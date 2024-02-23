@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2024-02-22T23:26:58.901Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:122.0) Gecko/20100101 Firefox/122.0" etag="Zw0VO6oaC6CFE81DoH-O" version="23.1.6" type="github">
+<mxfile host="app.diagrams.net" modified="2024-02-23T13:59:02.018Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:123.0) Gecko/20100101 Firefox/123.0" etag="Apj0jghV4BhxuXHLnPc2" version="23.1.6" type="github">
   <diagram name="Strona-1" id="TTjGYXf1ocC-9Z0RMeZj">
-    <mxGraphModel dx="1500" dy="1966" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1313" dy="1867" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -76,7 +76,7 @@
         <mxCell id="yAPrmbFOTz-pm8HXEm0U-6" value="Sign file" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="240" y="240" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="yAPrmbFOTz-pm8HXEm0U-7" value="Send file to verifier" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="yAPrmbFOTz-pm8HXEm0U-7" value="Send file to verifiers" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="240" y="120" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="yAPrmbFOTz-pm8HXEm0U-24" value="include" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.25;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="yAPrmbFOTz-pm8HXEm0U-8" target="yAPrmbFOTz-pm8HXEm0U-12" edge="1">
@@ -97,7 +97,7 @@
         <mxCell id="yAPrmbFOTz-pm8HXEm0U-9" value="Decrypt file" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="240" y="-120" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="yAPrmbFOTz-pm8HXEm0U-11" value="Receive file from Signer" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+        <mxCell id="yAPrmbFOTz-pm8HXEm0U-11" value="Receive file from signer" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="720" y="120" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="yAPrmbFOTz-pm8HXEm0U-12" value="Select file" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
