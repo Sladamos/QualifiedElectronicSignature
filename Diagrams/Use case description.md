@@ -1,7 +1,7 @@
 # Contents
 - [Generate RSA keys pair](#generate-rsa-keys-pair)
 
-![Alt text](<Use case diagram template.png>)
+![Use case diagram](<Use case diagram.jpg>)
 
 # Generate RSA keys pair
 [Return](#contents)
