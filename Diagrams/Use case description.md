@@ -8,12 +8,13 @@
 
 - Keyholder requests for keys generation
 - System asks for key length
-- Keyholder provides key lenght
-- System asks for pin
-- Keyholder provides pin
-- System asks for path
-- Keyholder provides relative path or cannonical
-- System generates keys in separate files
+- Keyholder provides key length
+- System asks for pin number
+- Keyholder provides pin number
+- System asks for path to save keys 
+- Keyholder provides relative or cannonical path
+- System prints generated keys
+- System generates keys in separate files in provided path
 
 # Decrypt file
 [Return](#contents)
