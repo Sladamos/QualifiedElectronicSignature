@@ -7,11 +7,11 @@
 [Return](#contents)
 
 - Keyholder requests for keys generation
-- System asks for key length
+- System demands key length
 - Keyholder provides key length
-- System asks for pin number
+- System demands pin number
 - Keyholder provides pin number
-- System asks for path to save keys 
+- System demands path to save keys 
 - Keyholder provides relative or cannonical path
 - System prints generated keys
 - System generates keys in separate files in provided path
@@ -19,8 +19,30 @@
 # Decrypt file
 [Return](#contents)
 
+- User requests for decrypt file
+- System provides cipher methods
+- System asks to select cipher method
+- Keyholder selects cipher method
+- System asks to select file which will be decrypted
+- Keyholder selects specific file
+- System checks if file type is allowed
+-> If file type is not allowed, use case is failed
+- System decrypts selected file
+- System saves decrypted file
+
 # Encrypt file
 [Return](#contents)
+
+- User requests for encrypt file
+- System provides cipher methods
+- System asks to select cipher method
+- Keyholder selects cipher method
+- System asks to select file which will be encrypted
+- Keyholder selects specific file
+- System checks if file type is allowed
+-> If file type is not allowed, use case is failed
+- System encrypts selected file
+- System saves encrypted file
 
 # Sign file
 [Return](#contents)
