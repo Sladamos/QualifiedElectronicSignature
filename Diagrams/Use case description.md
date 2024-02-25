@@ -40,15 +40,40 @@
 - System asks to select file which will be encrypted
 - Keyholder selects specific file
 - System checks if file type is allowed
--> If file type is not allowed, use case is failed
+    - If file type is not allowed, use case is failed
 - System encrypts selected file
 - System saves encrypted file
 
 # Sign file
 [Return](#contents)
 
+- User requests for sign file
+- System asks to select file with RSA private key
+- User selects specific file
+- Systems demands pin number
+- User provides pin number
+    - If pin number is invalid, use case is failed
+- System checks if the key is valid and meets requirements
+    - If key doesn't meet requirements, use case is failed
+- System asks to select file which will be signed
+- User selects specific file
+- System checks if file type is allowed
+    - If file type is not allowed, use case is failed
+- System signs selected file
+- System saves signed file
+
 # Verify file
 [Return](#contents)
+
+- User requests for verify file
+- System asks to select file with RSA public key
+- System checks if the key is valid and meets requirements
+    - If key doesn't meet requirements, use case is failed
+- System asks to select file which will be verified
+- User selects specific file
+- System checks if file type is allowed
+    - If file type is not allowed, use case is failed
+- System verifies selected file
 
 # Accept verifier
 [Return](#contents)
