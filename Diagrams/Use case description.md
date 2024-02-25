@@ -75,16 +75,42 @@
     - If file type is not allowed, use case is failed
 - System verifies selected file
 
+# Connect to sender
+[Return](#contents)
+
+- User requests for connect to sender
+- System asks for sender IP and port
+- User provides IP and port of sender
+- System sends request on provided IP
+- System notifies about connection status
+
 # Accept verifier
 [Return](#contents)
 
-# Connect to sender
-[Return](#contents)
+- System notifies about pending request
+- User accepts or declines verifier
+- System sends connection status to specific verifier
 
 # Send file to verifiers
 [Return](#contents)
 
+- User requests for send file to verifiers
+- System asks to select file which will be sent
+- User selects specific file
+- System checks if file type is allowed
+    - If file type is not allowed, use case is failed
+- System demands confirmation
+- User confirms operation
+- System sends file to verifiers
+
 # Accept file from signer
 [Return](#contents)
+
+- System notifies about incoming file
+- User accepts incoming file
+- System sends status to signer
+- System asks to select directory to save file
+- User selects specific directory 
+- System saves incoming file
 
 [Return](#contents)
