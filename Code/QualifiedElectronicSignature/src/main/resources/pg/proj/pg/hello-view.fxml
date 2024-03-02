@@ -3,13 +3,13 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane styleClass="root" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pg.proj.pg.HelloController">
+<BorderPane styleClass="root" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pg.proj.pg.MainController">
       <bottom>
          <HBox alignment="BOTTOM_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
             <children>
       
-                <Button mnemonicParsing="false" styleClass="button" text="Encrypt file" />
-                <Button onAction="#onHelloButtonClick" styleClass="button" text="Decrypt file" />
+                <Button mnemonicParsing="false" onAction="#onEncryptClicked" styleClass="button" text="Encrypt file" />
+                <Button onAction="#onDecryptClicked" styleClass="button" text="Decrypt file" />
             </children>
          </HBox>
       </bottom>
