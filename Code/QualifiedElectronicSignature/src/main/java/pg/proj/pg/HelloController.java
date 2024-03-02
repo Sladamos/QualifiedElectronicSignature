@@ -9,10 +9,6 @@ import lombok.Setter;
 import java.io.File;
 
 public class HelloController {
-
-    @FXML
-    private Label welcomeText;
-
     @Setter
     private Stage stage;
 
