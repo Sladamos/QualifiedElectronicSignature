@@ -5,6 +5,7 @@ import pg.proj.pg.error.receiver.api.BasicErrorReceiver;
 import pg.proj.pg.error.definition.CriticalAppError;
 import pg.proj.pg.error.receiver.api.CriticalErrorReceiver;
 import pg.proj.pg.event.entity.api.OneArgEvent;
+import pg.proj.pg.event.entity.impl.OneArgEventImpl;
 
 public class ErrorHandlingLayerImpl implements ErrorHandlingLayer {
 
@@ -13,7 +14,8 @@ public class ErrorHandlingLayerImpl implements ErrorHandlingLayer {
     private final OneArgEvent<BasicAppError> basicErrorEvent;
 
     public ErrorHandlingLayerImpl() {
-
+        criticalErrorEvent = new OneArgEventImpl<>();
+        basicErrorEvent = new OneArgEventImpl<>();
     }
 
     @Override

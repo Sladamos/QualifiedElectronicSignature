@@ -5,5 +5,5 @@ import pg.proj.pg.file.provider.FileProvider;
 import java.io.IOException;
 
 public interface FileSelector {
-    FileProvider selectFile() throws IOException;
+    FileProvider selectFile();
 }
