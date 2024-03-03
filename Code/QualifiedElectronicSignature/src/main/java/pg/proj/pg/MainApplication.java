@@ -4,6 +4,8 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import pg.proj.pg.plug.CryptorPlug;
+import pg.proj.pg.plug.CryptorPlugImpl;
 import pg.proj.pg.file.selector.FileSelector;
 import pg.proj.pg.file.selector.JavaFXFileSelector;
 
@@ -19,13 +21,13 @@ public class MainApplication extends Application {
         stage.setScene(scene);
         MainController controller = fxmlLoader.getController();
         initializeVariables(controller, stage);
-
         stage.show();
     }
 
     private void initializeVariables(MainController controller, Stage stage) {;
         FileSelector fileSelector = new JavaFXFileSelector(stage);
-        controller.setFileSelector(fileSelector);
+        CryptorPlug cryptorPlug = new CryptorPlugImpl(fileSelector);
+        controller.setCryptorPlug(cryptorPlug);
     }
 
     public static void main(String[] args) {
