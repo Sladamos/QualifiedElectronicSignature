@@ -1,8 +1,8 @@
 package pg.proj.pg.error.layer;
 
-import pg.proj.pg.error.entity.impl.BasicAppError;
+import pg.proj.pg.error.definition.BasicAppError;
 import pg.proj.pg.error.receiver.api.BasicErrorReceiver;
-import pg.proj.pg.error.entity.impl.CriticalAppError;
+import pg.proj.pg.error.definition.CriticalAppError;
 import pg.proj.pg.error.receiver.api.CriticalErrorReceiver;
 import pg.proj.pg.event.entity.api.OneArgEvent;
 
