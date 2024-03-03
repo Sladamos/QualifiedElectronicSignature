@@ -27,9 +27,13 @@ public class MainApplication extends Application {
     }
 
     private void initializeVariables(MainController controller, Stage stage) {;
-        MainReceiver receiver = new MainReceiver();
+        MainReceiver receiver = createMainReceiver(controller);
         setErrorHandlingLayer(controller, receiver);
         setCryptorPlug(controller, stage);
+    }
+
+    private MainReceiver createMainReceiver(MainController controller) {
+        return new MainReceiver(controller::onErrorOccurred, controller::onExitCalled);
     }
 
     private void setErrorHandlingLayer(MainController controller, MainReceiver receiver) {
