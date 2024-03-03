@@ -9,8 +9,6 @@ module pg.proj.pg {
 
     opens pg.proj.pg to javafx.fxml;
     exports pg.proj.pg;
-    exports pg.proj.pg.error;
-    opens pg.proj.pg.error to javafx.fxml;
     exports pg.proj.pg.error.basic;
     opens pg.proj.pg.error.basic to javafx.fxml;
     exports pg.proj.pg.error.critical;
