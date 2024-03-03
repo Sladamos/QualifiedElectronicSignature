@@ -1,24 +1,29 @@
 package pg.proj.pg.error.layer;
 
-import pg.proj.pg.error.basic.BasicAppError;
-import pg.proj.pg.error.basic.BasicErrorReceiver;
-import pg.proj.pg.error.critical.CriticalAppError;
-import pg.proj.pg.error.critical.CriticalErrorReceiver;
+import pg.proj.pg.error.entity.impl.BasicAppError;
+import pg.proj.pg.error.receiver.api.BasicErrorReceiver;
+import pg.proj.pg.error.entity.impl.CriticalAppError;
+import pg.proj.pg.error.receiver.api.CriticalErrorReceiver;
+import pg.proj.pg.event.entity.api.OneArgEvent;
 
 public class ErrorHandlingLayerImpl implements ErrorHandlingLayer {
 
-    private BasicErrorReceiver basicErrorReceiver;
+    private final OneArgEvent<CriticalAppError> criticalErrorEvent;
 
-    private CriticalErrorReceiver criticalErrorReceiver;
+    private final OneArgEvent<BasicAppError> basicErrorEvent;
+
+    public ErrorHandlingLayerImpl() {
+
+    }
 
     @Override
     public void runInErrorHandler(Runnable runnable) {
         try {
             runnable.run();
         } catch (CriticalAppError err) {
-            criticalErrorReceiver.onCriticalErrorOccurred(err);
+            criticalErrorEvent.invoke(err);
         } catch (BasicAppError err) {
-            basicErrorReceiver.onBasicErrorOccurred(err);
+            basicErrorEvent.invoke(err);
         } catch (Exception err) {
             notifyAboutUnspecifiedException(err);
         }
@@ -26,17 +31,17 @@ public class ErrorHandlingLayerImpl implements ErrorHandlingLayer {
 
     @Override
     public void registerBasicErrorReceiver(BasicErrorReceiver errorReceiver) {
-
+        basicErrorEvent.addListener(errorReceiver::onBasicErrorOccurred);
     }
 
     @Override
     public void registerCriticalErrorReceiver(CriticalErrorReceiver errorReceiver) {
-
+        criticalErrorEvent.addListener(errorReceiver::onCriticalErrorOccurred);
     }
 
     private void notifyAboutUnspecifiedException(Exception err) {
         CriticalAppError criticalError = new CriticalAppError("Something went very wrong. " + err.getMessage());
-        criticalErrorReceiver.onCriticalErrorOccurred(criticalError);
+        criticalErrorEvent.invoke(criticalError);
     }
 
 }

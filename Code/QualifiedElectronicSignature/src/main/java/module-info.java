@@ -13,4 +13,8 @@ module pg.proj.pg {
     opens pg.proj.pg.error.basic to javafx.fxml;
     exports pg.proj.pg.error.critical;
     opens pg.proj.pg.error.critical to javafx.fxml;
+    exports pg.proj.pg.error.receiver.api;
+    opens pg.proj.pg.error.receiver.api to javafx.fxml;
+    exports pg.proj.pg.error.entity.impl;
+    opens pg.proj.pg.error.entity.impl to javafx.fxml;
 }

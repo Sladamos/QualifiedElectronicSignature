@@ -1,4 +1,4 @@
-package pg.proj.pg.error.basic;
+package pg.proj.pg.error.entity.impl;
 
 public class BasicAppError extends RuntimeException {
 

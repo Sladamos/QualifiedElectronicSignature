@@ -1,4 +1,4 @@
-package pg.proj.pg.error.critical;
+package pg.proj.pg.error.entity.impl;
 
 public class CriticalAppError extends RuntimeException {
 
