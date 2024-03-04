@@ -1,7 +1,5 @@
 package pg.proj.pg.file.extension;
 
-import java.util.List;
-
 public enum FileExtension {
     TXT,
     CPP,
@@ -20,7 +18,12 @@ public enum FileExtension {
         throw new IllegalArgumentException("Incorrect substring");
     }
 
-    public static List<String> getAllowedExtensions() {
-        return List.of("cpp", "txt");
+    public String strValue() {
+        if(this.equals(CPP)) {
+            return "cpp";
+        } else if(this.equals(TXT)) {
+            return "txt";
+        }
+        throw new IllegalArgumentException("Incorrect extension");
     }
 }

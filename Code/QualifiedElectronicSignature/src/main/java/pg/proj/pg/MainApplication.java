@@ -6,12 +6,15 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import pg.proj.pg.error.layer.ErrorHandlingLayer;
 import pg.proj.pg.error.layer.ErrorHandlingLayerImpl;
+import pg.proj.pg.file.extension.FileExtension;
 import pg.proj.pg.plug.CryptorPlug;
 import pg.proj.pg.plug.CryptorPlugImpl;
 import pg.proj.pg.file.selector.FileSelector;
 import pg.proj.pg.file.selector.JavaFXFileSelector;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Set;
 
 public class MainApplication extends Application {
 
@@ -44,7 +47,7 @@ public class MainApplication extends Application {
     }
 
     private void setCryptorPlug(MainController controller, Stage stage) {
-        FileSelector fileSelector = new JavaFXFileSelector(stage);
+        FileSelector fileSelector = new JavaFXFileSelector(stage, Set.of(FileExtension.CPP, FileExtension.TXT));
         CryptorPlug cryptorPlug = new CryptorPlugImpl(fileSelector);
         controller.setCryptorPlug(cryptorPlug);
     }

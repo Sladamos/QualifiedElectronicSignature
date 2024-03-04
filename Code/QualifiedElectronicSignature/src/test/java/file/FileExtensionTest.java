@@ -7,21 +7,23 @@ import pg.proj.pg.file.extension.FileExtension;
 public class FileExtensionTest {
 
     @Test
-    public void should_returnTwoExtensions_when_getAllowedExtensionsCalled() {
-        var extensions = FileExtension.getAllowedExtensions();
-        assertThat(extensions).hasSize(2);
+    public void should_returnTxtString_when_txtExtensionProvided() {
+        FileExtension extension = FileExtension.TXT;
+        String value = extension.strValue();
+        assertThat(value).isEqualTo("txt");
     }
 
     @Test
-    public void should_returnCppExtension_when_getAllowedExtensionsCalled() {
-        var extensions = FileExtension.getAllowedExtensions();
-        assertThat(extensions).contains("cpp");
+    public void should_returnCppString_when_cppExtensionProvided() {
+        FileExtension extension = FileExtension.CPP;
+        String value = extension.strValue();
+        assertThat(value).isEqualTo("cpp");
     }
 
     @Test
-    public void should_returnTxtExtension_when_getAllowedExtensionsCalled() {
-        var extensions = FileExtension.getAllowedExtensions();
-        assertThat(extensions).contains("txt");
+    public void should_throwIllegalArgumentException_when_unknownExtensionProvided() {
+        FileExtension extension = FileExtension.UNKNOWN;
+        assertThatThrownBy(extension::strValue).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
