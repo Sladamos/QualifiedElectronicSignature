@@ -42,3 +42,23 @@
 .dark-blue-container .button:hover {
     -fx-background-color: #9094fb;
 }
+
+.radio-buttons-container > .radio-button {
+    -fx-border-insets: 5px;
+    -fx-background-insets: 5px;
+}
+
+.radio-button {
+    -fx-font-size: 14px;
+    -fx-text-fill: black;
+    -fx-padding: 10px;
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #CCCCCC;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+}
+
+.radio-button:selected {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+}

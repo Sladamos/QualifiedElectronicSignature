@@ -8,6 +8,8 @@ import javafx.stage.Stage;
 import lombok.AllArgsConstructor;
 import pg.proj.pg.cipher.provider.CipherProvider;
 import pg.proj.pg.error.definition.CriticalAppError;
+import pg.proj.pg.error.layer.ErrorHandlingLayer;
+import pg.proj.pg.error.layer.ErrorHandlingLayerImpl;
 
 import java.io.IOException;
 import java.util.List;
@@ -16,6 +18,8 @@ import java.util.List;
 public class JavaFXCipherSelector implements CipherSelector {
 
     private final List<CipherProvider> cipherProviders;
+
+    private final ErrorHandlingLayer errorHandlingLayer;
 
     @Override
     public CipherProvider selectCipher() {
@@ -33,6 +37,7 @@ public class JavaFXCipherSelector implements CipherSelector {
 
     private void initializeControllerWithNecessaryInformation(JavaFXCipherSelectorController controller, Stage stage) {
         controller.addCipherProviders(cipherProviders);
+        controller.setErrorHandlingLayer(errorHandlingLayer);
         controller.registerOnCloseStageRequested(stage::close);
     }
 
