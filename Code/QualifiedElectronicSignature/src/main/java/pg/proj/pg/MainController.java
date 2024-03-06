@@ -36,7 +36,6 @@ public class MainController {
     @FXML
     protected void onEncryptClicked() {
         errorHandlingLayer.runInErrorHandler(cryptorPlug::onEncryptCalled);
-
     }
 
     @FXML

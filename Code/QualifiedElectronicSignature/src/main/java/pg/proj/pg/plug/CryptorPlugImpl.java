@@ -1,6 +1,8 @@
 package pg.proj.pg.plug;
 
 import lombok.AllArgsConstructor;
+import pg.proj.pg.cipher.provider.CipherProvider;
+import pg.proj.pg.cipher.selector.CipherSelector;
 import pg.proj.pg.file.provider.FileProvider;
 import pg.proj.pg.file.selector.FileSelector;
 
@@ -9,10 +11,12 @@ public class CryptorPlugImpl implements CryptorPlug {
 
     private FileSelector fileSelector;
 
+    private CipherSelector encryptCipherSelector;
+
     @Override
     public void onEncryptCalled() {
-        FileProvider sourceFileProvider = fileSelector.selectFile();
-        System.out.println(sourceFileProvider.getFileInfo().canonicalPath());
+        //FileProvider sourceFileProvider = fileSelector.selectFile();
+        CipherProvider encryptCipherProvider = encryptCipherSelector.selectCipher();
     }
 
     @Override
