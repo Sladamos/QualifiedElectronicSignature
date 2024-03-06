@@ -13,15 +13,17 @@ public class CryptorPlugImpl implements CryptorPlug {
 
     private CipherSelector encryptCipherSelector;
 
+    private CipherSelector decryptCipherSelector;
+
     @Override
     public void onEncryptCalled() {
-        //FileProvider sourceFileProvider = fileSelector.selectFile();
+        //FileProvider sourceFileProvider = fileSelector.selectFile(); //TODO add
         CipherProvider encryptCipherProvider = encryptCipherSelector.selectCipher();
     }
 
     @Override
     public void onDecryptCalled() {
-        FileProvider sourceFileProvider = fileSelector.selectFile();
-        System.out.println(sourceFileProvider.getFileInfo().canonicalPath());
+        //FileProvider sourceFileProvider = fileSelector.selectFile(); TODO add
+        CipherProvider decryptCipherProvider = decryptCipherSelector.selectCipher();
     }
 }

@@ -52,13 +52,13 @@
     -fx-font-size: 14px;
     -fx-text-fill: black;
     -fx-padding: 10px;
-    -fx-background-color: #FFFFFF;
+    -fx-background-color: #b3b1b1;
     -fx-border-color: #CCCCCC;
     -fx-border-width: 1px;
     -fx-border-radius: 5px;
 }
 
 .radio-button:selected {
-    -fx-background-color: #4CAF50;
+    -fx-background-color: #0a3f94;
     -fx-text-fill: white;
 }

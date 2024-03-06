@@ -4,8 +4,10 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import pg.proj.pg.cipher.container.CipherContainerImpl;
 import pg.proj.pg.cipher.provider.CipherProvider;
-import pg.proj.pg.cipher.provider.EncryptedRsaCipherProvider;
+import pg.proj.pg.cipher.provider.EncryptedCipherProvider;
+import pg.proj.pg.cipher.provider.PlainCipherProvider;
 import pg.proj.pg.cipher.selector.CipherSelector;
 import pg.proj.pg.cipher.selector.JavaFXCipherSelector;
 import pg.proj.pg.error.layer.ErrorHandlingLayer;
@@ -33,7 +35,8 @@ public class MainApplication extends Application {
         stage.show();
     }
 
-    private void initializeVariables(MainController controller, Stage stage) {;
+    private void initializeVariables(MainController controller, Stage stage) {
+        ;
         MainReceiver receiver = createMainReceiver(controller);
         ErrorHandlingLayer errorHandlingLayer = createErrorHandlingLayer(receiver);
         CryptorPlug cryptorPlug = createCryptorPlug(stage, errorHandlingLayer);
@@ -55,16 +58,14 @@ public class MainApplication extends Application {
     private CryptorPlug createCryptorPlug(Stage stage, ErrorHandlingLayer errorHandlingLayer) {
         FileSelector fileSelector = new JavaFXFileSelector(stage, Set.of(FileExtension.CPP, FileExtension.TXT));
         List<CipherProvider> encryptCipherProviders = List.of(
-                new EncryptedRsaCipherProvider("Test1", null),
-                new EncryptedRsaCipherProvider("Test2", null),
-                new EncryptedRsaCipherProvider("Test3", null),
-                new EncryptedRsaCipherProvider("Test4", null),
-                new EncryptedRsaCipherProvider("Test5", null),
-                new EncryptedRsaCipherProvider("Test6", null),
-                new EncryptedRsaCipherProvider("Test7", null)
-        ); //TODO refactor
+                new EncryptedCipherProvider("RSA", new CipherContainerImpl())
+        );
+        List<CipherProvider> decryptCipherProviders = List.of(
+                new PlainCipherProvider("RSA", new CipherContainerImpl())
+        );
         CipherSelector encryptCipherSelector = new JavaFXCipherSelector(encryptCipherProviders, errorHandlingLayer);
-        return new CryptorPlugImpl(fileSelector, encryptCipherSelector);
+        CipherSelector decryptCipherSelector = new JavaFXCipherSelector(decryptCipherProviders, errorHandlingLayer);
+        return new CryptorPlugImpl(fileSelector, encryptCipherSelector, decryptCipherSelector);
     }
 
     public static void main(String[] args) {

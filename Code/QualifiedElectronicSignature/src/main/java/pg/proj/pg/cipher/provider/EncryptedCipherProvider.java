@@ -5,7 +5,7 @@ import lombok.Getter;
 import pg.proj.pg.cipher.container.CipherContainer;
 
 @AllArgsConstructor
-public class EncryptedRsaCipherProvider implements CipherProvider {
+public class EncryptedCipherProvider implements CipherProvider {
 
     @Getter
     private final String uniqueName;
@@ -14,8 +14,8 @@ public class EncryptedRsaCipherProvider implements CipherProvider {
 
     @Override
     public CipherContainer getCipher() {
-        //TODO ask for password
-        return null;
+        //TODO ask for password and verify it
+        return cipherContainer;
     }
 
 }
