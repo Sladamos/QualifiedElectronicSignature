@@ -28,7 +28,8 @@ public class CipherContainerImpl implements CipherContainer {
             FileInfo fileInfo = provider.getFileInfo();
             byte[] fileContent = Files.readAllBytes(Paths.get(fileInfo.canonicalPath()));
             Cipher cipher = Cipher.getInstance(cipherInstance);
-            return new CipherContainerImpl(cipher);
+            //TODO filesOperator and key
+            return new CipherContainerImpl(cipher, "");
         } catch (Exception e) {
             throw new CriticalAppError("Unable to create cipher");
         }
@@ -36,11 +37,13 @@ public class CipherContainerImpl implements CipherContainer {
 
     @Override
     public byte[] encrypt(byte[] source) {
+        //TODO initialize cipher
         return cipherMethod(source);
     }
 
     @Override
     public byte[] decrypt(byte[] source) {
+        //initialize cipher
         return cipherMethod(source);
     }
 
