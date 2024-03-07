@@ -44,20 +44,20 @@ public class CipherContainerImpl implements CipherContainer {
     @Override
     public byte[] encrypt(byte[] source) {
         launchCipherInMode(Cipher.ENCRYPT_MODE);
-        return cipherMethod(source);
+        try {
+            return cipher.doFinal(source);
+        } catch (Exception e) {
+            throw new BasicAppError("Unable to encrypt content");
+        }
     }
 
     @Override
     public byte[] decrypt(byte[] source) {
         launchCipherInMode(Cipher.DECRYPT_MODE);
-        return cipherMethod(source);
-    }
-
-    private byte[] cipherMethod(byte[] source) {
         try {
             return cipher.doFinal(source);
         } catch (Exception e) {
-            throw new BasicAppError("Unable to cipher content");
+            throw new BasicAppError("Unable to decrypt content");
         }
     }
 

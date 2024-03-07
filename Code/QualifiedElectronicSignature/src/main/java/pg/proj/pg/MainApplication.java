@@ -5,6 +5,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import pg.proj.pg.cipher.container.CipherContainerImpl;
+import pg.proj.pg.cipher.generator.KeyGenerator;
+import pg.proj.pg.cipher.generator.PrivateRsaKeyGenerator;
+import pg.proj.pg.cipher.generator.PublicRsaKeyGenerator;
 import pg.proj.pg.cipher.provider.CipherProvider;
 import pg.proj.pg.cipher.provider.EncryptedCipherProvider;
 import pg.proj.pg.cipher.provider.PlainCipherProvider;
@@ -61,17 +64,33 @@ public class MainApplication extends Application {
         FileSelector fileSelector = new JavaFXFileSelector(stage, Set.of(FileExtension.CPP, FileExtension.TXT));
         FileSelector cipherFileSelector = new JavaFXFileSelector(stage, Set.of(FileExtension.TXT));
         FileOperator cipherFileOperator = new SmallFilesOperator();
+        CipherSelector encryptCipherSelector = createEncryptCipherSelector(errorHandlingLayer,
+                cipherFileSelector, cipherFileOperator);
+        CipherSelector decryptCipherSelector = createDecryptCipherSelector(errorHandlingLayer,
+                cipherFileSelector, cipherFileOperator);
+        return new CryptorPlugImpl(fileSelector, encryptCipherSelector, decryptCipherSelector);
+    }
+
+    private CipherSelector createEncryptCipherSelector(ErrorHandlingLayer errorHandlingLayer,
+                                                       FileSelector cipherFileSelector,
+                                                       FileOperator cipherFileOperator) {
+        KeyGenerator rsaKeyGenerator = new PublicRsaKeyGenerator();
         List<CipherProvider> encryptCipherProviders = List.of(
                 new EncryptedCipherProvider("RSA",
                         () -> CipherContainerImpl.createFromFile(cipherFileSelector,
-                                cipherFileOperator, "RSA")));
+                                cipherFileOperator, rsaKeyGenerator, "RSA")));
+        return new JavaFXCipherSelector(encryptCipherProviders, errorHandlingLayer);
+    }
+
+    private CipherSelector createDecryptCipherSelector(ErrorHandlingLayer errorHandlingLayer,
+                                                       FileSelector cipherFileSelector,
+                                                       FileOperator cipherFileOperator) {
+        KeyGenerator rsaKeyGenerator = new PrivateRsaKeyGenerator();
         List<CipherProvider> decryptCipherProviders = List.of(
                 new PlainCipherProvider("RSA",
                         () -> CipherContainerImpl.createFromFile(cipherFileSelector,
-                                cipherFileOperator, "RSA")));
-        CipherSelector encryptCipherSelector = new JavaFXCipherSelector(encryptCipherProviders, errorHandlingLayer);
-        CipherSelector decryptCipherSelector = new JavaFXCipherSelector(decryptCipherProviders, errorHandlingLayer);
-        return new CryptorPlugImpl(fileSelector, encryptCipherSelector, decryptCipherSelector);
+                                cipherFileOperator, rsaKeyGenerator, "RSA")));
+        return new JavaFXCipherSelector(decryptCipherProviders, errorHandlingLayer);
     }
 
     public static void main(String[] args) {
