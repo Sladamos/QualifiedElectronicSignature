@@ -58,10 +58,11 @@ public class MainApplication extends Application {
     private CryptorPlug createCryptorPlug(Stage stage, ErrorHandlingLayer errorHandlingLayer) {
         FileSelector fileSelector = new JavaFXFileSelector(stage, Set.of(FileExtension.CPP, FileExtension.TXT));
         List<CipherProvider> encryptCipherProviders = List.of(
-                new EncryptedCipherProvider("RSA", new CipherContainerImpl())
+                new EncryptedCipherProvider("RSA", CipherContainerImpl::new) //TODO: change method to creating CipherContainer with Cipher in conttructor.
+                // and cipher would be based on file selection... create factory method
         );
         List<CipherProvider> decryptCipherProviders = List.of(
-                new PlainCipherProvider("RSA", new CipherContainerImpl())
+                new PlainCipherProvider("RSA", CipherContainerImpl::new) //TODO: up
         );
         CipherSelector encryptCipherSelector = new JavaFXCipherSelector(encryptCipherProviders, errorHandlingLayer);
         CipherSelector decryptCipherSelector = new JavaFXCipherSelector(decryptCipherProviders, errorHandlingLayer);
