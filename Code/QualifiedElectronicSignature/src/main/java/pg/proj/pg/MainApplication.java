@@ -13,6 +13,8 @@ import pg.proj.pg.cipher.selector.JavaFXCipherSelector;
 import pg.proj.pg.error.layer.ErrorHandlingLayer;
 import pg.proj.pg.error.layer.ErrorHandlingLayerImpl;
 import pg.proj.pg.file.extension.FileExtension;
+import pg.proj.pg.file.operator.FileOperator;
+import pg.proj.pg.file.operator.SmallFilesOperator;
 import pg.proj.pg.plug.CryptorPlug;
 import pg.proj.pg.plug.CryptorPlugImpl;
 import pg.proj.pg.file.selector.FileSelector;
@@ -58,12 +60,15 @@ public class MainApplication extends Application {
     private CryptorPlug createCryptorPlug(Stage stage, ErrorHandlingLayer errorHandlingLayer) {
         FileSelector fileSelector = new JavaFXFileSelector(stage, Set.of(FileExtension.CPP, FileExtension.TXT));
         FileSelector cipherFileSelector = new JavaFXFileSelector(stage, Set.of(FileExtension.TXT));
+        FileOperator cipherFileOperator = new SmallFilesOperator();
         List<CipherProvider> encryptCipherProviders = List.of(
                 new EncryptedCipherProvider("RSA",
-                        () -> CipherContainerImpl.createFromFile(cipherFileSelector, "RSA")));
+                        () -> CipherContainerImpl.createFromFile(cipherFileSelector,
+                                cipherFileOperator, "RSA")));
         List<CipherProvider> decryptCipherProviders = List.of(
                 new PlainCipherProvider("RSA",
-                        () -> CipherContainerImpl.createFromFile(cipherFileSelector, "RSA")));
+                        () -> CipherContainerImpl.createFromFile(cipherFileSelector,
+                                cipherFileOperator, "RSA")));
         CipherSelector encryptCipherSelector = new JavaFXCipherSelector(encryptCipherProviders, errorHandlingLayer);
         CipherSelector decryptCipherSelector = new JavaFXCipherSelector(decryptCipherProviders, errorHandlingLayer);
         return new CryptorPlugImpl(fileSelector, encryptCipherSelector, decryptCipherSelector);

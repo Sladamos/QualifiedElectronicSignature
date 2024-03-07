@@ -19,6 +19,7 @@ public class CryptorPlugImpl implements CryptorPlug {
     public void onEncryptCalled() {
         //FileProvider sourceFileProvider = fileSelector.selectFile(); //TODO add
         CipherProvider encryptCipherProvider = encryptCipherSelector.selectCipher();
+        encryptCipherProvider.getCipher();
     }
 
     @Override
