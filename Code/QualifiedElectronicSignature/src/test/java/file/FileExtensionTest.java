@@ -21,6 +21,13 @@ public class FileExtensionTest {
     }
 
     @Test
+    public void should_returnCypString_when_cypExtensionProvided() {
+        FileExtension extension = FileExtension.CYP;
+        String value = extension.strValue();
+        assertThat(value).isEqualTo("cyp");
+    }
+
+    @Test
     public void should_throwIllegalArgumentException_when_unknownExtensionProvided() {
         FileExtension extension = FileExtension.UNKNOWN;
         assertThatThrownBy(extension::strValue).isInstanceOf(IllegalArgumentException.class);
@@ -30,6 +37,12 @@ public class FileExtensionTest {
     public void should_returnTxtExtension_when_fromTxtStringCreated() {
         var extension = FileExtension.fromString("txt");
         assertThat(extension).isEqualTo(FileExtension.TXT);
+    }
+
+    @Test
+    public void should_returnCypExtension_when_fromCypStringCreated() {
+        var extension = FileExtension.fromString("cyp");
+        assertThat(extension).isEqualTo(FileExtension.CYP);
     }
 
     @Test
