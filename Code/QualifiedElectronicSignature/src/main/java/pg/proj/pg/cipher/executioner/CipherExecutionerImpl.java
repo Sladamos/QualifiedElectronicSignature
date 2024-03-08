@@ -12,28 +12,15 @@ import pg.proj.pg.file.selector.FileSelector;
 
 import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
-import java.security.*;
+import java.security.InvalidKeyException;
+import java.security.Key;
+import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
 @AllArgsConstructor
 public class CipherExecutionerImpl implements CipherExecutioner {
 
     private final CipherInfo cipherInfo;
-
-    public static CipherExecutionerImpl createFromFile(FileSelector fileSelector, FileContentOperator fileContentOperator,
-                                                       KeyGen keyGen, String cipherType) {
-        try {
-            FileProvider provider = fileSelector.selectFile();
-            FileInfo fileInfo = provider.getFileInfo();
-            var lines = fileContentOperator.loadStrFileContent(fileInfo).split("\n");
-            String keyStr = String.join("", lines);
-            Cipher cipher = Cipher.getInstance(cipherType);
-            CipherInfo cipherInfo = new CipherInfo(cipher, keyGen, keyStr, cipherType);
-            return new CipherExecutionerImpl(cipherInfo);
-        } catch (NoSuchPaddingException | NoSuchAlgorithmException e) {
-            throw new CriticalAppError("Unable to create cipher");
-        }
-    }
 
     @Override
     public byte[] encrypt(byte[] source) {
