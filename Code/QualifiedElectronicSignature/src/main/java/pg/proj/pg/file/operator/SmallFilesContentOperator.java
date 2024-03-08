@@ -22,6 +22,11 @@ public class SmallFilesContentOperator implements FileContentOperator {
 
     @Override
     public void saveByteFileContent(FileInfo destinationFile, byte[] encryptedContent) {
+        if(destinationFile == null)
+        {
+            System.out.println("kwiii");
+            return;
+        }
         String filePath = destinationFile.canonicalPath();
         try (FileOutputStream fos = new FileOutputStream(filePath, false)) {
             fos.write(encryptedContent);

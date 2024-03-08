@@ -13,6 +13,8 @@ import pg.proj.pg.cipher.provider.EncryptedCipherProvider;
 import pg.proj.pg.cipher.provider.PlainCipherProvider;
 import pg.proj.pg.cipher.selector.CipherSelector;
 import pg.proj.pg.cipher.selector.JavaFXCipherSelector;
+import pg.proj.pg.crypto.encryptor.FileEncryptor;
+import pg.proj.pg.crypto.encryptor.SmallFilesEncryptor;
 import pg.proj.pg.error.layer.ErrorHandlingLayer;
 import pg.proj.pg.error.layer.ErrorHandlingLayerImpl;
 import pg.proj.pg.file.extension.FileExtension;
@@ -68,7 +70,14 @@ public class MainApplication extends Application {
                 cipherFileSelector, cipherFileContentOperator);
         CipherSelector decryptCipherSelector = createDecryptCipherSelector(errorHandlingLayer,
                 cipherFileSelector, cipherFileContentOperator);
-        return new CryptorPlugImpl(fileSelector, encryptCipherSelector, decryptCipherSelector);
+        FileEncryptor encryptor = createEncryptor();
+        return new CryptorPlugImpl(fileSelector, encryptCipherSelector,
+                decryptCipherSelector, encryptor);
+    }
+
+    private FileEncryptor createEncryptor() {
+        FileContentOperator contentOperator = new SmallFilesContentOperator();
+        return new SmallFilesEncryptor(contentOperator);
     }
 
     private CipherSelector createEncryptCipherSelector(ErrorHandlingLayer errorHandlingLayer,
