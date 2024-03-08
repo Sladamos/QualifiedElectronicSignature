@@ -14,7 +14,7 @@ public class JavaFXFileSelectorTest {
 
     @Test
     void should_throwCriticalAppErrorOnSelectFile_when_stageIsNotSet(){
-        FileSelector selector = new JavaFXFileSelector(null, Set.of(FileExtension.CPP));
+        FileSelector selector = new JavaFXFileSelector(null, "Title", Set.of(FileExtension.CPP));
         assertThatThrownBy(selector::selectFile)
                 .isInstanceOf(CriticalAppError.class);
     }
@@ -24,7 +24,7 @@ public class JavaFXFileSelectorTest {
      * **/
     @Test
     void should_throwCriticalAppErrorOnSelectFile_when_allowedExtensionsAreEmpty(){
-        FileSelector selector = new JavaFXFileSelector(null, Set.of());
+        FileSelector selector = new JavaFXFileSelector(null, "Title", Set.of());
         assertThatThrownBy(selector::selectFile)
                 .isInstanceOf(CriticalAppError.class);
     }
