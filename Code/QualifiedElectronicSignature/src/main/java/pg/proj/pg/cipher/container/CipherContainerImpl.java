@@ -5,7 +5,7 @@ import pg.proj.pg.cipher.generator.KeyGenerator;
 import pg.proj.pg.error.definition.BasicAppError;
 import pg.proj.pg.error.definition.CriticalAppError;
 import pg.proj.pg.file.info.FileInfo;
-import pg.proj.pg.file.operator.FileOperator;
+import pg.proj.pg.file.operator.FileContentOperator;
 import pg.proj.pg.file.provider.FileProvider;
 import pg.proj.pg.file.selector.FileSelector;
 
@@ -27,12 +27,12 @@ public class CipherContainerImpl implements CipherContainer {
     private final String cipherType;
 
 
-    public static CipherContainerImpl createFromFile(FileSelector fileSelector, FileOperator fileOperator,
+    public static CipherContainerImpl createFromFile(FileSelector fileSelector, FileContentOperator fileContentOperator,
                                                      KeyGenerator keyGenerator, String cipherType) {
         try {
             FileProvider provider = fileSelector.selectFile();
             FileInfo fileInfo = provider.getFileInfo();
-            var lines = fileOperator.loadFileContent(fileInfo).split("\n");
+            var lines = fileContentOperator.loadStrFileContent(fileInfo).split("\n");
             String keyStr = String.join("", lines);
             Cipher cipher = Cipher.getInstance(cipherType);
             return new CipherContainerImpl(cipher, keyGenerator, keyStr, cipherType);
