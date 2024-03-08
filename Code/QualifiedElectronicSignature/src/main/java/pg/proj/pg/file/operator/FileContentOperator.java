@@ -6,5 +6,7 @@ public interface FileContentOperator {
 
     String loadStrFileContent(FileInfo sourceFile);
 
+    byte[] loadByteFileContent(FileInfo sourceFile);
+
     void saveByteFileContent(FileInfo destinationFile, byte[] encryptedContent);
 }

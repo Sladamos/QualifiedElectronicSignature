@@ -16,17 +16,22 @@ public class SmallFilesContentOperator implements FileContentOperator {
         try {
             return new String(Files.readAllBytes(Paths.get(sourceFile.canonicalPath()))).replace("\r", "");
         } catch (IOException e) {
-            throw new CriticalAppError("Unable to read file.");
+            throw new CriticalAppError("Unable to read file");
+        }
+    }
+
+    @Override
+    public byte[] loadByteFileContent(FileInfo sourceFile) {
+        try {
+
+            return Files.readAllBytes(Paths.get(sourceFile.canonicalPath()));
+        } catch (IOException e) {
+            throw new CriticalAppError("Unable to read file");
         }
     }
 
     @Override
     public void saveByteFileContent(FileInfo destinationFile, byte[] encryptedContent) {
-        if(destinationFile == null)
-        {
-            System.out.println("kwiii");
-            return;
-        }
         String filePath = destinationFile.canonicalPath();
         try (FileOutputStream fos = new FileOutputStream(filePath, false)) {
             fos.write(encryptedContent);

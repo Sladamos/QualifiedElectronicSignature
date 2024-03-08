@@ -6,6 +6,7 @@ import pg.proj.pg.cipher.provider.CipherProvider;
 import pg.proj.pg.cipher.selector.CipherSelector;
 import pg.proj.pg.crypto.container.CryptoInformationContainer;
 import pg.proj.pg.crypto.container.CryptoInformationContainerImpl;
+import pg.proj.pg.crypto.decryptor.FileDecryptor;
 import pg.proj.pg.crypto.encryptor.FileEncryptor;
 import pg.proj.pg.file.provider.FileProvider;
 import pg.proj.pg.file.selector.FileSelector;
@@ -15,13 +16,15 @@ import java.util.Arrays;
 @AllArgsConstructor
 public class CryptorPlugImpl implements CryptorPlug {
 
-    private FileSelector fileSelector;
+    private final FileSelector fileSelector;
 
-    private CipherSelector encryptCipherSelector;
+    private final CipherSelector encryptCipherSelector;
 
-    private CipherSelector decryptCipherSelector;
+    private final CipherSelector decryptCipherSelector;
 
-    private FileEncryptor encryptor;
+    private final FileEncryptor encryptor;
+
+    private final FileDecryptor decryptor;
 
     @Override
     public void onEncryptCalled() {
@@ -38,6 +41,7 @@ public class CryptorPlugImpl implements CryptorPlug {
         CipherProvider decryptCipherProvider = decryptCipherSelector.selectCipher();
         CryptoInformationContainer informationContainer = new CryptoInformationContainerImpl(sourceFileProvider,
                 sourceFileProvider, decryptCipherProvider);
-        //TODO: decryptor decrypt file
+        decryptor.decryptFile(informationContainer);
+        //TODO: add necessary communicates
     }
 }
