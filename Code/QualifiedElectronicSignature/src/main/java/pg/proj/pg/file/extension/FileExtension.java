@@ -3,6 +3,7 @@ package pg.proj.pg.file.extension;
 public enum FileExtension {
     TXT,
     CPP,
+    CYP,
     UNKNOWN;
 
     /**
@@ -10,19 +11,31 @@ public enum FileExtension {
      * substring doesn't match any extension.
      */
     public static FileExtension fromString(String substring) {
-        if(substring.equals("cpp")) {
-            return CPP;
-        } else if(substring.equals("txt")) {
-            return TXT;
+        switch (substring) {
+            case "cpp": {
+                return CPP;
+            }
+            case "txt": {
+                return TXT;
+            }
+            case "cyp": {
+                return CYP;
+            }
         }
         throw new IllegalArgumentException("Incorrect substring");
     }
 
     public String strValue() {
-        if(this.equals(CPP)) {
-            return "cpp";
-        } else if(this.equals(TXT)) {
-            return "txt";
+        switch (this) {
+            case CPP: {
+                return "cpp";
+            }
+            case TXT: {
+                return "txt";
+            }
+            case CYP: {
+                return "cyp";
+            }
         }
         throw new IllegalArgumentException("Incorrect extension");
     }

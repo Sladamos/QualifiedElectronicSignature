@@ -24,6 +24,8 @@ public class JavaFXFileSelector implements FileSelector {
 
     private final Stage stage;
 
+    private final String title;
+
     private final Set<FileExtension> allowedExtensions;
 
     private final FileExtensionProvider fileExtensionProvider = new FileExtensionProviderImpl();
@@ -33,7 +35,7 @@ public class JavaFXFileSelector implements FileSelector {
         sendErrorIfNoExtensionsAreAllowed();
         sendErrorIfStageIsNotSpecified();
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select file");
+        fileChooser.setTitle(title);
         fileChooser.getExtensionFilters().addAll(getFiltersFromExtensions());
         //TODO send communicate
         File file = fileChooser.showOpenDialog(stage);

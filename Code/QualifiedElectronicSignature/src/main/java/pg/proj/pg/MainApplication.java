@@ -65,8 +65,9 @@ public class MainApplication extends Application {
     }
 
     private CryptorPlug createCryptorPlug(Stage stage, ErrorHandlingLayer errorHandlingLayer) {
-        FileSelector fileSelector = new JavaFXFileSelector(stage, Set.of(FileExtension.CPP, FileExtension.TXT));
-        FileSelector cipherFileSelector = new JavaFXFileSelector(stage, Set.of(FileExtension.TXT));
+        FileSelector encryptFileSelector = new JavaFXFileSelector(stage, "Select source file", Set.of(FileExtension.CPP, FileExtension.TXT));
+        FileSelector decryptFileSelector = new JavaFXFileSelector(stage, "Select source file", Set.of(FileExtension.CYP));
+        FileSelector cipherFileSelector = new JavaFXFileSelector(stage, "Select key file", Set.of(FileExtension.TXT));
         FileContentOperator cipherFileContentOperator = new SmallFilesContentOperator();
         CipherSelector encryptCipherSelector = createEncryptCipherSelector(errorHandlingLayer,
                 cipherFileSelector, cipherFileContentOperator);
@@ -74,7 +75,7 @@ public class MainApplication extends Application {
                 cipherFileSelector, cipherFileContentOperator);
         FileEncryptor encryptor = createEncryptor();
         FileDecryptor decryptor = createDecryptor();
-        return new CryptorPlugImpl(fileSelector, encryptCipherSelector,
+        return new CryptorPlugImpl(encryptFileSelector, decryptFileSelector, encryptCipherSelector,
                 decryptCipherSelector, encryptor, decryptor);
     }
 
