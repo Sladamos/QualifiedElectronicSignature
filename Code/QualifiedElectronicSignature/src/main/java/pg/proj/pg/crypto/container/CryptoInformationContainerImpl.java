@@ -1,7 +1,7 @@
 package pg.proj.pg.crypto.container;
 
 import lombok.AllArgsConstructor;
-import pg.proj.pg.cipher.container.CipherContainer;
+import pg.proj.pg.cipher.executioner.CipherExecutioner;
 import pg.proj.pg.cipher.provider.CipherProvider;
 import pg.proj.pg.file.info.FileInfo;
 import pg.proj.pg.file.provider.FileProvider;
@@ -26,7 +26,7 @@ public class CryptoInformationContainerImpl implements CryptoInformationContaine
     }
 
     @Override
-    public CipherContainer getCipherContainer() {
+    public CipherExecutioner getCipherContainer() {
         return cipherProvider.getCipher();
     }
 }

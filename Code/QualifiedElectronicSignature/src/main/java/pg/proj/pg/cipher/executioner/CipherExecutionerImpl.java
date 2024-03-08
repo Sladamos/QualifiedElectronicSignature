@@ -1,7 +1,8 @@
-package pg.proj.pg.cipher.container;
+package pg.proj.pg.cipher.executioner;
 
 import lombok.AllArgsConstructor;
-import pg.proj.pg.cipher.generator.KeyGenerator;
+import pg.proj.pg.cipher.generator.KeyGen;
+import pg.proj.pg.cipher.info.CipherInfo;
 import pg.proj.pg.error.definition.BasicAppError;
 import pg.proj.pg.error.definition.CriticalAppError;
 import pg.proj.pg.file.info.FileInfo;
@@ -15,27 +16,20 @@ import java.security.*;
 import java.util.Base64;
 
 @AllArgsConstructor
-public class CipherContainerImpl implements CipherContainer {
+public class CipherExecutionerImpl implements CipherExecutioner {
 
-    private final Cipher cipher;
+    private final CipherInfo cipherInfo;
 
-    private final KeyGenerator keyGenerator;
-
-    private final String keyStr;
-
-
-    private final String cipherType;
-
-
-    public static CipherContainerImpl createFromFile(FileSelector fileSelector, FileContentOperator fileContentOperator,
-                                                     KeyGenerator keyGenerator, String cipherType) {
+    public static CipherExecutionerImpl createFromFile(FileSelector fileSelector, FileContentOperator fileContentOperator,
+                                                       KeyGen keyGen, String cipherType) {
         try {
             FileProvider provider = fileSelector.selectFile();
             FileInfo fileInfo = provider.getFileInfo();
             var lines = fileContentOperator.loadStrFileContent(fileInfo).split("\n");
             String keyStr = String.join("", lines);
             Cipher cipher = Cipher.getInstance(cipherType);
-            return new CipherContainerImpl(cipher, keyGenerator, keyStr, cipherType);
+            CipherInfo cipherInfo = new CipherInfo(cipher, keyGen, keyStr, cipherType);
+            return new CipherExecutionerImpl(cipherInfo);
         } catch (NoSuchPaddingException | NoSuchAlgorithmException e) {
             throw new CriticalAppError("Unable to create cipher");
         }
@@ -44,6 +38,7 @@ public class CipherContainerImpl implements CipherContainer {
     @Override
     public byte[] encrypt(byte[] source) {
         launchCipherInMode(Cipher.ENCRYPT_MODE);
+        Cipher cipher = cipherInfo.cipher();
         try {
             return cipher.doFinal(source);
         } catch (Exception e) {
@@ -54,6 +49,7 @@ public class CipherContainerImpl implements CipherContainer {
     @Override
     public byte[] decrypt(byte[] source) {
         launchCipherInMode(Cipher.DECRYPT_MODE);
+        Cipher cipher = cipherInfo.cipher();
         try {
             return cipher.doFinal(source);
         } catch (Exception e) {
@@ -62,8 +58,12 @@ public class CipherContainerImpl implements CipherContainer {
     }
 
     private void launchCipherInMode(int cipherMode) {
+        String keyStr = cipherInfo.keyStr();
         byte[] keyBytes = Base64.getDecoder().decode(keyStr.getBytes());
-        Key key = keyGenerator.generateKey(keyBytes, cipherType);
+        KeyGen keyGen = cipherInfo.keyGen();
+        String cipherType = cipherInfo.cipherType();
+        Cipher cipher = cipherInfo.cipher();
+        Key key = keyGen.generateKey(keyBytes, cipherType);
         try {
             cipher.init(cipherMode, key);
         } catch (InvalidKeyException e) {

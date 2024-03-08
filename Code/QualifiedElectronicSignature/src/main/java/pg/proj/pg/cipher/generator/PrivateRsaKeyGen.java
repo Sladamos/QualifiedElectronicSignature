@@ -7,9 +7,8 @@ import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.X509EncodedKeySpec;
 
-public class PrivateRsaKeyGenerator implements KeyGenerator {
+public class PrivateRsaKeyGen implements KeyGen {
     @Override
     public Key generateKey(byte[] bytes, String cipherType) {
         PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(bytes);

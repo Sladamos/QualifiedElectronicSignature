@@ -1,8 +1,8 @@
 package pg.proj.pg.cipher.provider;
 
-import pg.proj.pg.cipher.container.CipherContainer;
+import pg.proj.pg.cipher.executioner.CipherExecutioner;
 
 public interface CipherProvider {
-    CipherContainer getCipher();
+    CipherExecutioner getCipher();
     String getUniqueName();
 }

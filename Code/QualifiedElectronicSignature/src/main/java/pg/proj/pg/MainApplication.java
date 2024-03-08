@@ -4,10 +4,10 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import pg.proj.pg.cipher.container.CipherContainerImpl;
-import pg.proj.pg.cipher.generator.KeyGenerator;
-import pg.proj.pg.cipher.generator.PrivateRsaKeyGenerator;
-import pg.proj.pg.cipher.generator.PublicRsaKeyGenerator;
+import pg.proj.pg.cipher.executioner.CipherExecutionerImpl;
+import pg.proj.pg.cipher.generator.KeyGen;
+import pg.proj.pg.cipher.generator.PrivateRsaKeyGen;
+import pg.proj.pg.cipher.generator.PublicRsaKeyGen;
 import pg.proj.pg.cipher.provider.CipherProvider;
 import pg.proj.pg.cipher.provider.EncryptedCipherProvider;
 import pg.proj.pg.cipher.provider.PlainCipherProvider;
@@ -92,22 +92,22 @@ public class MainApplication extends Application {
     private CipherSelector createEncryptCipherSelector(ErrorHandlingLayer errorHandlingLayer,
                                                        FileSelector cipherFileSelector,
                                                        FileContentOperator cipherFileContentOperator) {
-        KeyGenerator rsaKeyGenerator = new PublicRsaKeyGenerator();
+        KeyGen rsaKeyGen = new PublicRsaKeyGen();
         List<CipherProvider> encryptCipherProviders = List.of(
                 new EncryptedCipherProvider("RSA",
-                        () -> CipherContainerImpl.createFromFile(cipherFileSelector,
-                                cipherFileContentOperator, rsaKeyGenerator, "RSA")));
+                        () -> CipherExecutionerImpl.createFromFile(cipherFileSelector,
+                                cipherFileContentOperator, rsaKeyGen, "RSA")));
         return new JavaFXCipherSelector(encryptCipherProviders, errorHandlingLayer);
     }
 
     private CipherSelector createDecryptCipherSelector(ErrorHandlingLayer errorHandlingLayer,
                                                        FileSelector cipherFileSelector,
                                                        FileContentOperator cipherFileContentOperator) {
-        KeyGenerator rsaKeyGenerator = new PrivateRsaKeyGenerator();
+        KeyGen rsaKeyGen = new PrivateRsaKeyGen();
         List<CipherProvider> decryptCipherProviders = List.of(
                 new PlainCipherProvider("RSA",
-                        () -> CipherContainerImpl.createFromFile(cipherFileSelector,
-                                cipherFileContentOperator, rsaKeyGenerator, "RSA")));
+                        () -> CipherExecutionerImpl.createFromFile(cipherFileSelector,
+                                cipherFileContentOperator, rsaKeyGen, "RSA")));
         return new JavaFXCipherSelector(decryptCipherProviders, errorHandlingLayer);
     }
 
