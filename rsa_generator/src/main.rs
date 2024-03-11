@@ -2,9 +2,6 @@ extern crate openssl;
 
 use openssl::rsa::{Rsa};
 use openssl::symm::Cipher;
-use openssl::pkey::Private;
-use openssl::hash::{Hasher, MessageDigest};
-use std::hash::{DefaultHasher, Hash};
 use std::io::{self, Write};
 use std::fs::File;
 use std::path::Path;
@@ -13,7 +10,7 @@ fn main() {
     println!("Welcome to RSA Key Pair Generator!");
 
     // let key_length = get_input("Enter key length: ").parse::<u32>().unwrap();
-    ley key_length = 4096;
+    let key_length = 4096;
 
     let pin = get_input("Enter pin number: ");
 
@@ -27,8 +24,15 @@ fn main() {
 
     let private_key = rsa.private_key_to_pem_passphrase(Cipher::aes_128_cbc(),pin.as_bytes()).unwrap();
 
-    save_key(&public_key, &format!("{}/public_key.pem", path));
-    save_key(&private_key, &format!("{}/private_key.pem", path));
+    save_key(&public_key, &format!("{}/public_key.urk", path));
+    save_key(&private_key, &format!("{}/private_key.rrk", path));
+
+    let dev_flag = true;
+
+    if dev_flag {
+        let private_unhashed_key = rsa.private_key_to_pem().unwrap();
+        save_key(&private_unhashed_key, &format!("{}/private_key_unhashed.rrk", path));
+    }
 
     println!("RSA key pair generated successfully!");
 }
