@@ -5,6 +5,7 @@ use openssl::symm::Cipher;
 use std::io::{self, Write};
 use std::fs::File;
 use std::path::Path;
+use openssl::pkey::PKey;
 
 fn main() {
     println!("Welcome to RSA Key Pair Generator!");
@@ -22,16 +23,19 @@ fn main() {
 
     let public_key = rsa.public_key_to_pem().unwrap();
 
-    let private_key = rsa.private_key_to_pem_passphrase(Cipher::aes_128_cbc(),pin.as_bytes()).unwrap();
+    let private_key = rsa.private_key_to_pem().unwrap();
+    let pkey = PKey::private_key_from_pem(&private_key).unwrap();
 
-    save_key(&public_key, &format!("{}/public_key.urk", path));
-    save_key(&private_key, &format!("{}/private_key.rrk", path));
+    let private_key = pkey.private_key_to_pkcs8_passphrase(Cipher::aes_128_cbc(),pin.as_bytes()).unwrap();
+
+    save_key(&public_key, &format!("{}/public_key.txt", path));
+    save_key(&private_key, &format!("{}/private_key.txt", path));
 
     let dev_flag = true;
 
     if dev_flag {
-        let private_unhashed_key = rsa.private_key_to_pem().unwrap();
-        save_key(&private_unhashed_key, &format!("{}/private_key_unhashed.rrk", path));
+        let private_key_pkcs8 = pkey.private_key_to_pem_pkcs8().unwrap();
+        save_key(&private_key_pkcs8, &format!("{}/private_key_unhashed.txt", path));
     }
 
     println!("RSA key pair generated successfully!");
