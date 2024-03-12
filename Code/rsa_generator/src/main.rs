@@ -1,7 +1,7 @@
 extern crate openssl;
 
 use openssl::rsa::{Rsa};
-use openssl::symm::Cipher;
+use openssl::symm::{Cipher};
 use std::io::{self, Write};
 use std::fs::File;
 use std::path::Path;
@@ -26,7 +26,10 @@ fn main() {
     let private_key = rsa.private_key_to_pem().unwrap();
     let pkey = PKey::private_key_from_pem(&private_key).unwrap();
 
-    let private_key = pkey.private_key_to_pkcs8_passphrase(Cipher::aes_128_cbc(),pin.as_bytes()).unwrap();
+    let cipher = Cipher::aes_128_ecb();
+
+    //TODO: hash it on own way
+    let private_key = pkey.private_key_to_pem_pkcs8_passphrase(cipher, pin.as_bytes()).unwrap();
 
     save_key(&public_key, &format!("{}/public_key.txt", path));
     save_key(&private_key, &format!("{}/private_key.txt", path));
