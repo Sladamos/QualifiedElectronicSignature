@@ -20,8 +20,6 @@ public class Main {
         KeyPair keyPair = generateRSAKeyPair(keyLength);
         PublicKey publicKey = keyPair.getPublic();
         PrivateKey privateKey = keyPair.getPrivate();
-        System.out.println(publicKey.getEncoded().length);
-        System.out.println(privateKey.getEncoded().length);
         byte[] hashedPin = hashSHA256(pin.getBytes());
 
         savePEMKey(keyTo64(publicKey.getEncoded()), path + "/public_key.txt");
