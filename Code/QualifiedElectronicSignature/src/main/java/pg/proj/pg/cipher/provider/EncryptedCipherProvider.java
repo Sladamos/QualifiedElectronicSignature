@@ -21,7 +21,7 @@ public class EncryptedCipherProvider implements CipherProvider {
         //TODO ask for password and modify keyStr
         CipherInfo cipherInfo = cipherInfoSupplier.get();
         return new CipherExecutionerImpl(new CipherInfo(cipherInfo.cipher(),
-                cipherInfo.keyGen(), cipherInfo.keyStr(), cipherInfo.cipherType()));
+                cipherInfo.keyGen(), cipherInfo.keyInfo(), cipherInfo.cipherType()));
     }
 
 }
