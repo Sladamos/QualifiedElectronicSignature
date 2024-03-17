@@ -21,8 +21,6 @@ public class EncryptedCipherProvider implements CipherProvider {
     @Getter
     private final String uniqueName;
 
-    private final CipherExecutioner passwordDecryptorInfo;
-
     private final Supplier<CipherInfo> cipherInfoSupplier;
 
     @Override
@@ -33,23 +31,18 @@ public class EncryptedCipherProvider implements CipherProvider {
         // then i will pass pinHash as keyContent and create new executioner to decrypt key
 
         //it all should be done in separate class fe. passwordDecryptor
-        byte[] hashedPin = hashPassword(pin);
+        //byte[] hashedPin = hashPassword(pin);
         CipherInfo cipherInfo = cipherInfoSupplier.get();
         try {
             byte[] hashedKey = cipherInfo.keyInfo().keyContent();
-            byte[] unhashedKey = cipherDecryptor.decrypt(hashedKey); //TODO: passPinToDecryptor
+           // byte[] unhashedKey = cipherDecryptor.decrypt(hashedKey); //TODO: passPinToDecryptor
+            byte[] unhashedKey = new byte[0];
             KeyInfo unhashedKeyInfo = new KeyInfoImpl(unhashedKey);
         return new CipherExecutionerImpl(new CipherInfo(cipherInfo.cipher(),
                 cipherInfo.keyGen(), unhashedKeyInfo, cipherInfo.cipherType()));
         } catch (Exception e) {
             throw new BasicAppError("Cannot decrypt key: " + e.getMessage());
         }
-    }
-
-    @SneakyThrows
-    private byte[] hashPassword(String password) {
-        MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        return digest.digest(password.getBytes());
     }
 
 }
