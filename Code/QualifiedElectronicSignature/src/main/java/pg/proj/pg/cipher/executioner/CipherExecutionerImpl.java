@@ -38,8 +38,7 @@ public class CipherExecutionerImpl implements CipherExecutioner {
     }
 
     private void launchCipherInMode(int cipherMode) {
-        byte[] keyContent = cipherInfo.keyInfo().keyContent();
-        byte[] keyBytes = Base64.getDecoder().decode(keyContent);
+        byte[] keyBytes = cipherInfo.keyInfo().keyContent();
         KeyGen keyGen = cipherInfo.keyGen();
         String cipherType = cipherInfo.cipherType();
         Cipher cipher = cipherInfo.cipher();

@@ -7,7 +7,6 @@ import pg.proj.pg.cipher.executioner.CipherExecutionerImpl;
 import pg.proj.pg.cipher.info.CipherInfo;
 import pg.proj.pg.cipher.unlocker.CipherInfoUnlocker;
 import pg.proj.pg.error.definition.BasicAppError;
-import pg.proj.pg.key.info.KeyInfoImpl;
 import pg.proj.pg.password.info.PasswordInfo;
 
 import java.util.function.Supplier;
@@ -24,11 +23,9 @@ public class EncryptedCipherProvider implements CipherProvider {
 
     @Override
     public CipherExecutioner getCipher() {
-        PasswordInfo password = new PasswordInfo("4554");
+        PasswordInfo password = new PasswordInfo("4554"); //TODO: ask for pin
         CipherInfo cipherInfo = cipherInfoSupplier.get();
         CipherInfo unlockedCipherInfo = cipherInfoUnlocker.unlock(cipherInfo, password);
-        //TODO:
-        // ask for pin
         try {
             return new CipherExecutionerImpl(unlockedCipherInfo);
         } catch (Exception e) {

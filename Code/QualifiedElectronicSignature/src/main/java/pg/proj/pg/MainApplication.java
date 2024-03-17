@@ -35,16 +35,14 @@ import pg.proj.pg.file.selector.JavaFXFileSelector;
 import pg.proj.pg.key.generator.SecretKeyGen;
 import pg.proj.pg.key.info.KeyInfo;
 import pg.proj.pg.key.unlocker.KeyInfoUnlocker;
-import pg.proj.pg.key.unlocker.KeyInfoUnlockerImpl;
+import pg.proj.pg.key.unlocker.RsaKeyInfoUnlocker;
 import pg.proj.pg.plug.CryptorPlug;
 import pg.proj.pg.plug.CryptorPlugImpl;
 
-import javax.crypto.Cipher;
-import javax.crypto.NoSuchPaddingException;
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Supplier;
 
 public class MainApplication extends Application {
 
@@ -107,32 +105,40 @@ public class MainApplication extends Application {
         return new SmallFilesDecryptor(contentOperator);
     }
 
-    private CipherSelector createEncryptCipherSelector(ErrorHandlingLayer errorHandlingLayer,
-                                                       FileSelector cipherFileSelector,
-                                                       FileContentOperator cipherFileContentOperator) {
-        KeyGen rsaKeyGen = new PublicRsaKeyGen();
-        List<CipherProvider> encryptCipherProviders = List.of(
-                new EncryptedCipherProvider("RSA",
-                        () -> CipherInfo.createFromFile(cipherFileSelector,
-                                cipherFileContentOperator, rsaKeyGen, "RSA")));
-        return new JavaFXCipherSelector(encryptCipherProviders, errorHandlingLayer);
-    }
-
     private CipherSelector createDecryptCipherSelector(ErrorHandlingLayer errorHandlingLayer,
                                                        FileSelector cipherFileSelector,
                                                        FileContentOperator cipherFileContentOperator) {
         KeyGen rsaKeyGen = new PrivateRsaKeyGen();
-        List<CipherProvider> decryptCipherProviders = List.of(
-                new PlainCipherProvider("RSA",
-                        () -> CipherInfo.createFromFile(cipherFileSelector,
-                                cipherFileContentOperator, rsaKeyGen, "RSA")));
+        Supplier<CipherInfo> encryptedCipherInfoSupplier = () -> CipherInfo.createFromBinaryFile(cipherFileSelector,
+                cipherFileContentOperator, rsaKeyGen, "RSA");
+        CipherInfoUnlocker unlocker = createCipherInfoUnlocker();
+        CipherProvider encryptedRsaProvider = new EncryptedCipherProvider("EncRSA",
+                unlocker, encryptedCipherInfoSupplier);
+
+        Supplier<CipherInfo> rawCipherInfoSupplier = () -> CipherInfo.createFromPEMFile(cipherFileSelector,
+                cipherFileContentOperator, rsaKeyGen, "RSA");
+        CipherProvider rawRsaProvider = new PlainCipherProvider("PlainRSA",
+                rawCipherInfoSupplier);
+
+        List<CipherProvider> encryptCipherProviders = List.of(encryptedRsaProvider, rawRsaProvider);
+        return new JavaFXCipherSelector(encryptCipherProviders, errorHandlingLayer);
+    }
+
+    private CipherSelector createEncryptCipherSelector(ErrorHandlingLayer errorHandlingLayer,
+                                                       FileSelector cipherFileSelector,
+                                                       FileContentOperator cipherFileContentOperator) {
+        KeyGen rsaKeyGen = new PublicRsaKeyGen();
+        Supplier<CipherInfo> cipherInfoSupplier = () -> CipherInfo.createFromPEMFile(cipherFileSelector,
+                cipherFileContentOperator, rsaKeyGen, "RSA");
+        CipherProvider plainRsaProvider = new PlainCipherProvider("RSA", cipherInfoSupplier);
+        List<CipherProvider> decryptCipherProviders = List.of(plainRsaProvider);
         return new JavaFXCipherSelector(decryptCipherProviders, errorHandlingLayer);
     }
 
     private CipherInfoUnlocker createCipherInfoUnlocker() {
         Hasher hasher = new Sha256Hasher();
         DataUnlocker dataUnlocker = new HashedDataUnlocker(hasher, this::createAesDecryptor);
-        KeyInfoUnlocker keyInfoUnlocker = new KeyInfoUnlockerImpl(dataUnlocker);
+        KeyInfoUnlocker keyInfoUnlocker = new RsaKeyInfoUnlocker(dataUnlocker);
         return new CipherInfoUnlockerImpl(keyInfoUnlocker);
     }
 
