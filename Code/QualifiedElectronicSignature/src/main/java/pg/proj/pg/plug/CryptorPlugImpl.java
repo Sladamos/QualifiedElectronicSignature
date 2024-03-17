@@ -3,10 +3,10 @@ package pg.proj.pg.plug;
 import lombok.AllArgsConstructor;
 import pg.proj.pg.cipher.provider.CipherProvider;
 import pg.proj.pg.cipher.selector.CipherSelector;
-import pg.proj.pg.crypto.container.CryptoInformationContainer;
-import pg.proj.pg.crypto.container.CryptoInformationContainerImpl;
-import pg.proj.pg.crypto.decryptor.FileDecryptor;
-import pg.proj.pg.crypto.encryptor.FileEncryptor;
+import pg.proj.pg.file.cryptography.container.FileCryptoInformationContainer;
+import pg.proj.pg.file.cryptography.container.FileCryptoInformationContainerImpl;
+import pg.proj.pg.file.cryptography.decryptor.FileDecryptor;
+import pg.proj.pg.file.cryptography.encryptor.FileEncryptor;
 import pg.proj.pg.file.extension.FileExtension;
 import pg.proj.pg.file.info.FileInfo;
 import pg.proj.pg.file.provider.FileProvider;
@@ -36,7 +36,7 @@ public class CryptorPlugImpl implements CryptorPlug {
         FileProvider sourceFileProvider = encryptFileSelector.selectFile();
         CipherProvider encryptCipherProvider = encryptCipherSelector.selectCipher();
         FileProvider destinationFileProvider = createFileProviderFromSource(sourceFileProvider, FileExtension.CYP, "enc");
-        CryptoInformationContainer informationContainer = new CryptoInformationContainerImpl(sourceFileProvider,
+        FileCryptoInformationContainer informationContainer = new FileCryptoInformationContainerImpl(sourceFileProvider,
                 destinationFileProvider, encryptCipherProvider);
         encryptor.encryptFile(informationContainer);
     }
@@ -46,7 +46,7 @@ public class CryptorPlugImpl implements CryptorPlug {
         FileProvider sourceFileProvider = decryptFileSelector.selectFile();
         CipherProvider decryptCipherProvider = decryptCipherSelector.selectCipher();
         FileProvider destinationFileProvider = createFileProviderFromSource(sourceFileProvider, FileExtension.TXT, "dec");
-        CryptoInformationContainer informationContainer = new CryptoInformationContainerImpl(sourceFileProvider,
+        FileCryptoInformationContainer informationContainer = new FileCryptoInformationContainerImpl(sourceFileProvider,
                 destinationFileProvider, decryptCipherProvider);
         decryptor.decryptFile(informationContainer);
         //TODO: add necessary communicates
