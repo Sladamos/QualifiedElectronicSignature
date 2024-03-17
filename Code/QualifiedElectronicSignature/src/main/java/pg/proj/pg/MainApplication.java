@@ -49,6 +49,7 @@ public class MainApplication extends Application {
 
     //TODO: add communicates, change cipherType to enum, try to change keyGen + content to one container
     // try to do same with cipherType + cipher
+    // try to limit access to private key file (external storage)
 
     @Override
     public void start(Stage stage) throws IOException {
