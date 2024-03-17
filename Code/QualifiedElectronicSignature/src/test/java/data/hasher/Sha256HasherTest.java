@@ -1,4 +1,4 @@
-package password.hasher;
+package data.hasher;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

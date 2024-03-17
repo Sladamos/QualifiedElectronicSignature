@@ -4,6 +4,14 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import pg.proj.pg.cipher.executioner.CipherExecutioner;
+import pg.proj.pg.cipher.executioner.CipherExecutionerImpl;
+import pg.proj.pg.cipher.unlocker.CipherInfoUnlocker;
+import pg.proj.pg.cipher.unlocker.CipherInfoUnlockerImpl;
+import pg.proj.pg.data.hasher.Hasher;
+import pg.proj.pg.data.hasher.Sha256Hasher;
+import pg.proj.pg.data.unlocker.DataUnlocker;
+import pg.proj.pg.data.unlocker.HashedDataUnlocker;
 import pg.proj.pg.key.generator.KeyGen;
 import pg.proj.pg.key.generator.PrivateRsaKeyGen;
 import pg.proj.pg.key.generator.PublicRsaKeyGen;
@@ -24,14 +32,24 @@ import pg.proj.pg.file.operator.FileContentOperator;
 import pg.proj.pg.file.operator.SmallFilesContentOperator;
 import pg.proj.pg.file.selector.FileSelector;
 import pg.proj.pg.file.selector.JavaFXFileSelector;
+import pg.proj.pg.key.generator.SecretKeyGen;
+import pg.proj.pg.key.info.KeyInfo;
+import pg.proj.pg.key.unlocker.KeyInfoUnlocker;
+import pg.proj.pg.key.unlocker.KeyInfoUnlockerImpl;
 import pg.proj.pg.plug.CryptorPlug;
 import pg.proj.pg.plug.CryptorPlugImpl;
 
+import javax.crypto.Cipher;
+import javax.crypto.NoSuchPaddingException;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Set;
 
 public class MainApplication extends Application {
+
+    //TODO: add communicates, change cipherType to enum, try to change keyGen + content to one container
+    // try to do same with cipherType + cipher
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -109,6 +127,22 @@ public class MainApplication extends Application {
                         () -> CipherInfo.createFromFile(cipherFileSelector,
                                 cipherFileContentOperator, rsaKeyGen, "RSA")));
         return new JavaFXCipherSelector(decryptCipherProviders, errorHandlingLayer);
+    }
+
+    private CipherInfoUnlocker createCipherInfoUnlocker() {
+        Hasher hasher = new Sha256Hasher();
+        DataUnlocker dataUnlocker = new HashedDataUnlocker(hasher, this::createAesDecryptor);
+        KeyInfoUnlocker keyInfoUnlocker = new KeyInfoUnlockerImpl(dataUnlocker);
+        return new CipherInfoUnlockerImpl(keyInfoUnlocker);
+    }
+
+    private CipherExecutioner createAesDecryptor(KeyInfo keyInfo)  {
+        String cipherType = "AES/ECB/PKCS5Padding";
+        String algorithmType = "AES";
+        KeyGen keyGen = new SecretKeyGen();
+        CipherInfo cipherInfo = CipherInfo.createFromProvidedKey(keyGen, keyInfo,
+                cipherType, algorithmType);
+        return new CipherExecutionerImpl(cipherInfo);
     }
 
     public static void main(String[] args) {

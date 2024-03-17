@@ -15,7 +15,9 @@ import java.security.NoSuchAlgorithmException;
 
 public record CipherInfo(Cipher cipher, KeyGen keyGen, KeyInfo keyInfo, String cipherType) {
 
-    public static CipherInfo createFromFile(FileSelector fileSelector, FileContentOperator fileContentOperator, KeyGen keyGen, String cipherType) {
+    public static CipherInfo createFromFile(FileSelector fileSelector,
+                                            FileContentOperator fileContentOperator,
+                                            KeyGen keyGen, String cipherType) {
         try {
             FileProvider provider = fileSelector.selectFile();
             FileInfo fileInfo = provider.getFileInfo();
@@ -23,6 +25,16 @@ public record CipherInfo(Cipher cipher, KeyGen keyGen, KeyInfo keyInfo, String c
             KeyInfo keyInfo = new KeyInfoImpl(keyBytes);
             Cipher cipher = Cipher.getInstance(cipherType);
             return new CipherInfo(cipher, keyGen, keyInfo, cipherType);
+        } catch (NoSuchPaddingException | NoSuchAlgorithmException e) {
+            throw new CriticalAppError("Unable to get all necessary cipher information");
+        }
+    }
+
+    public static CipherInfo createFromProvidedKey(KeyGen keyGen, KeyInfo keyInfo,
+                                                   String cipherType, String algorithmType) {
+        try {
+            Cipher cipher = Cipher.getInstance(cipherType);
+            return new CipherInfo(cipher, keyGen, keyInfo, algorithmType);
         } catch (NoSuchPaddingException | NoSuchAlgorithmException e) {
             throw new CriticalAppError("Unable to get all necessary cipher information");
         }
