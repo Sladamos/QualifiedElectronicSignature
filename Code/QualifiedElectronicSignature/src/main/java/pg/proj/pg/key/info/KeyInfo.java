@@ -1,5 +1,4 @@
 package pg.proj.pg.key.info;
 
-public interface KeyInfo {
-    byte[] keyContent();
+public record KeyInfo(byte[] keyContent) {
 }

@@ -1,9 +1,9 @@
-package utils.hasher;
+package password.hasher;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import pg.proj.pg.utils.hasher.Hasher;
-import pg.proj.pg.utils.hasher.Sha256Hasher;
+import pg.proj.pg.data.hasher.Hasher;
+import pg.proj.pg.data.hasher.Sha256Hasher;
 
 import static org.assertj.core.api.Assertions.*;
 
