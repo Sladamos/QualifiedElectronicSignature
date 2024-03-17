@@ -19,9 +19,8 @@ public record CipherInfo(Cipher cipher, KeyGen keyGen, KeyInfo keyInfo, String c
         try {
             FileProvider provider = fileSelector.selectFile();
             FileInfo fileInfo = provider.getFileInfo();
-            String keyStr = fileContentOperator.loadStrFileContent(fileInfo)
-                    .replace(System.lineSeparator(), "");
-            KeyInfo keyInfo = new KeyInfoImpl(keyStr.getBytes());
+            byte[] keyBytes = fileContentOperator.loadByteFileContent(fileInfo);
+            KeyInfo keyInfo = new KeyInfoImpl(keyBytes);
             Cipher cipher = Cipher.getInstance(cipherType);
             return new CipherInfo(cipher, keyGen, keyInfo, cipherType);
         } catch (NoSuchPaddingException | NoSuchAlgorithmException e) {
