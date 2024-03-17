@@ -36,6 +36,7 @@ import pg.proj.pg.key.generator.SecretKeyGen;
 import pg.proj.pg.key.info.KeyInfo;
 import pg.proj.pg.key.unlocker.KeyInfoUnlocker;
 import pg.proj.pg.key.unlocker.RsaKeyInfoUnlocker;
+import pg.proj.pg.password.selector.JavaFXPasswordSelector;
 import pg.proj.pg.plug.CryptorPlug;
 import pg.proj.pg.plug.CryptorPlugImpl;
 
@@ -112,8 +113,9 @@ public class MainApplication extends Application {
         Supplier<CipherInfo> encryptedCipherInfoSupplier = () -> CipherInfo.createFromBinaryFile(cipherFileSelector,
                 cipherFileContentOperator, rsaKeyGen, "RSA");
         CipherInfoUnlocker unlocker = createCipherInfoUnlocker();
+        JavaFXPasswordSelector passwordSelector = new JavaFXPasswordSelector(errorHandlingLayer);
         CipherProvider encryptedRsaProvider = new EncryptedCipherProvider("EncRSA",
-                unlocker, encryptedCipherInfoSupplier);
+                unlocker, passwordSelector, encryptedCipherInfoSupplier);
 
         Supplier<CipherInfo> rawCipherInfoSupplier = () -> CipherInfo.createFromPEMFile(cipherFileSelector,
                 cipherFileContentOperator, rsaKeyGen, "RSA");

@@ -23,7 +23,6 @@ public class SmallFilesContentOperator implements FileContentOperator {
     @Override
     public byte[] loadByteFileContent(FileInfo sourceFile) {
         try {
-
             return Files.readAllBytes(Paths.get(sourceFile.canonicalPath()));
         } catch (IOException e) {
             throw new CriticalAppError("Unable to read file");
