@@ -62,7 +62,6 @@ public class MainApplication extends Application {
     }
 
     private void initializeVariables(MainController controller, Stage stage) {
-        ;
         MainReceiver receiver = createMainReceiver(controller);
         ErrorHandlingLayer errorHandlingLayer = createErrorHandlingLayer(receiver);
         CryptorPlug cryptorPlug = createCryptorPlug(stage, errorHandlingLayer);
