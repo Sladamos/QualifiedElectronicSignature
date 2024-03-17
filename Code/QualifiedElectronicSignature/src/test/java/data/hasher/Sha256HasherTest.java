@@ -18,37 +18,37 @@ public class Sha256HasherTest {
 
     @Test
     public void should_return32LengthArr_when_EmptyStrPassed() {
-        byte[] result = hasher.hashStr("");
+        byte[] result = hasher.hash("".getBytes());
         assertThat(result.length).isEqualTo(32);
     }
 
     @Test
     public void should_return32LengthArr_when_OneLetterPassed() {
-        byte[] result = hasher.hashStr("x");
+        byte[] result = hasher.hash("x".getBytes());
         assertThat(result.length).isEqualTo(32);
     }
 
     @Test
     public void should_return32LengthArr_when_OneDigitPassed() {
-        byte[] result = hasher.hashStr("9");
+        byte[] result = hasher.hash("9".getBytes());
         assertThat(result.length).isEqualTo(32);
     }
 
     @Test
     public void should_return32LengthArr_when_MultipleCharsPassed() {
-        byte[] result = hasher.hashStr("abc");
+        byte[] result = hasher.hash("abc".getBytes());
         assertThat(result.length).isEqualTo(32);
     }
 
     @Test
     public void should_return32LengthArr_when_MultipleDigitsPassed() {
-        byte[] result = hasher.hashStr("1234");
+        byte[] result = hasher.hash("1234".getBytes());
         assertThat(result.length).isEqualTo(32);
     }
 
     @Test
     public void should_return32LengthArr_when_CombinedDigitsAndCharsPassed() {
-        byte[] result = hasher.hashStr("1234abc4321");
+        byte[] result = hasher.hash("1234abc4321".getBytes());
         assertThat(result.length).isEqualTo(32);
     }
 }
