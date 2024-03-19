@@ -1,4 +1,4 @@
-package pg.proj.pg.crypto.container;
+package pg.proj.pg.file.cryptography.container;
 
 import lombok.AllArgsConstructor;
 import pg.proj.pg.cipher.executioner.CipherExecutioner;
@@ -7,7 +7,7 @@ import pg.proj.pg.file.info.FileInfo;
 import pg.proj.pg.file.provider.FileProvider;
 
 @AllArgsConstructor
-public class CryptoInformationContainerImpl implements CryptoInformationContainer {
+public class FileCryptoInformationContainerImpl implements FileCryptoInformationContainer {
 
     private final FileProvider sourceFileProvider;
 

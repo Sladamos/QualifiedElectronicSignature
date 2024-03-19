@@ -1,4 +1,4 @@
-package pg.proj.pg.cipher.generator;
+package pg.proj.pg.key.generator;
 
 import pg.proj.pg.error.definition.BasicAppError;
 
@@ -6,17 +6,17 @@ import java.security.Key;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.security.spec.X509EncodedKeySpec;
+import java.security.spec.PKCS8EncodedKeySpec;
 
-public class PublicRsaKeyGen implements KeyGen {
+public class PrivateRsaKeyGen implements KeyGen {
     @Override
     public Key generateKey(byte[] bytes, String cipherType) {
-        X509EncodedKeySpec spec = new X509EncodedKeySpec(bytes);
+        PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(bytes);
         try {
             KeyFactory kf = KeyFactory.getInstance(cipherType);
-            return kf.generatePublic(spec);
+            return kf.generatePrivate(spec);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            throw new BasicAppError("Unable to create public RSA key");
+            throw new BasicAppError("Unable to create private RSA key");
         }
     }
 }

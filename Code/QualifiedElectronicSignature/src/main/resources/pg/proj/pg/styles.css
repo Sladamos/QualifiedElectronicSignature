@@ -62,3 +62,16 @@
     -fx-background-color: #0a3f94;
     -fx-text-fill: white;
 }
+.password-field {
+    -fx-background-color: #f2f2f2;
+    -fx-border-color: #b3b1b1;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-prompt-text-fill: #b3b1b1;
+    -fx-padding: 10px;
+    -fx-font-size: 14px;
+}
+
+.password-field:focused {
+    -fx-border-color: #0a3f94;
+}

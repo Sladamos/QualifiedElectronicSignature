@@ -10,7 +10,7 @@ import pg.proj.pg.file.provider.FileProviderImpl;
 
 import static org.assertj.core.api.Assertions.*;
 
-public class FileProviderTest {
+public class FileProviderImplTest {
 
     public FileInfo fileInfoMock;
 

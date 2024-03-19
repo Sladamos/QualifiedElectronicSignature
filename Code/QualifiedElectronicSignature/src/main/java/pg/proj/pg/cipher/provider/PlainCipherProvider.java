@@ -20,6 +20,6 @@ public class PlainCipherProvider implements CipherProvider {
     public CipherExecutioner getCipher() {
         CipherInfo cipherInfo = cipherInfoSupplier.get();
         return new CipherExecutionerImpl(new CipherInfo(cipherInfo.cipher(),
-                cipherInfo.keyGen(), cipherInfo.keyStr(), cipherInfo.cipherType()));
+                cipherInfo.keyGen(), cipherInfo.keyInfo(), cipherInfo.cipherType()));
     }
 }

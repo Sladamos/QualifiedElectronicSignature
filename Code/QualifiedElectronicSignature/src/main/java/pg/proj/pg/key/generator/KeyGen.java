@@ -1,4 +1,4 @@
-package pg.proj.pg.cipher.generator;
+package pg.proj.pg.key.generator;
 
 import java.security.Key;
 

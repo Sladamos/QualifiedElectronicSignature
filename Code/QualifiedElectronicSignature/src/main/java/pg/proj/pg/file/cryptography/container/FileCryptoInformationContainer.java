@@ -1,9 +1,9 @@
-package pg.proj.pg.crypto.container;
+package pg.proj.pg.file.cryptography.container;
 
 import pg.proj.pg.cipher.executioner.CipherExecutioner;
 import pg.proj.pg.file.info.FileInfo;
 
-public interface CryptoInformationContainer {
+public interface FileCryptoInformationContainer {
 
     FileInfo getSourceFileInfo();
 

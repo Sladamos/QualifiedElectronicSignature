@@ -1,20 +1,13 @@
 package pg.proj.pg.cipher.executioner;
 
 import lombok.AllArgsConstructor;
-import pg.proj.pg.cipher.generator.KeyGen;
+import pg.proj.pg.key.generator.KeyGen;
 import pg.proj.pg.cipher.info.CipherInfo;
 import pg.proj.pg.error.definition.BasicAppError;
-import pg.proj.pg.error.definition.CriticalAppError;
-import pg.proj.pg.file.info.FileInfo;
-import pg.proj.pg.file.operator.FileContentOperator;
-import pg.proj.pg.file.provider.FileProvider;
-import pg.proj.pg.file.selector.FileSelector;
 
 import javax.crypto.Cipher;
-import javax.crypto.NoSuchPaddingException;
 import java.security.InvalidKeyException;
 import java.security.Key;
-import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
 @AllArgsConstructor
@@ -45,8 +38,7 @@ public class CipherExecutionerImpl implements CipherExecutioner {
     }
 
     private void launchCipherInMode(int cipherMode) {
-        String keyStr = cipherInfo.keyStr();
-        byte[] keyBytes = Base64.getDecoder().decode(keyStr.getBytes());
+        byte[] keyBytes = cipherInfo.keyInfo().keyContent();
         KeyGen keyGen = cipherInfo.keyGen();
         String cipherType = cipherInfo.cipherType();
         Cipher cipher = cipherInfo.cipher();
