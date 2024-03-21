@@ -10,6 +10,8 @@ module pg.proj.pg {
     exports pg.proj.pg;
     exports pg.proj.pg.error.receiver.api;
     exports pg.proj.pg.error.definition;
+    exports pg.proj.pg.communicate.receiver.api;
+    exports pg.proj.pg.communicate.definition;
     opens pg.proj.pg to javafx.fxml;
     opens pg.proj.pg.cipher.selector to javafx.fxml;
     opens pg.proj.pg.password.selector to javafx.fxml;

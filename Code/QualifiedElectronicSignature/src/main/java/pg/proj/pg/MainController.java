@@ -6,7 +6,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import lombok.Setter;
-import pg.proj.pg.communicate.receiver.api.CommunicateReceiver;
 import pg.proj.pg.error.layer.ErrorHandlingLayer;
 import pg.proj.pg.plug.CryptorPlug;
 
