@@ -1,6 +1,7 @@
 package pg.proj.pg.cipher.info;
 
 import pg.proj.pg.cipher.type.CipherType;
+import pg.proj.pg.error.definition.BasicAppError;
 import pg.proj.pg.key.generator.KeyGen;
 import pg.proj.pg.error.definition.CriticalAppError;
 import pg.proj.pg.file.info.FileInfo;
@@ -27,17 +28,21 @@ public record CipherInfo(Cipher cipher, KeyGen keyGen, KeyInfo keyInfo, CipherTy
             Cipher cipher = Cipher.getInstance(cipherType.getStrValue());
             return new CipherInfo(cipher, keyGen, keyInfo, cipherType);
         } catch (NoSuchPaddingException | NoSuchAlgorithmException e) {
-            throw new CriticalAppError("Unable to get all necessary cipher information");
+            throw new BasicAppError("Unable to get all necessary cipher information");
         }
     }
 
     public static CipherInfo createFromPEMFile(FileSelector fileSelector,
                                             FileContentOperator fileContentOperator,
                                             KeyGen keyGen, CipherType cipherType) {
-        CipherInfo cipherInfo = createFromBinaryFile(fileSelector, fileContentOperator, keyGen, cipherType);
-        byte[] decodedKeyBytes = Base64.getDecoder().decode(cipherInfo.keyInfo.keyContent());
-        KeyInfo keyInfo = new KeyInfo(decodedKeyBytes);
-        return new CipherInfo(cipherInfo.cipher, cipherInfo.keyGen, keyInfo, cipherInfo.cipherType);
+        try {
+            CipherInfo cipherInfo = createFromBinaryFile(fileSelector, fileContentOperator, keyGen, cipherType);
+            byte[] decodedKeyBytes = Base64.getDecoder().decode(cipherInfo.keyInfo.keyContent());
+            KeyInfo keyInfo = new KeyInfo(decodedKeyBytes);
+            return new CipherInfo(cipherInfo.cipher, cipherInfo.keyGen, keyInfo, cipherInfo.cipherType);
+        } catch (IllegalArgumentException e) {
+            throw new BasicAppError("Unable to get all necessary cipher information");
+        }
     }
 
     public static CipherInfo createFromProvidedKey(KeyGen keyGen, KeyInfo keyInfo, CipherType cipherType) {

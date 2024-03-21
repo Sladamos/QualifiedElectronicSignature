@@ -71,7 +71,7 @@ public class MainApplication extends Application {
     private void initializeVariables(MainController controller, Stage stage) {
         MainReceiver receiver = createMainReceiver(controller);
         ErrorHandlingLayer errorHandlingLayer = createErrorHandlingLayer(receiver);
-        CryptorPlug cryptorPlug = createCryptorPlug(stage, errorHandlingLayer);
+        CryptorPlug cryptorPlug = createCryptorPlug(stage, errorHandlingLayer, receiver);
         controller.setErrorHandlingLayer(errorHandlingLayer);
         controller.setCryptorPlug(cryptorPlug);
     }
@@ -88,7 +88,7 @@ public class MainApplication extends Application {
         return errorHandlingLayer;
     }
 
-    private CryptorPlug createCryptorPlug(Stage stage, ErrorHandlingLayer errorHandlingLayer) {
+    private CryptorPlug createCryptorPlug(Stage stage, ErrorHandlingLayer errorHandlingLayer, MainReceiver receiver) {
         FileSelector encryptFileSelector = new JavaFXFileSelector(stage, "Select source file", Set.of(FileExtension.CPP, FileExtension.TXT));
         FileSelector decryptFileSelector = new JavaFXFileSelector(stage, "Select source file", Set.of(FileExtension.CYP));
         FileSelector cipherFileSelector = new JavaFXFileSelector(stage, "Select key file", Set.of(FileExtension.TXT));
@@ -99,8 +99,10 @@ public class MainApplication extends Application {
                 cipherFileSelector, cipherFileContentOperator);
         FileEncryptor encryptor = createEncryptor();
         FileDecryptor decryptor = createDecryptor();
-        return new CryptorPlugImpl(encryptFileSelector, decryptFileSelector, encryptCipherSelector,
+        CryptorPlug cryptorPlug = new CryptorPlugImpl(encryptFileSelector, decryptFileSelector, encryptCipherSelector,
                 decryptCipherSelector, encryptor, decryptor);
+        cryptorPlug.registerCommunicatesReceiver(receiver);
+        return cryptorPlug;
     }
 
     private FileEncryptor createEncryptor() {

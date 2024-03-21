@@ -34,6 +34,7 @@ public class MainController {
         alert.setHeaderText(null);
         alert.setContentText(reason);
         ButtonType buttonTypeOk = new ButtonType("OK");
+        communicateLabel.setText("");
         alert.getButtonTypes().setAll(buttonTypeOk);
         alert.showAndWait();
     }
