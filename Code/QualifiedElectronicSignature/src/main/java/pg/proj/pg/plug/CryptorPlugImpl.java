@@ -33,8 +33,8 @@ public class CryptorPlugImpl implements CryptorPlug {
 
     @Override
     public void onEncryptCalled() {
-        CipherProvider encryptCipherProvider = encryptCipherSelector.selectCipher();
         FileProvider sourceFileProvider = encryptFileSelector.selectFile();
+        CipherProvider encryptCipherProvider = encryptCipherSelector.selectCipher();
         FileProvider destinationFileProvider = createFileProviderFromSource(sourceFileProvider, FileExtension.CYP, "enc");
         FileCryptoInformationContainer informationContainer = new FileCryptoInformationContainerImpl(sourceFileProvider,
                 destinationFileProvider, encryptCipherProvider);
@@ -43,8 +43,8 @@ public class CryptorPlugImpl implements CryptorPlug {
 
     @Override
     public void onDecryptCalled() {
-        CipherProvider decryptCipherProvider = decryptCipherSelector.selectCipher();
         FileProvider sourceFileProvider = decryptFileSelector.selectFile();
+        CipherProvider decryptCipherProvider = decryptCipherSelector.selectCipher();
         FileProvider destinationFileProvider = createFileProviderFromSource(sourceFileProvider, FileExtension.TXT, "dec");
         FileCryptoInformationContainer informationContainer = new FileCryptoInformationContainerImpl(sourceFileProvider,
                 destinationFileProvider, decryptCipherProvider);
