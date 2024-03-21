@@ -41,7 +41,7 @@ public class CryptorPlugImpl implements CryptorPlug {
     public void onEncryptCalled() {
         sendCommunicate("Select file to encrypt");
         FileProvider sourceFileProvider = encryptFileSelector.selectFile();
-        sendCommunicate("Select cipher type");
+        sendCommunicate("Select cipher");
         CipherProvider encryptCipherProvider = encryptCipherSelector.selectCipher();
         FileProvider destinationFileProvider = createFileProviderFromSource(sourceFileProvider, FileExtension.CYP, "enc");
         FileCryptoInformationContainer informationContainer = new FileCryptoInformationContainerImpl(sourceFileProvider,
@@ -54,7 +54,7 @@ public class CryptorPlugImpl implements CryptorPlug {
     public void onDecryptCalled() {
         sendCommunicate("Select file to decrypt");
         FileProvider sourceFileProvider = decryptFileSelector.selectFile();
-        sendCommunicate("Select cipher type");
+        sendCommunicate("Select cipher");
         CipherProvider decryptCipherProvider = decryptCipherSelector.selectCipher();
         FileProvider destinationFileProvider = createFileProviderFromSource(sourceFileProvider, FileExtension.TXT, "dec");
         FileCryptoInformationContainer informationContainer = new FileCryptoInformationContainerImpl(sourceFileProvider,
