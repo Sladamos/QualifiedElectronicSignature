@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import pg.proj.pg.cipher.executioner.CipherExecutioner;
 import pg.proj.pg.cipher.executioner.CipherExecutionerImpl;
+import pg.proj.pg.cipher.type.CipherType;
 import pg.proj.pg.cipher.unlocker.CipherInfoUnlocker;
 import pg.proj.pg.cipher.unlocker.CipherInfoUnlockerImpl;
 import pg.proj.pg.data.hasher.Hasher;
@@ -49,7 +50,6 @@ public class MainApplication extends Application {
 
     //TODO: add communicates, change cipherType to enum, try to change keyGen + content to one container
     // try to do same with cipherType + cipher
-    // try to limit access to private key file (external storage)
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -111,14 +111,14 @@ public class MainApplication extends Application {
                                                        FileContentOperator cipherFileContentOperator) {
         KeyGen rsaKeyGen = new PrivateRsaKeyGen();
         Supplier<CipherInfo> encryptedCipherInfoSupplier = () -> CipherInfo.createFromBinaryFile(cipherFileSelector,
-                cipherFileContentOperator, rsaKeyGen, "RSA");
+                cipherFileContentOperator, rsaKeyGen, CipherType.RSA);
         CipherInfoUnlocker unlocker = createCipherInfoUnlocker();
         JavaFXPasswordSelector passwordSelector = new JavaFXPasswordSelector(errorHandlingLayer);
         CipherProvider encryptedRsaProvider = new EncryptedCipherProvider("EncRSA",
                 unlocker, passwordSelector, encryptedCipherInfoSupplier);
 
         Supplier<CipherInfo> rawCipherInfoSupplier = () -> CipherInfo.createFromPEMFile(cipherFileSelector,
-                cipherFileContentOperator, rsaKeyGen, "RSA");
+                cipherFileContentOperator, rsaKeyGen, CipherType.RSA);
         CipherProvider rawRsaProvider = new PlainCipherProvider("PlainRSA",
                 rawCipherInfoSupplier);
 
@@ -131,7 +131,7 @@ public class MainApplication extends Application {
                                                        FileContentOperator cipherFileContentOperator) {
         KeyGen rsaKeyGen = new PublicRsaKeyGen();
         Supplier<CipherInfo> cipherInfoSupplier = () -> CipherInfo.createFromPEMFile(cipherFileSelector,
-                cipherFileContentOperator, rsaKeyGen, "RSA");
+                cipherFileContentOperator, rsaKeyGen, CipherType.RSA);
         CipherProvider plainRsaProvider = new PlainCipherProvider("RSA", cipherInfoSupplier);
         List<CipherProvider> decryptCipherProviders = List.of(plainRsaProvider);
         return new JavaFXCipherSelector(decryptCipherProviders, errorHandlingLayer);
@@ -145,11 +145,9 @@ public class MainApplication extends Application {
     }
 
     private CipherExecutioner createAesDecryptor(KeyInfo keyInfo)  {
-        String cipherType = "AES/ECB/PKCS5Padding";
-        String algorithmType = "AES";
+        CipherType cipherType = CipherType.AES;
         KeyGen keyGen = new SecretKeyGen();
-        CipherInfo cipherInfo = CipherInfo.createFromProvidedKey(keyGen, keyInfo,
-                cipherType, algorithmType);
+        CipherInfo cipherInfo = CipherInfo.createFromProvidedKey(keyGen, keyInfo, cipherType);
         return new CipherExecutionerImpl(cipherInfo);
     }
 

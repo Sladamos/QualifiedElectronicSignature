@@ -40,9 +40,9 @@ public class CipherExecutionerImpl implements CipherExecutioner {
     private void launchCipherInMode(int cipherMode) {
         byte[] keyBytes = cipherInfo.keyInfo().keyContent();
         KeyGen keyGen = cipherInfo.keyGen();
-        String cipherType = cipherInfo.cipherType();
+        String algorithmType = cipherInfo.cipherType().getAlgorithmType();
         Cipher cipher = cipherInfo.cipher();
-        Key key = keyGen.generateKey(keyBytes, cipherType);
+        Key key = keyGen.generateKey(keyBytes, algorithmType);
         try {
             cipher.init(cipherMode, key);
         } catch (InvalidKeyException e) {
