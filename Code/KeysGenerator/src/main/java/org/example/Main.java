@@ -67,7 +67,7 @@ public class Main {
     }
 
     private static byte[] encryptPrivateKey(byte[] key, byte[] hashedPin) throws Exception {
-        Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
         cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(hashedPin, "AES"));
         return cipher.doFinal(key);
     }

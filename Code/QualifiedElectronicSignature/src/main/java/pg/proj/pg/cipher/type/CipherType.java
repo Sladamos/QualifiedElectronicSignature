@@ -7,7 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum CipherType {
     RSA("RSA", "RSA"),
-    AES("AES/ECB/PKCS5Padding", "AES");
+    AES("AES/CBC/PKCS5Padding", "AES");
 
     private final String strValue;
 

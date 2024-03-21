@@ -48,8 +48,7 @@ import java.util.function.Supplier;
 
 public class MainApplication extends Application {
 
-    //TODO: add communicates, change cipherType to enum, try to change keyGen + content to one container
-    // try to do same with cipherType + cipher
+    //TODO: add communicates
 
     @Override
     public void start(Stage stage) throws IOException {
