@@ -60,7 +60,7 @@ public class MainApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("main-app.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 1024, 768);
+        Scene scene = new Scene(fxmlLoader.load(), 512, 384);
         stage.setTitle("Emulator");
         stage.setScene(scene);
         MainController controller = fxmlLoader.getController();
@@ -77,7 +77,8 @@ public class MainApplication extends Application {
     }
 
     private MainReceiver createMainReceiver(MainController controller) {
-        return new MainReceiver(controller::onErrorOccurred, controller::onExitCalled);
+        return new MainReceiver(controller::onErrorOccurred,
+                controller::onCommunicateOccurred, controller::onExitCalled );
     }
 
     private ErrorHandlingLayer createErrorHandlingLayer(MainReceiver receiver) {

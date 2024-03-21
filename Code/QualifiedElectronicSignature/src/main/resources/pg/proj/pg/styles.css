@@ -10,6 +10,13 @@
     -fx-alignment: center;
 }
 
+.communicate {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-alignment: center;
+}
+
 .button {
     -fx-background-color: #0a3f94;
     -fx-text-fill: white;

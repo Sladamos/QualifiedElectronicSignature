@@ -4,7 +4,9 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import lombok.Setter;
+import pg.proj.pg.communicate.receiver.api.CommunicateReceiver;
 import pg.proj.pg.error.layer.ErrorHandlingLayer;
 import pg.proj.pg.plug.CryptorPlug;
 
@@ -16,6 +18,9 @@ public class MainController {
     private ErrorHandlingLayer errorHandlingLayer;
 
     private CryptorPlug cryptorPlug;
+
+    @FXML
+    private Label communicateLabel;
 
     public void onExitCalled() {
         Platform.exit();
@@ -33,14 +38,17 @@ public class MainController {
         alert.showAndWait();
     }
 
+    public void onCommunicateOccurred(String content) {
+        communicateLabel.setText(content);
+    }
+
     @FXML
-    protected void onEncryptClicked() {
+    private void onEncryptClicked() {
         errorHandlingLayer.runInErrorHandler(cryptorPlug::onEncryptCalled);
     }
 
     @FXML
-    protected void onDecryptClicked() {
+    private void onDecryptClicked() {
         errorHandlingLayer.runInErrorHandler(cryptorPlug::onDecryptCalled);
     }
-
 }
