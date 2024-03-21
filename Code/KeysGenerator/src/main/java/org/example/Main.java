@@ -1,6 +1,7 @@
 package org.example;
 
 import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
@@ -10,6 +11,10 @@ import java.security.*;
 import java.util.Base64;
 
 public class Main {
+
+    private static final byte[] hardcodedNonce =
+            new byte[]{'T', 'h', 'i', 's', 'I', 's', 'A', 'S', 'e', 'c', 'r', 'e', 't', 'K', 'e', 'y'};
+
     public static void main(String[] args) throws Exception {
         System.out.println("Welcome to RSA Key Pair Generator!");
 
@@ -68,7 +73,7 @@ public class Main {
 
     private static byte[] encryptPrivateKey(byte[] key, byte[] hashedPin) throws Exception {
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(hashedPin, "AES"));
+        cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(hashedPin, "AES"), new IvParameterSpec(hardcodedNonce));
         return cipher.doFinal(key);
     }
 }

@@ -6,6 +6,9 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import pg.proj.pg.cipher.executioner.CipherExecutioner;
 import pg.proj.pg.cipher.executioner.CipherExecutionerImpl;
+import pg.proj.pg.cipher.initializer.CipherInitializer;
+import pg.proj.pg.cipher.initializer.NonceCipherInitializer;
+import pg.proj.pg.cipher.initializer.SimpleCipherInitializer;
 import pg.proj.pg.cipher.type.CipherType;
 import pg.proj.pg.cipher.unlocker.CipherInfoUnlocker;
 import pg.proj.pg.cipher.unlocker.CipherInfoUnlockerImpl;
@@ -41,6 +44,7 @@ import pg.proj.pg.password.selector.JavaFXPasswordSelector;
 import pg.proj.pg.plug.CryptorPlug;
 import pg.proj.pg.plug.CryptorPlugImpl;
 
+import javax.crypto.spec.IvParameterSpec;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
@@ -49,6 +53,9 @@ import java.util.function.Supplier;
 public class MainApplication extends Application {
 
     //TODO: add communicates
+
+    private static final byte[] hardcodedNonce =
+            new byte[]{'T', 'h', 'i', 's', 'I', 's', 'A', 'S', 'e', 'c', 'r', 'e', 't', 'K', 'e', 'y'};
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -109,17 +116,19 @@ public class MainApplication extends Application {
                                                        FileSelector cipherFileSelector,
                                                        FileContentOperator cipherFileContentOperator) {
         KeyGen rsaKeyGen = new PrivateRsaKeyGen();
+        JavaFXPasswordSelector passwordSelector = new JavaFXPasswordSelector(errorHandlingLayer);
+        CipherInfoUnlocker unlocker = createCipherInfoUnlocker();
+        CipherInitializer rsaCipherInitializer = new SimpleCipherInitializer();
+
         Supplier<CipherInfo> encryptedCipherInfoSupplier = () -> CipherInfo.createFromBinaryFile(cipherFileSelector,
                 cipherFileContentOperator, rsaKeyGen, CipherType.RSA);
-        CipherInfoUnlocker unlocker = createCipherInfoUnlocker();
-        JavaFXPasswordSelector passwordSelector = new JavaFXPasswordSelector(errorHandlingLayer);
         CipherProvider encryptedRsaProvider = new EncryptedCipherProvider("EncRSA",
-                unlocker, passwordSelector, encryptedCipherInfoSupplier);
+                unlocker, passwordSelector, rsaCipherInitializer, encryptedCipherInfoSupplier);
 
         Supplier<CipherInfo> rawCipherInfoSupplier = () -> CipherInfo.createFromPEMFile(cipherFileSelector,
                 cipherFileContentOperator, rsaKeyGen, CipherType.RSA);
         CipherProvider rawRsaProvider = new PlainCipherProvider("PlainRSA",
-                rawCipherInfoSupplier);
+                rsaCipherInitializer, rawCipherInfoSupplier);
 
         List<CipherProvider> encryptCipherProviders = List.of(encryptedRsaProvider, rawRsaProvider);
         return new JavaFXCipherSelector(encryptCipherProviders, errorHandlingLayer);
@@ -131,7 +140,9 @@ public class MainApplication extends Application {
         KeyGen rsaKeyGen = new PublicRsaKeyGen();
         Supplier<CipherInfo> cipherInfoSupplier = () -> CipherInfo.createFromPEMFile(cipherFileSelector,
                 cipherFileContentOperator, rsaKeyGen, CipherType.RSA);
-        CipherProvider plainRsaProvider = new PlainCipherProvider("RSA", cipherInfoSupplier);
+        CipherInitializer rsaCipherInitializer = new SimpleCipherInitializer();
+        CipherProvider plainRsaProvider = new PlainCipherProvider("RSA",
+                rsaCipherInitializer, cipherInfoSupplier);
         List<CipherProvider> decryptCipherProviders = List.of(plainRsaProvider);
         return new JavaFXCipherSelector(decryptCipherProviders, errorHandlingLayer);
     }
@@ -147,7 +158,8 @@ public class MainApplication extends Application {
         CipherType cipherType = CipherType.AES;
         KeyGen keyGen = new SecretKeyGen();
         CipherInfo cipherInfo = CipherInfo.createFromProvidedKey(keyGen, keyInfo, cipherType);
-        return new CipherExecutionerImpl(cipherInfo);
+        CipherInitializer aesCipherInitializer = new NonceCipherInitializer(new IvParameterSpec(hardcodedNonce));
+        return new CipherExecutionerImpl(cipherInfo, aesCipherInitializer);
     }
 
     public static void main(String[] args) {
