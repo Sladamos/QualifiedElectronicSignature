@@ -51,7 +51,6 @@ public class Main {
         try {
             return reader.readLine().trim();
         } catch (IOException e) {
-            e.printStackTrace();
             return "";
         }
     }
