@@ -27,9 +27,9 @@ public class Main {
         PrivateKey privateKey = keyPair.getPrivate();
         byte[] hashedPin = hashSHA256(pin.getBytes());
 
-        savePEMKey(keyTo64(publicKey.getEncoded()), path + "/public_key.txt");
-        savePEMKey(keyTo64(privateKey.getEncoded()), path + "/private_key_clear.txt");
-        saveEncryptedPEMKey(privateKey, hashedPin, path + "/private_key.txt");
+        savePEMKey(keyTo64(publicKey.getEncoded()), path + "/public_key.puk");
+        savePEMKey(keyTo64(privateKey.getEncoded()), path + "/private_key.ppk");
+        saveEncryptedPEMKey(privateKey, hashedPin, path + "/private_key.epk");
 
         System.out.println("RSA key pair generated and private key encrypted successfully!");
     }
