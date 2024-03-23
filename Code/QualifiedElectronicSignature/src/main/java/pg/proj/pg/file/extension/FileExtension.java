@@ -4,6 +4,9 @@ public enum FileExtension {
     TXT,
     CPP,
     CYP,
+    EPK,
+    PUK,
+    PPK,
     UNKNOWN;
 
     /**
@@ -21,22 +24,23 @@ public enum FileExtension {
             case "cyp": {
                 return CYP;
             }
+            case "epk": {
+                return EPK;
+            }
+            case "puk": {
+                return PUK;
+            }
+            case "ppk": {
+                return PPK;
+            }
         }
         throw new IllegalArgumentException("Incorrect substring");
     }
 
     public String strValue() {
-        switch (this) {
-            case CPP: {
-                return "cpp";
-            }
-            case TXT: {
-                return "txt";
-            }
-            case CYP: {
-                return "cyp";
-            }
+        if(this == UNKNOWN) {
+            throw new IllegalArgumentException("Unknown type");
         }
-        throw new IllegalArgumentException("Incorrect extension");
+        return this.name().toLowerCase();
     }
 }

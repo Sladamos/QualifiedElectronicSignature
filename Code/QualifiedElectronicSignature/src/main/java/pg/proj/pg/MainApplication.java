@@ -52,7 +52,6 @@ import java.util.function.Supplier;
 
 public class MainApplication extends Application {
 
-    //TODO: change extensions of keys
     //TODO: auto detection of key on pendrive
     //TODO: create unittests
 
@@ -93,12 +92,11 @@ public class MainApplication extends Application {
     private CryptorPlug createCryptorPlug(Stage stage, ErrorHandlingLayer errorHandlingLayer, MainReceiver receiver) {
         FileSelector encryptFileSelector = new JavaFXFileSelector(stage, "Select source file", Set.of(FileExtension.CPP, FileExtension.TXT));
         FileSelector decryptFileSelector = new JavaFXFileSelector(stage, "Select source file", Set.of(FileExtension.CYP));
-        FileSelector cipherFileSelector = new JavaFXFileSelector(stage, "Select key file", Set.of(FileExtension.TXT));
         FileContentOperator cipherFileContentOperator = new SmallFilesContentOperator();
         CipherSelector encryptCipherSelector = createEncryptCipherSelector(errorHandlingLayer,
-                cipherFileSelector, cipherFileContentOperator);
+                cipherFileContentOperator, stage);
         CipherSelector decryptCipherSelector = createDecryptCipherSelector(errorHandlingLayer,
-                cipherFileSelector, cipherFileContentOperator);
+                cipherFileContentOperator, stage);
         FileEncryptor encryptor = createEncryptor();
         FileDecryptor decryptor = createDecryptor();
         CryptorPlug cryptorPlug = new CryptorPlugImpl(encryptFileSelector, decryptFileSelector, encryptCipherSelector,
@@ -118,19 +116,23 @@ public class MainApplication extends Application {
     }
 
     private CipherSelector createDecryptCipherSelector(ErrorHandlingLayer errorHandlingLayer,
-                                                       FileSelector cipherFileSelector,
-                                                       FileContentOperator cipherFileContentOperator) {
+                                                       FileContentOperator cipherFileContentOperator,
+                                                       Stage stage) {
+        FileSelector encryptedCipherFileSelector = new JavaFXFileSelector(stage,
+                "Select encrypted private key", Set.of(FileExtension.EPK));
+        FileSelector plainCipherFileSelector = new JavaFXFileSelector(stage,
+                "Select plain private key", Set.of(FileExtension.PPK));
         KeyGen rsaKeyGen = new PrivateRsaKeyGen();
         JavaFXPasswordSelector passwordSelector = new JavaFXPasswordSelector(errorHandlingLayer);
         CipherInfoUnlocker unlocker = createCipherInfoUnlocker();
         CipherInitializer rsaCipherInitializer = new SimpleCipherInitializer();
 
-        Supplier<CipherInfo> encryptedCipherInfoSupplier = () -> CipherInfo.createFromBinaryFile(cipherFileSelector,
+        Supplier<CipherInfo> encryptedCipherInfoSupplier = () -> CipherInfo.createFromBinaryFile(encryptedCipherFileSelector,
                 cipherFileContentOperator, rsaKeyGen, CipherType.RSA);
         CipherProvider encryptedRsaProvider = new EncryptedCipherProvider("EncRSA",
                 unlocker, passwordSelector, rsaCipherInitializer, encryptedCipherInfoSupplier);
 
-        Supplier<CipherInfo> rawCipherInfoSupplier = () -> CipherInfo.createFromPEMFile(cipherFileSelector,
+        Supplier<CipherInfo> rawCipherInfoSupplier = () -> CipherInfo.createFromPEMFile(plainCipherFileSelector,
                 cipherFileContentOperator, rsaKeyGen, CipherType.RSA);
         CipherProvider rawRsaProvider = new PlainCipherProvider("PlainRSA",
                 rsaCipherInitializer, rawCipherInfoSupplier);
@@ -140,8 +142,10 @@ public class MainApplication extends Application {
     }
 
     private CipherSelector createEncryptCipherSelector(ErrorHandlingLayer errorHandlingLayer,
-                                                       FileSelector cipherFileSelector,
-                                                       FileContentOperator cipherFileContentOperator) {
+                                                       FileContentOperator cipherFileContentOperator,
+                                                       Stage stage) {
+        FileSelector cipherFileSelector = new JavaFXFileSelector(stage,
+                "Select plain public key", Set.of(FileExtension.PUK));
         KeyGen rsaKeyGen = new PublicRsaKeyGen();
         Supplier<CipherInfo> cipherInfoSupplier = () -> CipherInfo.createFromPEMFile(cipherFileSelector,
                 cipherFileContentOperator, rsaKeyGen, CipherType.RSA);

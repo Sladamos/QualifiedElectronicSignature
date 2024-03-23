@@ -28,6 +28,27 @@ public class FileExtensionTest {
     }
 
     @Test
+    public void should_returnEpkString_when_epkExtensionProvided() {
+        FileExtension extension = FileExtension.EPK;
+        String value = extension.strValue();
+        assertThat(value).isEqualTo("epk");
+    }
+
+    @Test
+    public void should_returnPukString_when_pukExtensionProvided() {
+        FileExtension extension = FileExtension.PUK;
+        String value = extension.strValue();
+        assertThat(value).isEqualTo("puk");
+    }
+
+    @Test
+    public void should_returnPpkString_when_ppkExtensionProvided() {
+        FileExtension extension = FileExtension.PPK;
+        String value = extension.strValue();
+        assertThat(value).isEqualTo("ppk");
+    }
+
+    @Test
     public void should_throwIllegalArgumentException_when_unknownExtensionProvided() {
         FileExtension extension = FileExtension.UNKNOWN;
         assertThatThrownBy(extension::strValue).isInstanceOf(IllegalArgumentException.class);
@@ -46,9 +67,27 @@ public class FileExtensionTest {
     }
 
     @Test
-    public void should_returnCppExtension_when_fromTxtStringCreated() {
+    public void should_returnCppExtension_when_fromCppStringCreated() {
         var extension = FileExtension.fromString("cpp");
         assertThat(extension).isEqualTo(FileExtension.CPP);
+    }
+
+    @Test
+    public void should_returnEpkExtension_when_fromEpkStringCreated() {
+        var extension = FileExtension.fromString("epk");
+        assertThat(extension).isEqualTo(FileExtension.EPK);
+    }
+
+    @Test
+    public void should_returnPukExtension_when_fromPukStringCreated() {
+        var extension = FileExtension.fromString("puk");
+        assertThat(extension).isEqualTo(FileExtension.PUK);
+    }
+
+    @Test
+    public void should_returnPpkExtension_when_fromPpkStringCreated() {
+        var extension = FileExtension.fromString("ppk");
+        assertThat(extension).isEqualTo(FileExtension.PPK);
     }
 
     @Test
