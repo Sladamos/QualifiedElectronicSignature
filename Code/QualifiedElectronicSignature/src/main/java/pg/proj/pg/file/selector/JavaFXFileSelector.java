@@ -14,7 +14,6 @@ import pg.proj.pg.file.provider.FileProvider;
 import pg.proj.pg.file.provider.FileProviderImpl;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -28,8 +27,6 @@ public class JavaFXFileSelector implements FileSelector {
 
     private final Set<FileExtension> allowedExtensions;
 
-    private final FileExtensionProvider fileExtensionProvider = new FileExtensionProviderImpl();
-
     @Override
     public FileProvider selectFile() {
         sendErrorIfNoExtensionsAreAllowed();
@@ -37,12 +34,9 @@ public class JavaFXFileSelector implements FileSelector {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(title);
         fileChooser.getExtensionFilters().addAll(getFiltersFromExtensions());
-        //TODO send communicate
         File file = fileChooser.showOpenDialog(stage);
         sendErrorIfFileIsNotSelected(file);
-        FileProvider provider = createFileProviderFromFile(file);
-        //TODO send communicate
-        return provider;
+        return FileProviderImpl.createFromFile(file);
     }
 
     private void sendErrorIfStageIsNotSpecified() {
@@ -60,16 +54,6 @@ public class JavaFXFileSelector implements FileSelector {
     private void sendErrorIfFileIsNotSelected(File file) {
         if(file == null) {
             throw new BasicAppError("File selection was aborted");
-        }
-    }
-
-    private FileProvider createFileProviderFromFile(File file) {
-        FileExtension extension = fileExtensionProvider.fromFileName(file.getName());
-        try {
-            FileInfo fileInfo = new FileInfo(file.getCanonicalPath(), file.getName(), extension);
-            return new FileProviderImpl(fileInfo);
-        } catch (IOException err) {
-            throw new BasicAppError(err.getMessage());
         }
     }
 
