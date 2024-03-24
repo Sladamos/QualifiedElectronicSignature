@@ -5,6 +5,7 @@ import lombok.Getter;
 import pg.proj.pg.cipher.executioner.CipherExecutioner;
 import pg.proj.pg.cipher.executioner.CipherExecutionerImpl;
 import pg.proj.pg.cipher.info.CipherInfo;
+import pg.proj.pg.cipher.initializer.CipherInitializer;
 import pg.proj.pg.cipher.unlocker.CipherInfoUnlocker;
 import pg.proj.pg.error.definition.BasicAppError;
 import pg.proj.pg.password.info.PasswordInfo;
@@ -23,6 +24,8 @@ public class EncryptedCipherProvider implements CipherProvider {
 
     private final PasswordSelector passwordSelector;
 
+    private final CipherInitializer cipherInitializer;
+
     private final Supplier<CipherInfo> cipherInfoSupplier;
 
     @Override
@@ -32,7 +35,7 @@ public class EncryptedCipherProvider implements CipherProvider {
         PasswordInfo password = passwordProvider.getPasswordInfo();
         CipherInfo unlockedCipherInfo = cipherInfoUnlocker.unlock(cipherInfo, password);
         try {
-            return new CipherExecutionerImpl(unlockedCipherInfo);
+            return new CipherExecutionerImpl(unlockedCipherInfo, cipherInitializer);
         } catch (Exception e) {
             throw new BasicAppError("Cannot decrypt key: " + e.getMessage());
         }

@@ -1,6 +1,7 @@
 package pg.proj.pg.cipher.executioner;
 
 import lombok.AllArgsConstructor;
+import pg.proj.pg.cipher.initializer.CipherInitializer;
 import pg.proj.pg.key.generator.KeyGen;
 import pg.proj.pg.cipher.info.CipherInfo;
 import pg.proj.pg.error.definition.BasicAppError;
@@ -15,10 +16,11 @@ public class CipherExecutionerImpl implements CipherExecutioner {
 
     private final CipherInfo cipherInfo;
 
+    private final CipherInitializer cipherInitializer;
+
     @Override
     public byte[] encrypt(byte[] source) {
-        launchCipherInMode(Cipher.ENCRYPT_MODE);
-        Cipher cipher = cipherInfo.cipher();
+        Cipher cipher = cipherInitializer.initializeCipher(cipherInfo, Cipher.ENCRYPT_MODE);
         try {
             return cipher.doFinal(source);
         } catch (Exception e) {
@@ -28,25 +30,11 @@ public class CipherExecutionerImpl implements CipherExecutioner {
 
     @Override
     public byte[] decrypt(byte[] source) {
-        launchCipherInMode(Cipher.DECRYPT_MODE);
-        Cipher cipher = cipherInfo.cipher();
+        Cipher cipher = cipherInitializer.initializeCipher(cipherInfo, Cipher.DECRYPT_MODE);
         try {
             return cipher.doFinal(source);
         } catch (Exception e) {
             throw new BasicAppError("Unable to decrypt content");
-        }
-    }
-
-    private void launchCipherInMode(int cipherMode) {
-        byte[] keyBytes = cipherInfo.keyInfo().keyContent();
-        KeyGen keyGen = cipherInfo.keyGen();
-        String cipherType = cipherInfo.cipherType();
-        Cipher cipher = cipherInfo.cipher();
-        Key key = keyGen.generateKey(keyBytes, cipherType);
-        try {
-            cipher.init(cipherMode, key);
-        } catch (InvalidKeyException e) {
-            throw new BasicAppError("Unable to init cipher");
         }
     }
 }

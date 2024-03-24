@@ -1,6 +1,8 @@
 package pg.proj.pg;
 
 import lombok.AllArgsConstructor;
+import pg.proj.pg.communicate.definition.Communicate;
+import pg.proj.pg.communicate.receiver.api.CommunicateReceiver;
 import pg.proj.pg.error.definition.BasicAppError;
 import pg.proj.pg.error.definition.CriticalAppError;
 import pg.proj.pg.error.receiver.api.BasicErrorReceiver;
@@ -9,9 +11,11 @@ import pg.proj.pg.error.receiver.api.CriticalErrorReceiver;
 import java.util.function.Consumer;
 
 @AllArgsConstructor
-public class MainReceiver implements CriticalErrorReceiver, BasicErrorReceiver {
+public class MainReceiver implements CriticalErrorReceiver, BasicErrorReceiver, CommunicateReceiver {
 
     private Consumer<String> errorsDisplayer;
+
+    private Consumer<String> communicatesDisplayer;
 
     private Runnable exitOption;
 
@@ -22,8 +26,14 @@ public class MainReceiver implements CriticalErrorReceiver, BasicErrorReceiver {
 
     @Override
     public void onCriticalErrorOccurred(CriticalAppError error) {
-        errorsDisplayer.accept(error.getMessage());
+        String message = error.getMessage();
+        errorsDisplayer.accept(message);
         exitOption.run();
     }
 
+    @Override
+    public void onCommunicateOccurred(Communicate communicate) {
+        String content = communicate.content();
+        communicatesDisplayer.accept(content);
+    }
 }

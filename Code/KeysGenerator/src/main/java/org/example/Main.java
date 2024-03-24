@@ -1,6 +1,7 @@
 package org.example;
 
 import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
@@ -10,6 +11,10 @@ import java.security.*;
 import java.util.Base64;
 
 public class Main {
+
+    private static final byte[] hardcodedNonce =
+            new byte[]{'T', 'h', 'i', 's', 'I', 's', 'A', 'S', 'e', 'c', 'r', 'e', 't', 'K', 'e', 'y'};
+
     public static void main(String[] args) throws Exception {
         System.out.println("Welcome to RSA Key Pair Generator!");
 
@@ -22,9 +27,9 @@ public class Main {
         PrivateKey privateKey = keyPair.getPrivate();
         byte[] hashedPin = hashSHA256(pin.getBytes());
 
-        savePEMKey(keyTo64(publicKey.getEncoded()), path + "/public_key.txt");
-        savePEMKey(keyTo64(privateKey.getEncoded()), path + "/private_key_clear.txt");
-        saveEncryptedPEMKey(privateKey, hashedPin, path + "/private_key.txt");
+        savePEMKey(keyTo64(publicKey.getEncoded()), path + "/public_key.puk");
+        savePEMKey(keyTo64(privateKey.getEncoded()), path + "/private_key.ppk");
+        saveEncryptedPEMKey(privateKey, hashedPin, path + "/private_key.epk");
 
         System.out.println("RSA key pair generated and private key encrypted successfully!");
     }
@@ -46,7 +51,6 @@ public class Main {
         try {
             return reader.readLine().trim();
         } catch (IOException e) {
-            e.printStackTrace();
             return "";
         }
     }
@@ -67,8 +71,8 @@ public class Main {
     }
 
     private static byte[] encryptPrivateKey(byte[] key, byte[] hashedPin) throws Exception {
-        Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-        cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(hashedPin, "AES"));
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(hashedPin, "AES"), new IvParameterSpec(hardcodedNonce));
         return cipher.doFinal(key);
     }
 }

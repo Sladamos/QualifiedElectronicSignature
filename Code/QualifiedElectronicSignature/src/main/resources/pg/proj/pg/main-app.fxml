@@ -4,17 +4,16 @@
 <?import javafx.scene.layout.*?>
 
 <BorderPane styleClass="root" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pg.proj.pg.MainController">
-      <bottom>
-         <HBox alignment="BOTTOM_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
-            <children>
-      
-                <Button mnemonicParsing="false" onAction="#onEncryptClicked" styleClass="button" text="Encrypt file" />
-                <Button onAction="#onDecryptClicked" styleClass="button" text="Decrypt file" />
-            </children>
-         </HBox>
-      </bottom>
       <top>
-      
           <Label styleClass="title" text="Welcome to Tool Emulator" BorderPane.alignment="CENTER" />
       </top>
+   <center>
+       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0" BorderPane.alignment="CENTER">
+           <Button mnemonicParsing="false" onAction="#onEncryptClicked" styleClass="button" text="Encrypt file"/>
+           <Button onAction="#onDecryptClicked" styleClass="button" text="Decrypt file"/>
+       </HBox>
+   </center>
+   <bottom>
+      <Label fx:id="communicateLabel" styleClass="communicate" wrapText="true" BorderPane.alignment="CENTER" />
+   </bottom>
    </BorderPane>
