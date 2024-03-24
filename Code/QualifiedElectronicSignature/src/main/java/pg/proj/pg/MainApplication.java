@@ -56,9 +56,6 @@ import java.util.function.Supplier;
 
 public class MainApplication extends Application {
 
-    //TODO: auto detection of key on pendrive
-    //TODO: create unittests
-
     private static final byte[] hardcodedNonce =
             new byte[]{'T', 'h', 'i', 's', 'I', 's', 'A', 'S', 'e', 'c', 'r', 'e', 't', 'K', 'e', 'y'};
 

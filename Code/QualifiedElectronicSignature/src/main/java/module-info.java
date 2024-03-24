@@ -6,6 +6,7 @@ module pg.proj.pg {
     requires org.kordamp.bootstrapfx.core;
     requires lombok;
     requires org.apache.commons.lang3;
+    requires usbdrivedetector;
 
     exports pg.proj.pg;
     exports pg.proj.pg.error.receiver.api;

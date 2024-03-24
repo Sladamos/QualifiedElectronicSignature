@@ -75,6 +75,11 @@
             <artifactId>lombok</artifactId>
             <version>1.18.30</version>
         </dependency>
+            <dependency>
+                <groupId>net.samuelcampos</groupId>
+                <artifactId>usbdrivedetector</artifactId>
+                <version>2.2.1</version>
+            </dependency>
     </dependencies>
 
     <build>
