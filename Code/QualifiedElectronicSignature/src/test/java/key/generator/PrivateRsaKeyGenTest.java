@@ -13,7 +13,10 @@ import static org.assertj.core.api.Assertions.*;
 
 public class PrivateRsaKeyGenTest {
 
-    private final byte[] keyBytes = KeyPairGenerator.getInstance("RSA").generateKeyPair().getPrivate().getEncoded();
+    private final byte[] keyBytes = KeyPairGenerator.getInstance("RSA")
+            .generateKeyPair()
+            .getPrivate()
+            .getEncoded();
 
     private final String cipherType = CipherType.RSA.getStrValue();
 
@@ -48,6 +51,5 @@ public class PrivateRsaKeyGenTest {
     public void should_notThrowAnyException_when_validCipherTypeAndBytesPassedToGenerateKey() {
         assertThatCode(() -> keyGen.generateKey(keyBytes, cipherType)).doesNotThrowAnyException();
     }
-
 
 }
