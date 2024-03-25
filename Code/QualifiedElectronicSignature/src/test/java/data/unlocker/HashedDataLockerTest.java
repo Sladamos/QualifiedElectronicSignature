@@ -44,11 +44,22 @@ public class HashedDataLockerTest {
     }
 
     @Test
-    public void should_returnEmptyArray_when_emptyDataProvided() {
-        //DataUnlocker dataUnlocker = new HashedDataUnlocker();
+    public void should_returnDecryptedArray_when_rawDataWithEmptyPasswordProvidedToUnlock() {
+        Hasher hasher = createDefaultMockForHasher();
+        Function<KeyInfo, CipherExecutioner> cipherExecutionerGen = createDefaultMockForCipherExecutionerGen();
+        DataUnlocker dataUnlocker = new HashedDataUnlocker(hasher, cipherExecutionerGen);
+        PasswordInfo passwordInfo = new PasswordInfo("");
+        assertThat(dataUnlocker.unlock(rawDataArr, passwordInfo)).isEqualTo(decryptedDataArr);
     }
 
-    //void should__when_()
+    @Test
+    public void should_returnDecryptedArray_when_rawDataWithSomePasswordProvidedToUnlock() {
+        Hasher hasher = createDefaultMockForHasher();
+        Function<KeyInfo, CipherExecutioner> cipherExecutionerGen = createDefaultMockForCipherExecutionerGen();
+        DataUnlocker dataUnlocker = new HashedDataUnlocker(hasher, cipherExecutionerGen);
+        PasswordInfo passwordInfo = new PasswordInfo(password);
+        assertThat(dataUnlocker.unlock(rawDataArr, passwordInfo)).isEqualTo(decryptedDataArr);
+    }
 
     private Function<KeyInfo, CipherExecutioner> createDefaultMockForCipherExecutionerGen() {
         CipherExecutioner cipherExecutioner = Mockito.mock(CipherExecutioner.class);
