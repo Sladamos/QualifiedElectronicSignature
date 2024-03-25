@@ -3,6 +3,7 @@ package pg.proj.pg.data.unlocker;
 import lombok.AllArgsConstructor;
 import pg.proj.pg.cipher.executioner.CipherExecutioner;
 import pg.proj.pg.data.hasher.Hasher;
+import pg.proj.pg.error.definition.CriticalAppError;
 import pg.proj.pg.key.info.KeyInfo;
 import pg.proj.pg.password.info.PasswordInfo;
 
@@ -17,6 +18,9 @@ public class HashedDataUnlocker implements DataUnlocker {
 
     @Override
     public byte[] unlock(byte[] data, PasswordInfo passwordInfo) {
+        if(passwordInfo == null || data == null) {
+            throw new CriticalAppError("Incorrect arguments provided to unlocker");
+        }
         byte[] passwordAsBytes = passwordInfo.content().getBytes();
         byte[] hashedPassword = hasher.hash(passwordAsBytes);
         KeyInfo keyInfo = new KeyInfo(hashedPassword);

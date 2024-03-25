@@ -18,4 +18,6 @@ module pg.proj.pg {
     opens pg.proj.pg.password.selector to javafx.fxml;
     opens pg.proj.pg.error.receiver.api to javafx.fxml;
     opens pg.proj.pg.error.definition to javafx.fxml;
+    opens pg.proj.pg.data.hasher;
+    opens pg.proj.pg.cipher.executioner;
 }
