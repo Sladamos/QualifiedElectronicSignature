@@ -1,6 +1,7 @@
 package pg.proj.pg.key.generator;
 
 import pg.proj.pg.error.definition.BasicAppError;
+import pg.proj.pg.error.definition.CriticalAppError;
 
 import java.security.Key;
 import java.security.KeyFactory;
@@ -11,6 +12,9 @@ import java.security.spec.PKCS8EncodedKeySpec;
 public class PrivateRsaKeyGen implements KeyGen {
     @Override
     public Key generateKey(byte[] bytes, String cipherType) {
+        if(bytes == null || cipherType == null) {
+            throw new CriticalAppError("Incorrect key gen arguments");
+        }
         PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(bytes);
         try {
             KeyFactory kf = KeyFactory.getInstance(cipherType);
