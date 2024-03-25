@@ -1,8 +1,6 @@
 package data.unlocker;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import pg.proj.pg.cipher.executioner.CipherExecutioner;
 import pg.proj.pg.data.hasher.Hasher;
@@ -16,7 +14,7 @@ import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.*;
 
-public class HashedDataLockerTest {
+public class HashedDataUnlockerTest {
 
     private final byte[] rawDataArr = new byte[]{1, 2, 3};
 
