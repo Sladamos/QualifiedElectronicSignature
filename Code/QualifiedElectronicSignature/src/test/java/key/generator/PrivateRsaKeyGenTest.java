@@ -51,5 +51,4 @@ public class PrivateRsaKeyGenTest {
     public void should_notThrowAnyException_when_validCipherTypeAndBytesPassedToGenerateKey() {
         assertThatCode(() -> keyGen.generateKey(keyBytes, cipherType)).doesNotThrowAnyException();
     }
-
 }
