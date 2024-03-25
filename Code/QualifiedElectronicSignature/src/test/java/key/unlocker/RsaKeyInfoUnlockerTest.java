@@ -21,7 +21,7 @@ public class RsaKeyInfoUnlockerTest {
     private final byte[] unlockedKeyContent = Base64.getEncoder().encode(new byte[]{3, 52, 12, 14});
 
     @Test
-    public void should_throwCriticalAppError_when_nullKeyInfoProvidedToUnlock() {
+    public void should_throwCriticalAppError_when_nullKeyInfoPassedToUnlock() {
         PasswordInfo passwordInfo = new PasswordInfo(password);
         DataUnlocker dataUnlocker = mockDataUnlocker(passwordInfo);
         RsaKeyInfoUnlocker keyInfoUnlocker = new RsaKeyInfoUnlocker(dataUnlocker);
@@ -29,7 +29,7 @@ public class RsaKeyInfoUnlockerTest {
     }
 
     @Test
-    public void should_throwCriticalAppError_when_nullPasswordInfoProvidedToUnlock() {
+    public void should_throwCriticalAppError_when_nullPasswordInfoPassedToUnlock() {
         KeyInfo source = new KeyInfo(keyContent);
         DataUnlocker dataUnlocker = mockDataUnlocker(null);
         RsaKeyInfoUnlocker keyInfoUnlocker = new RsaKeyInfoUnlocker(dataUnlocker);
@@ -37,7 +37,7 @@ public class RsaKeyInfoUnlockerTest {
     }
 
     @Test
-    public void should_returnUnlockedKeyContent_when_emptyPasswordInfoProvidedToUnlock() {
+    public void should_returnUnlockedKeyContent_when_emptyPasswordInfoPassedToUnlock() {
         KeyInfo source = new KeyInfo(keyContent);
         PasswordInfo passwordInfo = new PasswordInfo("");
         DataUnlocker dataUnlocker = mockDataUnlocker(passwordInfo);
@@ -47,7 +47,7 @@ public class RsaKeyInfoUnlockerTest {
     }
 
     @Test
-    public void should_returnUnlockedKeyContent_when_notEmptyPasswordInfoProvidedToUnlock() {
+    public void should_returnUnlockedKeyContent_when_notEmptyPasswordInfoPassedToUnlock() {
         KeyInfo source = new KeyInfo(keyContent);
         PasswordInfo passwordInfo = new PasswordInfo("random");
         DataUnlocker dataUnlocker = mockDataUnlocker(passwordInfo);

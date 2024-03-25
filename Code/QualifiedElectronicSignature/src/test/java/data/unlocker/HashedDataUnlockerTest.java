@@ -25,7 +25,7 @@ public class HashedDataUnlockerTest {
     private final byte[] passwordHashedArr = new byte[]{5, 1, 7};
 
     @Test
-    public void should_throwCriticalAppError_when_nullDataProvidedToUnlock() {
+    public void should_throwCriticalAppError_when_nullDataPassedToUnlock() {
         Hasher hasher = createDefaultMockForHasher();
         Function<KeyInfo, CipherExecutioner> cipherExecutionerGen = createDefaultMockForCipherExecutionerGen();
         DataUnlocker dataUnlocker = new HashedDataUnlocker(hasher, cipherExecutionerGen);
@@ -34,7 +34,7 @@ public class HashedDataUnlockerTest {
     }
 
     @Test
-    public void should_throwCriticalAppError_when_nullPasswordProvidedToUnlock() {
+    public void should_throwCriticalAppError_when_nullPasswordPassedToUnlock() {
         Hasher hasher = createDefaultMockForHasher();
         Function<KeyInfo, CipherExecutioner> cipherExecutionerGen = createDefaultMockForCipherExecutionerGen();
         DataUnlocker dataUnlocker = new HashedDataUnlocker(hasher, cipherExecutionerGen);
@@ -42,7 +42,7 @@ public class HashedDataUnlockerTest {
     }
 
     @Test
-    public void should_returnDecryptedArray_when_rawDataWithEmptyPasswordProvidedToUnlock() {
+    public void should_returnDecryptedArray_when_rawDataWithEmptyPasswordPassedToUnlock() {
         Hasher hasher = createDefaultMockForHasher();
         Function<KeyInfo, CipherExecutioner> cipherExecutionerGen = createDefaultMockForCipherExecutionerGen();
         DataUnlocker dataUnlocker = new HashedDataUnlocker(hasher, cipherExecutionerGen);
@@ -51,7 +51,7 @@ public class HashedDataUnlockerTest {
     }
 
     @Test
-    public void should_returnDecryptedArray_when_rawDataWithSomePasswordProvidedToUnlock() {
+    public void should_returnDecryptedArray_when_rawDataWithSomePasswordPassedToUnlock() {
         Hasher hasher = createDefaultMockForHasher();
         Function<KeyInfo, CipherExecutioner> cipherExecutionerGen = createDefaultMockForCipherExecutionerGen();
         DataUnlocker dataUnlocker = new HashedDataUnlocker(hasher, cipherExecutionerGen);
