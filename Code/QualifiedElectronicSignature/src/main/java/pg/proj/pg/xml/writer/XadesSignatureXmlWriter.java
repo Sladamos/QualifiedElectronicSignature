@@ -7,7 +7,7 @@ import java.util.Base64;
 public class XadesSignatureXmlWriter implements SignatureXmlWriter {
     @Override
     public String toXml(SignatureXmlInfo xmlInfo) {
-        String xmlBuilder = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+        return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                 "<document>\n" +
                 "\t<details>\n" +
                 "\t\t<lastModificationDate>" + xmlInfo.sourceInfo().documentDetails().modificationDate() + "</lastModificationDate>\n" +
@@ -22,6 +22,5 @@ public class XadesSignatureXmlWriter implements SignatureXmlWriter {
                 "\t\t<signature>" + Base64.getEncoder().encodeToString(xmlInfo.signedValue()) + "</signature>\n" +
                 "\t</content>\n" +
                 "</document>";
-        return xmlBuilder;
     }
 }
