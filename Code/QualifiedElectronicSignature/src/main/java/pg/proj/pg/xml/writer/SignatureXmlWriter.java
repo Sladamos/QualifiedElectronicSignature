@@ -1,7 +1,7 @@
 package pg.proj.pg.xml.writer;
 
-import pg.proj.pg.xml.info.SignatureXmlInfo;
+import pg.proj.pg.signature.info.SignatureInfo;
 
 public interface SignatureXmlWriter {
-    String toXml(SignatureXmlInfo xmlInfo);
+    String toXml(SignatureInfo xmlInfo);
 }

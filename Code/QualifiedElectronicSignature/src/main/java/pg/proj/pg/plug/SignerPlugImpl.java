@@ -48,6 +48,16 @@ public class SignerPlugImpl implements SignerPlug {
     }
 
     @Override
+    public void onVerifyCalled() {
+        //select file to verify - typical FileSelector
+        //select signature ~ FileSelector + (XadesSignatureXmlParser: SignatureInfoProvider)
+        //select verifier type - SignatureVerifierSelector
+        //FileVerifierInformationContainer - signatureInfo +
+        //verify file - FileVerifier: boolean
+        //send communicate if is Signed or not
+    }
+
+    @Override
     public void registerCommunicatesReceiver(CommunicateReceiver communicateReceiver) {
         communicateEvent.addListener(communicateReceiver::onCommunicateOccurred);
     }

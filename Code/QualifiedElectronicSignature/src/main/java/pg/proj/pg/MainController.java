@@ -63,5 +63,6 @@ public class MainController {
 
     @FXML
     private void onVerifyClicked() {
+        errorHandlingLayer.runInErrorHandler(signerPlug::onVerifyCalled);
     }
 }
