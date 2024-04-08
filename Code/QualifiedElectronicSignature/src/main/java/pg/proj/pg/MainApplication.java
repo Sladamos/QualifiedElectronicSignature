@@ -147,8 +147,7 @@ public class MainApplication extends Application {
                                                        ErrorHandlingLayer errorHandlingLayer) {
         CipherProvider encryptedRsaProvider = createEncryptedRsaPrivateKeyCipherProvider(stage,
                 cipherFileContentOperator, errorHandlingLayer);
-        CipherProvider plainRsaProvider = createPlainRsaPrivateKeyCipherProvider(stage, cipherFileContentOperator);
-        List<CipherProvider> encryptCipherProviders = List.of(encryptedRsaProvider, plainRsaProvider);
+        List<CipherProvider> encryptCipherProviders = List.of(encryptedRsaProvider);
         return new JavaFXCipherSelector(encryptCipherProviders, errorHandlingLayer);
     }
 
