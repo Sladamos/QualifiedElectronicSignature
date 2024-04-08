@@ -15,21 +15,16 @@ public class DocumentInfoProviderImpl implements DocumentInfoProvider {
 
     private final DateProvider dateProvider;
 
-    private final FileProvider fileProvider;
-
     public DocumentInfoProviderImpl(DocumentDetailsProvider detailsProvider,
                                     AuthorProvider authorProvider,
-                                    DateProvider dateProvider,
-                                    FileProvider fileProvider) {
+                                    DateProvider dateProvider) {
         this.detailsProvider = detailsProvider;
         this.authorProvider = authorProvider;
         this.dateProvider = dateProvider;
-        this.fileProvider = fileProvider;
     }
 
     @Override
-    public DocumentInfo getDocumentInfo() {
-        FileInfo fileInfo = fileProvider.getFileInfo();
+    public DocumentInfo getDocumentInfo(FileInfo fileInfo) {
         return new DocumentInfo(detailsProvider.getDocumentDetails(fileInfo), authorProvider.getAuthor(), dateProvider.getDate());
     }
 }
