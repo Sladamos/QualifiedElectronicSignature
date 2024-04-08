@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import pg.proj.pg.author.provider.HardcodedAuthorProvider;
 import pg.proj.pg.cipher.executioner.CipherExecutioner;
 import pg.proj.pg.cipher.executioner.CipherExecutionerImpl;
 import pg.proj.pg.cipher.initializer.CipherInitializer;
@@ -16,12 +17,17 @@ import pg.proj.pg.data.hasher.Hasher;
 import pg.proj.pg.data.hasher.Sha256Hasher;
 import pg.proj.pg.data.unlocker.DataUnlocker;
 import pg.proj.pg.data.unlocker.HashedDataUnlocker;
+import pg.proj.pg.date.provider.CurrentDateProvider;
+import pg.proj.pg.document.details.provider.DocumentDetailsProviderImpl;
+import pg.proj.pg.document.info.provider.DocumentInfoProvider;
+import pg.proj.pg.document.info.provider.DocumentInfoProviderImpl;
+import pg.proj.pg.file.cryptography.signer.FileSigner;
+import pg.proj.pg.file.cryptography.signer.SmallFilesSigner;
 import pg.proj.pg.file.detector.DesktopFileDetector;
 import pg.proj.pg.file.detector.FileDetector;
+import pg.proj.pg.file.detector.UsbFileDetector;
 import pg.proj.pg.file.selector.PreDetectedFileSelector;
-import pg.proj.pg.key.generator.KeyGen;
-import pg.proj.pg.key.generator.PrivateRsaKeyGen;
-import pg.proj.pg.key.generator.PublicRsaKeyGen;
+import pg.proj.pg.key.generator.*;
 import pg.proj.pg.cipher.info.CipherInfo;
 import pg.proj.pg.cipher.provider.CipherProvider;
 import pg.proj.pg.cipher.provider.EncryptedCipherProvider;
@@ -39,13 +45,26 @@ import pg.proj.pg.file.operator.FileContentOperator;
 import pg.proj.pg.file.operator.SmallFilesContentOperator;
 import pg.proj.pg.file.selector.FileSelector;
 import pg.proj.pg.file.selector.JavaFXFileSelector;
-import pg.proj.pg.key.generator.SecretKeyGen;
 import pg.proj.pg.key.info.KeyInfo;
 import pg.proj.pg.key.unlocker.KeyInfoUnlocker;
 import pg.proj.pg.key.unlocker.RsaKeyInfoUnlocker;
 import pg.proj.pg.password.selector.JavaFXPasswordSelector;
 import pg.proj.pg.plug.CryptorPlug;
 import pg.proj.pg.plug.CryptorPlugImpl;
+import pg.proj.pg.plug.SignerPlug;
+import pg.proj.pg.plug.SignerPlugImpl;
+import pg.proj.pg.signature.info.SignatureExecutionerInfo;
+import pg.proj.pg.signature.initializer.SignatureExecutionerInitializer;
+import pg.proj.pg.signature.initializer.SignatureExecutionerInitializerImpl;
+import pg.proj.pg.signature.provider.EncryptedSignatureExecutionerProvider;
+import pg.proj.pg.signature.provider.SignatureExecutionerProvider;
+import pg.proj.pg.signature.selector.JavaFXSignatureExecutionerSelector;
+import pg.proj.pg.signature.selector.SignatureExecutionerSelector;
+import pg.proj.pg.signature.type.SignatureType;
+import pg.proj.pg.signature.unlocker.SignatureExecutionerInfoUnlocker;
+import pg.proj.pg.signature.unlocker.SignatureExecutionerInfoUnlockerImpl;
+import pg.proj.pg.xml.writer.SignatureXmlWriter;
+import pg.proj.pg.xml.writer.XadesSignatureXmlWriter;
 
 import javax.crypto.spec.IvParameterSpec;
 import java.io.IOException;
@@ -74,8 +93,10 @@ public class MainApplication extends Application {
         MainReceiver receiver = createMainReceiver(controller);
         ErrorHandlingLayer errorHandlingLayer = createErrorHandlingLayer(receiver);
         CryptorPlug cryptorPlug = createCryptorPlug(stage, errorHandlingLayer, receiver);
+        SignerPlug signerPlug = createSignerPlug(stage, errorHandlingLayer, receiver);
         controller.setErrorHandlingLayer(errorHandlingLayer);
         controller.setCryptorPlug(cryptorPlug);
+        controller.setSignerPlug(signerPlug);
     }
 
     private MainReceiver createMainReceiver(MainController controller) {
@@ -129,8 +150,7 @@ public class MainApplication extends Application {
                                                        ErrorHandlingLayer errorHandlingLayer) {
         CipherProvider encryptedRsaProvider = createEncryptedRsaPrivateKeyCipherProvider(stage,
                 cipherFileContentOperator, errorHandlingLayer);
-        CipherProvider plainRsaProvider = createPlainRsaPrivateKeyCipherProvider(stage, cipherFileContentOperator);
-        List<CipherProvider> encryptCipherProviders = List.of(encryptedRsaProvider, plainRsaProvider);
+        List<CipherProvider> encryptCipherProviders = List.of(encryptedRsaProvider);
         return new JavaFXCipherSelector(encryptCipherProviders, errorHandlingLayer);
     }
 
@@ -174,7 +194,7 @@ public class MainApplication extends Application {
         CipherInitializer rsaCipherInitializer = new SimpleCipherInitializer();
         FileSelector encryptedPrivateKeySelector = new JavaFXFileSelector(stage,
                 "Select encrypted private key", Set.of(FileExtension.EPK));
-        FileDetector encryptedPrivateKeyDetector = new DesktopFileDetector("private_key", FileExtension.EPK);
+        FileDetector encryptedPrivateKeyDetector = new UsbFileDetector("private_key", FileExtension.EPK);
         FileSelector encryptedCipherPreDetectedFileSelector = new PreDetectedFileSelector(encryptedPrivateKeySelector, encryptedPrivateKeyDetector);
         KeyGen rsaKeyGen = new PrivateRsaKeyGen();
         JavaFXPasswordSelector passwordSelector = new JavaFXPasswordSelector(errorHandlingLayer);
@@ -200,6 +220,63 @@ public class MainApplication extends Application {
         CipherInitializer aesCipherInitializer = new NonceCipherInitializer(new IvParameterSpec(hardcodedNonce));
         return new CipherExecutionerImpl(cipherInfo, aesCipherInitializer);
     }
+
+    private SignerPlug createSignerPlug(Stage stage, ErrorHandlingLayer errorHandlingLayer, MainReceiver receiver) {
+        Set<FileExtension> signerFileExtensions = createExtensionsPossibleToEncrypt();
+        FileSelector signFileSelector = new JavaFXFileSelector(stage, "Select source file", signerFileExtensions);
+        FileContentOperator signerFileContentOperator = new SmallFilesContentOperator();
+        SignatureExecutionerSelector encryptExecutionerSelector = createEncryptExecutionerSelector(stage,
+                signerFileContentOperator, errorHandlingLayer);
+        FileSigner fileSigner = createFileSigner();
+        SignerPlug signerPlug = new SignerPlugImpl(signFileSelector, encryptExecutionerSelector, fileSigner, this::createDocumentInfoProvider);
+        signerPlug.registerCommunicatesReceiver(receiver);
+        return signerPlug;
+    }
+
+    private SignatureExecutionerSelector createEncryptExecutionerSelector(Stage stage,
+            FileContentOperator contentOperator, ErrorHandlingLayer errorHandlingLayer) {
+        SignatureExecutionerProvider encryptedRsaProvider = createEncryptedRsaPrivateKeyExecutionerProvider(stage,
+                contentOperator, errorHandlingLayer);
+        List<SignatureExecutionerProvider> encryptExecutionerProviders = List.of(encryptedRsaProvider);
+        return new JavaFXSignatureExecutionerSelector(encryptExecutionerProviders, errorHandlingLayer);
+    }
+
+    private SignatureExecutionerProvider createEncryptedRsaPrivateKeyExecutionerProvider(Stage stage,
+                                                                                         FileContentOperator contentOperator,
+                                                                                         ErrorHandlingLayer errorHandlingLayer) {
+        SignatureExecutionerInitializer rsaExecutionerInitializer = new SignatureExecutionerInitializerImpl();
+        FileSelector encryptedPrivateKeySelector = new JavaFXFileSelector(stage,
+                "Select encrypted private key", Set.of(FileExtension.EPK));
+        FileDetector encryptedPrivateKeyDetector = new DesktopFileDetector("private_key", FileExtension.EPK); //TODO swtich to usb
+        FileSelector encryptedCipherPreDetectedFileSelector = new PreDetectedFileSelector(encryptedPrivateKeySelector, encryptedPrivateKeyDetector);
+        PrivateKeyGen rsaKeyGen = new PrivateRsaKeyGen();
+        JavaFXPasswordSelector passwordSelector = new JavaFXPasswordSelector(errorHandlingLayer);
+        SignatureExecutionerInfoUnlocker unlocker = createExecutionerInfoUnlocker();
+        Supplier<SignatureExecutionerInfo> encryptedSignatureInfoSupplier = () ->
+                SignatureExecutionerInfo.createFromBinaryFile(encryptedCipherPreDetectedFileSelector
+                        ,contentOperator, rsaKeyGen, SignatureType.RSA);
+        return new EncryptedSignatureExecutionerProvider("EncRSA", unlocker, passwordSelector,
+                rsaExecutionerInitializer, encryptedSignatureInfoSupplier);
+    }
+
+    private SignatureExecutionerInfoUnlocker createExecutionerInfoUnlocker() {
+        Hasher hasher = new Sha256Hasher();
+        DataUnlocker dataUnlocker = new HashedDataUnlocker(hasher, this::createAesDecryptor);
+        KeyInfoUnlocker keyInfoUnlocker = new RsaKeyInfoUnlocker(dataUnlocker);
+        return new SignatureExecutionerInfoUnlockerImpl(keyInfoUnlocker);
+    }
+
+    private FileSigner createFileSigner() {
+        FileContentOperator signerFileContentOperator = new SmallFilesContentOperator();
+        SignatureXmlWriter signatureXmlWriter = new XadesSignatureXmlWriter();
+        return new SmallFilesSigner(signerFileContentOperator, signatureXmlWriter);
+    }
+
+    private DocumentInfoProvider createDocumentInfoProvider() {
+        return new DocumentInfoProviderImpl(new DocumentDetailsProviderImpl(),
+                new HardcodedAuthorProvider(), new CurrentDateProvider());
+    }
+
 
     public static void main(String[] args) {
         launch();

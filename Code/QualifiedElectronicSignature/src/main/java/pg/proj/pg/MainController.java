@@ -1,6 +1,7 @@
 package pg.proj.pg;
 
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -8,6 +9,7 @@ import javafx.scene.control.Label;
 import lombok.Setter;
 import pg.proj.pg.error.layer.ErrorHandlingLayer;
 import pg.proj.pg.plug.CryptorPlug;
+import pg.proj.pg.plug.SignerPlug;
 
 import java.util.Objects;
 
@@ -17,6 +19,8 @@ public class MainController {
     private ErrorHandlingLayer errorHandlingLayer;
 
     private CryptorPlug cryptorPlug;
+
+    private SignerPlug signerPlug;
 
     @FXML
     private Label communicateLabel;
@@ -50,5 +54,14 @@ public class MainController {
     @FXML
     private void onDecryptClicked() {
         errorHandlingLayer.runInErrorHandler(cryptorPlug::onDecryptCalled);
+    }
+
+    @FXML
+    private void onSignClicked() {
+        errorHandlingLayer.runInErrorHandler(signerPlug::onSignCalled);
+    }
+
+    @FXML
+    private void onVerifyClicked() {
     }
 }

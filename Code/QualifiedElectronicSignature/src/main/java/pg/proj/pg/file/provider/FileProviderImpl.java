@@ -10,11 +10,24 @@ import pg.proj.pg.file.info.FileInfo;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 
 @AllArgsConstructor
 public class FileProviderImpl implements FileProvider {
 
     private final FileInfo template;
+
+    public static FileProviderImpl fromSource(FileProvider sourceFileProvider, FileExtension extension,
+                                              String postfix) {
+        FileInfo fileInfo = sourceFileProvider.getFileInfo();
+        String newName = "%s_%s.%s".formatted(fileInfo.fileName().split("\\.")[0], postfix, extension.strValue());
+        Path path = FileSystems.getDefault().getPath(fileInfo.canonicalPath());
+        Path newPath = path.resolveSibling(newName);
+        String newCanonicalPath = String.valueOf(newPath);
+        FileInfo destinationFileInfo = new FileInfo(newCanonicalPath, newName, extension);
+        return new FileProviderImpl(destinationFileInfo);
+    }
 
     public static FileProviderImpl createFromFile(File file) {
         FileExtensionProvider fileExtensionProvider = new FileExtensionProviderImpl();

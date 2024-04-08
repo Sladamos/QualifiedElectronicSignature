@@ -7,6 +7,7 @@ public enum FileExtension {
     EPK,
     PUK,
     PPK,
+    XML,
     UNKNOWN;
 
     /**
@@ -32,6 +33,9 @@ public enum FileExtension {
             }
             case "ppk": {
                 return PPK;
+            }
+            case "xml": {
+                return XML;
             }
         }
         throw new IllegalArgumentException("Incorrect substring");
