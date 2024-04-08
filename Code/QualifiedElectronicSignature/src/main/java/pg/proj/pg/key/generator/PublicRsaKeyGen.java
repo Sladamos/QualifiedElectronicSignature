@@ -5,12 +5,18 @@ import pg.proj.pg.error.definition.BasicAppError;
 import java.security.Key;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 
-public class PublicRsaKeyGen implements KeyGen {
+public class PublicRsaKeyGen implements KeyGen, PublicKeyGen {
     @Override
     public Key generateKey(byte[] bytes, String cipherType) {
+        return generatePublicKey(bytes, cipherType);
+    }
+
+    @Override
+    public PublicKey generatePublicKey(byte[] bytes, String cipherType) {
         X509EncodedKeySpec spec = new X509EncodedKeySpec(bytes);
         try {
             KeyFactory kf = KeyFactory.getInstance(cipherType);
