@@ -15,6 +15,7 @@ module pg.proj.pg {
     exports pg.proj.pg.communicate.definition;
     opens pg.proj.pg to javafx.fxml;
     opens pg.proj.pg.cipher.selector to javafx.fxml;
+    opens pg.proj.pg.signature.selector to javafx.fxml;
     opens pg.proj.pg.password.selector to javafx.fxml;
     opens pg.proj.pg.error.receiver.api to javafx.fxml;
     opens pg.proj.pg.error.definition to javafx.fxml;

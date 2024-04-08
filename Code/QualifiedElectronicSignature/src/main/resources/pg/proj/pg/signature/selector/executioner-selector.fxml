@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane styleClass="root" stylesheets="@../../styles.css" xmlns="http://javafx.com/javafx/17.0.2-ea"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="pg.proj.pg.signature.selector.JavaFXSignatureExecutionerSelectorController">
+    <top>
+        <FlowPane styleClass="radio-buttons-container" fx:id="buttonsContainer" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER"/>
+    </top>
+    <bottom>
+        <Button alignment="CENTER" contentDisplay="CENTER" onAction="#onSaveClicked" styleClass="button" text="Save"
+                BorderPane.alignment="CENTER"/>
+    </bottom>
+</BorderPane>
