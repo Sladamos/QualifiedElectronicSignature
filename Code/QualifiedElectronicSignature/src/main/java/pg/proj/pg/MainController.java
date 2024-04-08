@@ -8,6 +8,7 @@ import javafx.scene.control.Label;
 import lombok.Setter;
 import pg.proj.pg.error.layer.ErrorHandlingLayer;
 import pg.proj.pg.plug.CryptorPlug;
+import pg.proj.pg.plug.SignerPlug;
 
 import java.util.Objects;
 
@@ -17,6 +18,8 @@ public class MainController {
     private ErrorHandlingLayer errorHandlingLayer;
 
     private CryptorPlug cryptorPlug;
+
+    private SignerPlug signerPlug;
 
     @FXML
     private Label communicateLabel;
@@ -44,7 +47,8 @@ public class MainController {
 
     @FXML
     private void onEncryptClicked() {
-        errorHandlingLayer.runInErrorHandler(cryptorPlug::onEncryptCalled);
+        //errorHandlingLayer.runInErrorHandler(cryptorPlug::onEncryptCalled);
+        errorHandlingLayer.runInErrorHandler(signerPlug::onSignCalled);
     }
 
     @FXML

@@ -38,13 +38,15 @@ public class SignerPlugImpl implements SignerPlug {
         sendCommunicate("Select cipher");
         SignatureExecutionerProvider signatureExecutionerProvider = signatureExecutionerSelector.selectExecutioner();
         FileProvider destinationFileProvider = FileProviderImpl.fromSource(sourceFileProvider,
-                FileExtension.TXT, "test");
+                FileExtension.XML, "xades");
         DocumentInfoProvider documentInfoProvider = signerDocumentInfoProviderSupplier.get();
         FileSignerInformationContainer signerInfo = new FileSignerInformationContainerImpl(documentInfoProvider,
                 sourceFileProvider, destinationFileProvider, signatureExecutionerProvider);
+        sendCommunicate("Signing file");
         signer.signFile(signerInfo);
         sendCommunicate("File signed properly");
     }
+
     @Override
     public void registerCommunicatesReceiver(CommunicateReceiver communicateReceiver) {
         communicateEvent.addListener(communicateReceiver::onCommunicateOccurred);
