@@ -43,7 +43,8 @@ public class CryptorPlugImpl implements CryptorPlug {
         FileProvider sourceFileProvider = encryptFileSelector.selectFile();
         sendCommunicate("Select cipher");
         CipherProvider encryptCipherProvider = encryptCipherSelector.selectCipher();
-        FileProvider destinationFileProvider = createFileProviderFromSource(sourceFileProvider, FileExtension.CYP, "enc");
+        FileProvider destinationFileProvider = FileProviderImpl.fromSource(sourceFileProvider,
+                FileExtension.CYP, "enc");
         FileCryptoInformationContainer informationContainer = new FileCryptoInformationContainerImpl(sourceFileProvider,
                 destinationFileProvider, encryptCipherProvider);
         encryptor.encryptFile(informationContainer);
@@ -56,7 +57,8 @@ public class CryptorPlugImpl implements CryptorPlug {
         FileProvider sourceFileProvider = decryptFileSelector.selectFile();
         sendCommunicate("Select cipher");
         CipherProvider decryptCipherProvider = decryptCipherSelector.selectCipher();
-        FileProvider destinationFileProvider = createFileProviderFromSource(sourceFileProvider, FileExtension.TXT, "dec");
+        FileProvider destinationFileProvider = FileProviderImpl.fromSource(sourceFileProvider,
+                FileExtension.TXT, "dec");
         FileCryptoInformationContainer informationContainer = new FileCryptoInformationContainerImpl(sourceFileProvider,
                 destinationFileProvider, decryptCipherProvider);
         decryptor.decryptFile(informationContainer);
@@ -66,17 +68,6 @@ public class CryptorPlugImpl implements CryptorPlug {
     @Override
     public void registerCommunicatesReceiver(CommunicateReceiver communicateReceiver) {
         communicateEvent.addListener(communicateReceiver::onCommunicateOccurred);
-    }
-
-    private FileProvider createFileProviderFromSource(FileProvider sourceFileProvider, FileExtension extension,
-                                                      String postfix) {
-        FileInfo fileInfo = sourceFileProvider.getFileInfo();
-        String newName = "%s_%s.%s".formatted(fileInfo.fileName().split("\\.")[0], postfix, extension.strValue());
-        Path path = FileSystems.getDefault().getPath(fileInfo.canonicalPath());
-        Path newPath = path.resolveSibling(newName);
-        String newCanonicalPath = String.valueOf(newPath);
-        FileInfo destinationFileInfo = new FileInfo(newCanonicalPath, newName, extension);
-        return new FileProviderImpl(destinationFileInfo);
     }
 
     private void sendCommunicate(String content) {
