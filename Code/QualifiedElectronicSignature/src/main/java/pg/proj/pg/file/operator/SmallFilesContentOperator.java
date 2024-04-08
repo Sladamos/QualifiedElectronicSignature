@@ -40,4 +40,10 @@ public class SmallFilesContentOperator implements FileContentOperator {
             throw new BasicAppError("Unable to save content to file");
         }
     }
+
+    @Override
+    public void saveStrFileContent(FileInfo destinationFile, String fileContent) {
+        byte[] contentBytes = fileContent.getBytes();
+        saveByteFileContent(destinationFile, contentBytes);
+    }
 }

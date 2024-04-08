@@ -1,6 +1,7 @@
 package pg.proj.pg;
 
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -47,12 +48,20 @@ public class MainController {
 
     @FXML
     private void onEncryptClicked() {
-        //errorHandlingLayer.runInErrorHandler(cryptorPlug::onEncryptCalled);
-        errorHandlingLayer.runInErrorHandler(signerPlug::onSignCalled);
+        errorHandlingLayer.runInErrorHandler(cryptorPlug::onEncryptCalled);
     }
 
     @FXML
     private void onDecryptClicked() {
         errorHandlingLayer.runInErrorHandler(cryptorPlug::onDecryptCalled);
+    }
+
+    @FXML
+    private void onSignClicked() {
+        errorHandlingLayer.runInErrorHandler(signerPlug::onSignCalled);
+    }
+
+    @FXML
+    private void onVerifyClicked() {
     }
 }

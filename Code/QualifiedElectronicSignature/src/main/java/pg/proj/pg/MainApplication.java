@@ -25,6 +25,7 @@ import pg.proj.pg.file.cryptography.signer.FileSigner;
 import pg.proj.pg.file.cryptography.signer.SmallFilesSigner;
 import pg.proj.pg.file.detector.DesktopFileDetector;
 import pg.proj.pg.file.detector.FileDetector;
+import pg.proj.pg.file.detector.UsbFileDetector;
 import pg.proj.pg.file.selector.PreDetectedFileSelector;
 import pg.proj.pg.key.generator.*;
 import pg.proj.pg.cipher.info.CipherInfo;
@@ -62,6 +63,8 @@ import pg.proj.pg.signature.selector.SignatureExecutionerSelector;
 import pg.proj.pg.signature.type.SignatureType;
 import pg.proj.pg.signature.unlocker.SignatureExecutionerInfoUnlocker;
 import pg.proj.pg.signature.unlocker.SignatureExecutionerInfoUnlockerImpl;
+import pg.proj.pg.xml.writer.SignatureXmlWriter;
+import pg.proj.pg.xml.writer.XadesSignatureXmlWriter;
 
 import javax.crypto.spec.IvParameterSpec;
 import java.io.IOException;
@@ -191,7 +194,7 @@ public class MainApplication extends Application {
         CipherInitializer rsaCipherInitializer = new SimpleCipherInitializer();
         FileSelector encryptedPrivateKeySelector = new JavaFXFileSelector(stage,
                 "Select encrypted private key", Set.of(FileExtension.EPK));
-        FileDetector encryptedPrivateKeyDetector = new DesktopFileDetector("private_key", FileExtension.EPK);
+        FileDetector encryptedPrivateKeyDetector = new UsbFileDetector("private_key", FileExtension.EPK);
         FileSelector encryptedCipherPreDetectedFileSelector = new PreDetectedFileSelector(encryptedPrivateKeySelector, encryptedPrivateKeyDetector);
         KeyGen rsaKeyGen = new PrivateRsaKeyGen();
         JavaFXPasswordSelector passwordSelector = new JavaFXPasswordSelector(errorHandlingLayer);
@@ -244,7 +247,7 @@ public class MainApplication extends Application {
         SignatureExecutionerInitializer rsaExecutionerInitializer = new SignatureExecutionerInitializerImpl();
         FileSelector encryptedPrivateKeySelector = new JavaFXFileSelector(stage,
                 "Select encrypted private key", Set.of(FileExtension.EPK));
-        FileDetector encryptedPrivateKeyDetector = new DesktopFileDetector("private_key", FileExtension.EPK);
+        FileDetector encryptedPrivateKeyDetector = new DesktopFileDetector("private_key", FileExtension.EPK); //TODO swtich to usb
         FileSelector encryptedCipherPreDetectedFileSelector = new PreDetectedFileSelector(encryptedPrivateKeySelector, encryptedPrivateKeyDetector);
         PrivateKeyGen rsaKeyGen = new PrivateRsaKeyGen();
         JavaFXPasswordSelector passwordSelector = new JavaFXPasswordSelector(errorHandlingLayer);
@@ -265,7 +268,8 @@ public class MainApplication extends Application {
 
     private FileSigner createFileSigner() {
         FileContentOperator signerFileContentOperator = new SmallFilesContentOperator();
-        return new SmallFilesSigner(signerFileContentOperator);
+        SignatureXmlWriter signatureXmlWriter = new XadesSignatureXmlWriter();
+        return new SmallFilesSigner(signerFileContentOperator, signatureXmlWriter);
     }
 
     private DocumentInfoProvider createDocumentInfoProvider() {

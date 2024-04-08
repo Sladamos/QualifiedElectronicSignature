@@ -6,12 +6,16 @@ import pg.proj.pg.file.cryptography.container.FileSignerInformationContainer;
 import pg.proj.pg.file.info.FileInfo;
 import pg.proj.pg.file.operator.FileContentOperator;
 import pg.proj.pg.signature.executioner.SignatureExecutioner;
+import pg.proj.pg.xml.info.SignatureXmlInfo;
+import pg.proj.pg.xml.writer.SignatureXmlWriter;
 
 
 @AllArgsConstructor
 public class SmallFilesSigner implements FileSigner {
 
     private final FileContentOperator contentOperator;
+
+    private final SignatureXmlWriter xmlWriter;
 
     @Override
     public void signFile(FileSignerInformationContainer informationContainer) {
@@ -20,6 +24,8 @@ public class SmallFilesSigner implements FileSigner {
         FileInfo sourceFileInfo = sourceInfo.documentDetails().fileInfo();
         byte[] sourceContent = contentOperator.loadByteFileContent(sourceFileInfo);
         byte[] signedValue = executioner.sign(sourceContent);
-        contentOperator.saveByteFileContent(informationContainer.getDestinationFileInfo(), signedValue); //TODO: xades
+        SignatureXmlInfo xmlInfo = new SignatureXmlInfo(sourceInfo, signedValue);
+        String xml = xmlWriter.toXml(xmlInfo);
+        contentOperator.saveStrFileContent(informationContainer.getDestinationFileInfo(), xml);
     }
 }

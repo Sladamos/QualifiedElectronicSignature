@@ -6,6 +6,9 @@ import pg.proj.pg.date.provider.DateProvider;
 import pg.proj.pg.document.details.provider.DocumentDetailsProvider;
 import pg.proj.pg.document.info.DocumentInfo;
 import pg.proj.pg.file.info.FileInfo;
+
+import java.time.ZoneId;
+
 @AllArgsConstructor
 public class DocumentInfoProviderImpl implements DocumentInfoProvider {
 
@@ -17,6 +20,7 @@ public class DocumentInfoProviderImpl implements DocumentInfoProvider {
 
     @Override
     public DocumentInfo getDocumentInfo(FileInfo fileInfo) {
-        return new DocumentInfo(detailsProvider.getDocumentDetails(fileInfo), authorProvider.getAuthor(), dateProvider.getDate());
+        return new DocumentInfo(detailsProvider.getDocumentDetails(fileInfo), authorProvider.getAuthor(),
+                dateProvider.getDate().atZone(ZoneId.systemDefault()).toInstant());
     }
 }

@@ -7,13 +7,19 @@
       <top>
           <Label styleClass="title" text="Welcome to Tool Emulator" BorderPane.alignment="CENTER" />
       </top>
-   <center>
-       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0" BorderPane.alignment="CENTER">
-           <Button mnemonicParsing="false" onAction="#onEncryptClicked" styleClass="button" text="Encrypt file"/>
-           <Button onAction="#onDecryptClicked" styleClass="button" text="Decrypt file"/>
-       </HBox>
-   </center>
    <bottom>
       <Label fx:id="communicateLabel" styleClass="communicate" wrapText="true" BorderPane.alignment="CENTER" />
    </bottom>
+   <center>
+       <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+           <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+               <Button mnemonicParsing="false" onAction="#onEncryptClicked" styleClass="button" text="Encrypt file"/>
+               <Button onAction="#onDecryptClicked" styleClass="button" text="Decrypt file"/>
+           </HBox>
+           <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+               <Button mnemonicParsing="false" onAction="#onSignClicked" styleClass="button" text="Sign file"/>
+               <Button onAction="#onVerifyClicked" styleClass="button" text="Verify file"/>
+           </HBox>
+       </VBox>
+   </center>
    </BorderPane>
