@@ -1,6 +1,7 @@
 package pg.proj.pg.file.cryptography.verifier;
 
 import lombok.AllArgsConstructor;
+import pg.proj.pg.document.info.DocumentInfo;
 import pg.proj.pg.file.cryptography.container.FileVerifierInformationContainer;
 import pg.proj.pg.file.info.FileInfo;
 import pg.proj.pg.file.operator.FileContentOperator;
@@ -23,7 +24,13 @@ public class SmallFilesVerifier implements FileVerifier {
         SignatureVerifier verifier = informationContainer.getSignatureVerifier();
         byte[] sourceFileContent = contentOperator.loadByteFileContent(sourceFileInfo);
         boolean isSignatureValid = verifier.isSignatureValid(sourceFileContent, signatureInfo.signedValue());
-        //TODO verify attributes
-        return isSignatureValid;
+        DocumentInfo sourceDocumentInfo = informationContainer.getSourceDocumentInfo();
+        DocumentInfo documentInfoFromSignature = signatureInfo.sourceInfo();
+        boolean areAttributesValid = areAttributesEqual(sourceDocumentInfo, documentInfoFromSignature);
+        return isSignatureValid && areAttributesValid;
+    }
+
+    private boolean areAttributesEqual(DocumentInfo first, DocumentInfo second) {
+        return first.equals(second);
     }
 }

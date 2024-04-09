@@ -12,7 +12,7 @@ public enum FileExtension {
 
     /**
      * Throws {@code IllegalArgumentException} when
-     * substring doesn't match any extension.
+     * substring doesn't match any fileExtension.
      */
     public static FileExtension fromString(String substring) {
         switch (substring) {

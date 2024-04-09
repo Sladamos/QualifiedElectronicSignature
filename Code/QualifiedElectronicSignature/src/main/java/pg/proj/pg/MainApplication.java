@@ -19,6 +19,7 @@ import pg.proj.pg.data.unlocker.DataUnlocker;
 import pg.proj.pg.data.unlocker.HashedDataUnlocker;
 import pg.proj.pg.date.provider.CurrentDateProvider;
 import pg.proj.pg.document.details.provider.DocumentDetailsProviderImpl;
+import pg.proj.pg.document.info.DocumentInfo;
 import pg.proj.pg.document.info.provider.DocumentInfoProvider;
 import pg.proj.pg.document.info.provider.DocumentInfoProviderImpl;
 import pg.proj.pg.file.cryptography.signer.FileSigner;
@@ -76,6 +77,7 @@ import pg.proj.pg.xml.writer.XadesSignatureXmlWriter;
 
 import javax.crypto.spec.IvParameterSpec;
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -174,10 +176,8 @@ public class MainApplication extends Application {
                                                                  FileContentOperator cipherFileContentOperator) {
         FileSelector publicKeySelector = new JavaFXFileSelector(stage,
                 "Select plain public key", Set.of(FileExtension.PUK));
-        FileDetector publicKeyDetector = new DesktopFileDetector("public_key", FileExtension.PUK);
-        FileSelector publicKeyPreDetectedFileSelector = new PreDetectedFileSelector(publicKeySelector, publicKeyDetector);
         KeyGen rsaKeyGen = new PublicRsaKeyGen();
-        Supplier<CipherInfo> cipherInfoSupplier = () -> CipherInfo.createFromPEMFile(publicKeyPreDetectedFileSelector,
+        Supplier<CipherInfo> cipherInfoSupplier = () -> CipherInfo.createFromPEMFile(publicKeySelector,
                 cipherFileContentOperator, rsaKeyGen, CipherType.RSA);
         CipherInitializer rsaCipherInitializer = new SimpleCipherInitializer();
         return new PlainCipherProvider("RSA", rsaCipherInitializer, cipherInfoSupplier);
@@ -189,7 +189,7 @@ public class MainApplication extends Application {
         CipherInitializer rsaCipherInitializer = new SimpleCipherInitializer();
         FileSelector encryptedPrivateKeySelector = new JavaFXFileSelector(stage,
                 "Select encrypted private key", Set.of(FileExtension.EPK));
-        FileDetector encryptedPrivateKeyDetector = new DesktopFileDetector("private_key", FileExtension.EPK);
+        FileDetector encryptedPrivateKeyDetector = new UsbFileDetector("private_key", FileExtension.EPK);
         FileSelector encryptedCipherPreDetectedFileSelector = new PreDetectedFileSelector(encryptedPrivateKeySelector, encryptedPrivateKeyDetector);
         KeyGen rsaKeyGen = new PrivateRsaKeyGen();
         JavaFXPasswordSelector passwordSelector = new JavaFXPasswordSelector(errorHandlingLayer);
@@ -246,12 +246,9 @@ public class MainApplication extends Application {
                                                                               FileContentOperator signerFileContentOperator) {
         FileSelector publicKeySelector = new JavaFXFileSelector(stage,
                 "Select plain public key", Set.of(FileExtension.PUK));
-        FileDetector publicKeyDetector = new DesktopFileDetector("public_key", FileExtension.PUK);
-        FileSelector publicKeyPreDetectedFileSelector = new PreDetectedFileSelector(publicKeySelector,
-                publicKeyDetector);
         PublicKeyGen rsaKeyGen = new PublicRsaKeyGen();
         Supplier<SignatureVerifierInfo> verifierInfoSupplier = () ->
-                SignatureVerifierInfo.createFromPEMFile(publicKeyPreDetectedFileSelector,
+                SignatureVerifierInfo.createFromPEMFile(publicKeySelector,
                         signerFileContentOperator, rsaKeyGen, SignatureType.RSA);
         SignatureVerifierInitializer verifierInitializer = new SignatureVerifierInitializerImpl();
         return new PlainSignatureVerifierProvider("RSA", verifierInitializer, verifierInfoSupplier);
