@@ -56,14 +56,16 @@ import pg.proj.pg.plug.CryptorPlugImpl;
 import pg.proj.pg.plug.SignerPlug;
 import pg.proj.pg.plug.SignerPlugImpl;
 import pg.proj.pg.signature.info.SignatureExecutionerInfo;
+import pg.proj.pg.signature.info.SignatureVerifierInfo;
 import pg.proj.pg.signature.initializer.SignatureExecutionerInitializer;
 import pg.proj.pg.signature.initializer.SignatureExecutionerInitializerImpl;
-import pg.proj.pg.signature.provider.EncryptedSignatureExecutionerProvider;
-import pg.proj.pg.signature.provider.SignatureExecutionerProvider;
-import pg.proj.pg.signature.provider.SignatureInfoProvider;
-import pg.proj.pg.signature.provider.XmlSignatureInfoProvider;
+import pg.proj.pg.signature.initializer.SignatureVerifierInitializer;
+import pg.proj.pg.signature.initializer.SignatureVerifierInitializerImpl;
+import pg.proj.pg.signature.provider.*;
 import pg.proj.pg.signature.selector.JavaFXSignatureExecutionerSelector;
+import pg.proj.pg.signature.selector.JavaFXSignatureVerifierSelector;
 import pg.proj.pg.signature.selector.SignatureExecutionerSelector;
+import pg.proj.pg.signature.selector.SignatureVerifierSelector;
 import pg.proj.pg.signature.type.SignatureType;
 import pg.proj.pg.signature.unlocker.SignatureExecutionerInfoUnlocker;
 import pg.proj.pg.signature.unlocker.SignatureExecutionerInfoUnlockerImpl;
@@ -233,19 +235,44 @@ public class MainApplication extends Application {
         FileSelector verifyFileSelector = new JavaFXFileSelector(stage, "Select file to verify", signerFileExtensions);
         FileSelector signatureFileSelector = new JavaFXFileSelector(stage, "Select file with signature", Set.of(FileExtension.XML));
         FileContentOperator signerFileContentOperator = new SmallFilesContentOperator();
-        SignatureExecutionerSelector encryptExecutionerSelector = createEncryptExecutionerSelector(stage,
+        SignatureExecutionerSelector signatureExecutionerSelector = createExecutionerSelector(stage,
                 signerFileContentOperator, errorHandlingLayer);
         FileSigner fileSigner = createFileSigner();
         FileVerifier fileVerifier = createFileVerifier();
+        SignatureVerifierSelector signatureVerifierSelector = createVerifierSelector(stage,
+                signerFileContentOperator, errorHandlingLayer);
         SignerPlug signerPlug = new SignerPlugImpl(signFileSelector, verifyFileSelector, signatureFileSelector,
-                encryptExecutionerSelector, fileSigner, fileVerifier,
+                signatureExecutionerSelector, signatureVerifierSelector, fileSigner, fileVerifier,
                 this::createDocumentInfoProvider, this::createDocumentInfoProvider);
         signerPlug.registerCommunicatesReceiver(receiver);
         return signerPlug;
     }
 
-    private SignatureExecutionerSelector createEncryptExecutionerSelector(Stage stage,
-            FileContentOperator contentOperator, ErrorHandlingLayer errorHandlingLayer) {
+    private SignatureVerifierSelector createVerifierSelector(Stage stage, FileContentOperator signerFileContentOperator, ErrorHandlingLayer errorHandlingLayer) {
+        SignatureVerifierProvider plainRsaProvider = createPlainRsaPublicKeyVerifierProvider(stage,
+                signerFileContentOperator);
+        List<SignatureVerifierProvider> verifierProviders = List.of(plainRsaProvider);
+        return new JavaFXSignatureVerifierSelector(verifierProviders, errorHandlingLayer);
+    }
+
+    private SignatureVerifierProvider createPlainRsaPublicKeyVerifierProvider(Stage stage,
+                                                                              FileContentOperator signerFileContentOperator) {
+        FileSelector publicKeySelector = new JavaFXFileSelector(stage,
+                "Select plain public key", Set.of(FileExtension.PUK));
+        FileDetector publicKeyDetector = new DesktopFileDetector("public_key", FileExtension.PUK);
+        FileSelector publicKeyPreDetectedFileSelector = new PreDetectedFileSelector(publicKeySelector,
+                publicKeyDetector);
+        PublicKeyGen rsaKeyGen = new PublicRsaKeyGen();
+        Supplier<SignatureVerifierInfo> verifierInfoSupplier = () ->
+                SignatureVerifierInfo.createFromPEMFile(publicKeyPreDetectedFileSelector,
+                        signerFileContentOperator, rsaKeyGen, SignatureType.RSA);
+        SignatureVerifierInitializer verifierInitializer = new SignatureVerifierInitializerImpl();
+        return new PlainSignatureVerifierProvider("RSA", verifierInitializer, verifierInfoSupplier);
+    }
+
+    private SignatureExecutionerSelector createExecutionerSelector(Stage stage,
+                                                                   FileContentOperator contentOperator,
+                                                                   ErrorHandlingLayer errorHandlingLayer) {
         SignatureExecutionerProvider encryptedRsaProvider = createEncryptedRsaPrivateKeyExecutionerProvider(stage,
                 contentOperator, errorHandlingLayer);
         List<SignatureExecutionerProvider> encryptExecutionerProviders = List.of(encryptedRsaProvider);

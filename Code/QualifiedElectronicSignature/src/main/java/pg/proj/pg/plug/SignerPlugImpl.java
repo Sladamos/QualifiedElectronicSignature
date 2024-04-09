@@ -19,7 +19,9 @@ import pg.proj.pg.file.selector.FileSelector;
 import pg.proj.pg.signature.info.SignatureInfo;
 import pg.proj.pg.signature.provider.SignatureExecutionerProvider;
 import pg.proj.pg.signature.provider.SignatureInfoProvider;
+import pg.proj.pg.signature.provider.SignatureVerifierProvider;
 import pg.proj.pg.signature.selector.SignatureExecutionerSelector;
+import pg.proj.pg.signature.selector.SignatureVerifierSelector;
 
 import java.util.function.Supplier;
 
@@ -33,6 +35,8 @@ public class SignerPlugImpl implements SignerPlug {
     private final FileSelector signatureFileSelector;
 
     private final SignatureExecutionerSelector signatureExecutionerSelector;
+
+    private final SignatureVerifierSelector signatureVerifierSelector;
 
     private final FileSigner signer;
 
@@ -67,12 +71,11 @@ public class SignerPlugImpl implements SignerPlug {
         sendCommunicate("Select file with signature");
         FileProvider signatureFileProvider = signatureFileSelector.selectFile();
         sendCommunicate("Select verifier");
-        //select verifier provider - SignatureVerifierSelector
-        //FileVerifierInformationContainer - signatureInfo + sourceInfo + verifierProvider
+        SignatureVerifierProvider signatureVerifierProvider = signatureVerifierSelector.selectVerifier();
         DocumentInfoProvider documentInfoProvider = verifierDocumentInfoProviderSupplier.get();
         FileVerifierInformationContainer informationContainer =
                 new FileVerifierInformationContainerImpl(sourceFileProvider, signatureFileProvider,
-                        documentInfoProvider);
+                        documentInfoProvider, signatureVerifierProvider);
         sendCommunicate("Verifying signature");
         boolean isSigned = verifier.isFileSigned(informationContainer);
         sendCommunicateAboutVerifiedFile(isSigned);

@@ -5,6 +5,7 @@ import pg.proj.pg.document.info.DocumentInfo;
 import pg.proj.pg.document.info.provider.DocumentInfoProvider;
 import pg.proj.pg.file.info.FileInfo;
 import pg.proj.pg.file.provider.FileProvider;
+import pg.proj.pg.signature.provider.SignatureVerifierProvider;
 import pg.proj.pg.signature.verifier.SignatureVerifier;
 
 @AllArgsConstructor
@@ -15,6 +16,8 @@ public class FileVerifierInformationContainerImpl implements FileVerifierInforma
     private final FileProvider signatureFileProvider;
 
     private final DocumentInfoProvider documentInfoProvider;
+
+    private final SignatureVerifierProvider verifierProvider;
 
     @Override
     public FileInfo getSourceFileInfo() {
@@ -33,6 +36,6 @@ public class FileVerifierInformationContainerImpl implements FileVerifierInforma
 
     @Override
     public SignatureVerifier getSignatureVerifier() {
-        return null;
+        return verifierProvider.getSignatureVerifier();
     }
 }
