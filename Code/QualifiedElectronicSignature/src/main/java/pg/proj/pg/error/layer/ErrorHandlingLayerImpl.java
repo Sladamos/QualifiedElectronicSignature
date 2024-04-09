@@ -42,7 +42,7 @@ public class ErrorHandlingLayerImpl implements ErrorHandlingLayer {
     }
 
     private void notifyAboutUnspecifiedException(Exception err) {
-        CriticalAppError criticalError = new CriticalAppError("Something went very wrong. " + err.getMessage());
+        CriticalAppError criticalError = new CriticalAppError("Something went very wrong");
         criticalErrorEvent.invoke(criticalError);
     }
 
