@@ -10,23 +10,23 @@ import pg.proj.pg.error.layer.ErrorHandlingLayer;
 import pg.proj.pg.event.entity.api.NoArgsEvent;
 import pg.proj.pg.event.entity.impl.NoArgsEventImpl;
 import pg.proj.pg.event.receiver.api.NoArgsEventReceiver;
-import pg.proj.pg.signature.provider.SignatureExecutionerProvider;
+import pg.proj.pg.signature.provider.SignatureVerifierProvider;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class JavaFXSignatureExecutionerSelectorController {
+public class JavaFXSignatureVerifierSelectorController {
 
-    private final Map<String, SignatureExecutionerProvider> executionerProviders = new HashMap<>();
+    private final Map<String, SignatureVerifierProvider> verifierProviders = new HashMap<>();
 
     private final NoArgsEvent onCloseStageRequested = new NoArgsEventImpl();
 
     @Setter
     private ErrorHandlingLayer errorHandlingLayer;
 
-    private SignatureExecutionerProvider signatureExecutionerProvider;
+    private SignatureVerifierProvider signatureVerifierProvider;
 
     @FXML
     private FlowPane buttonsContainer;
@@ -34,18 +34,18 @@ public class JavaFXSignatureExecutionerSelectorController {
     @FXML
     private final ToggleGroup toggleGroup = new ToggleGroup();
 
-    public SignatureExecutionerProvider getSelectedSignatureExecutionerProvider() {
-        if(signatureExecutionerProvider == null) {
-            throw new BasicAppError("Signer provider wasn't selected properly");
+    public SignatureVerifierProvider getSelectedSignatureVerifierProvider() {
+        if(signatureVerifierProvider == null) {
+            throw new BasicAppError("Verifier provider wasn't selected properly");
         }
-        return signatureExecutionerProvider;
+        return signatureVerifierProvider;
     }
 
-    public void addExecutionerProviders(List<SignatureExecutionerProvider> newExecutionerProviders) {
-        var mapOfNewExecutionerProviders = newExecutionerProviders.stream().collect(Collectors.toMap(
-                SignatureExecutionerProvider::getUniqueName, (provider) -> provider));
-        executionerProviders.putAll(mapOfNewExecutionerProviders);
-        addProvidersAsRadioButtons(newExecutionerProviders);
+    public void addVerifierProviders(List<SignatureVerifierProvider> newVerifierProviders) {
+        var mapOfNewVerifierProviders = newVerifierProviders.stream().collect(Collectors.toMap(
+                SignatureVerifierProvider::getUniqueName, (provider) -> provider));
+        verifierProviders.putAll(mapOfNewVerifierProviders);
+        addProvidersAsRadioButtons(newVerifierProviders);
     }
 
     public void registerOnCloseStageRequested(NoArgsEventReceiver listener) {
@@ -54,23 +54,23 @@ public class JavaFXSignatureExecutionerSelectorController {
 
     @FXML
     protected void onSaveClicked() {
-        errorHandlingLayer.runInErrorHandler(this::updateSelectedExecutionerProvider);
+        errorHandlingLayer.runInErrorHandler(this::updateSelectedVerifierProvider);
     }
 
-    private void updateSelectedExecutionerProvider() {
+    private void updateSelectedVerifierProvider() {
         RadioButton button = (RadioButton) toggleGroup.getSelectedToggle();
         if(button == null) {
-            throw new BasicAppError("Executioner is not selected");
+            throw new BasicAppError("Verifier is not selected");
         }
         String key = button.getText();
-        signatureExecutionerProvider = executionerProviders.get(key);
+        signatureVerifierProvider = verifierProviders.get(key);
         onCloseStageRequested.invoke();
         onCloseStageRequested.removeAllListeners();
     }
 
-    private void addProvidersAsRadioButtons(List<SignatureExecutionerProvider> newExecutionerProviders) {
-        newExecutionerProviders.stream()
-                .map(SignatureExecutionerProvider::getUniqueName)
+    private void addProvidersAsRadioButtons(List<SignatureVerifierProvider> newVerifierProviders) {
+        newVerifierProviders.stream()
+                .map(SignatureVerifierProvider::getUniqueName)
                 .map(RadioButton::new)
                 .forEach(this::addButtonToContainerWithProperToggleGroup);
     }

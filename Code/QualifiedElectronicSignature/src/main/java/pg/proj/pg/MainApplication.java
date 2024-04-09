@@ -23,7 +23,8 @@ import pg.proj.pg.document.info.provider.DocumentInfoProvider;
 import pg.proj.pg.document.info.provider.DocumentInfoProviderImpl;
 import pg.proj.pg.file.cryptography.signer.FileSigner;
 import pg.proj.pg.file.cryptography.signer.SmallFilesSigner;
-import pg.proj.pg.file.detector.DesktopFileDetector;
+import pg.proj.pg.file.cryptography.verifier.FileVerifier;
+import pg.proj.pg.file.cryptography.verifier.SmallFilesVerifier;
 import pg.proj.pg.file.detector.FileDetector;
 import pg.proj.pg.file.detector.UsbFileDetector;
 import pg.proj.pg.file.selector.PreDetectedFileSelector;
@@ -54,15 +55,21 @@ import pg.proj.pg.plug.CryptorPlugImpl;
 import pg.proj.pg.plug.SignerPlug;
 import pg.proj.pg.plug.SignerPlugImpl;
 import pg.proj.pg.signature.info.SignatureExecutionerInfo;
+import pg.proj.pg.signature.info.SignatureVerifierInfo;
 import pg.proj.pg.signature.initializer.SignatureExecutionerInitializer;
 import pg.proj.pg.signature.initializer.SignatureExecutionerInitializerImpl;
-import pg.proj.pg.signature.provider.EncryptedSignatureExecutionerProvider;
-import pg.proj.pg.signature.provider.SignatureExecutionerProvider;
+import pg.proj.pg.signature.initializer.SignatureVerifierInitializer;
+import pg.proj.pg.signature.initializer.SignatureVerifierInitializerImpl;
+import pg.proj.pg.signature.provider.*;
 import pg.proj.pg.signature.selector.JavaFXSignatureExecutionerSelector;
+import pg.proj.pg.signature.selector.JavaFXSignatureVerifierSelector;
 import pg.proj.pg.signature.selector.SignatureExecutionerSelector;
+import pg.proj.pg.signature.selector.SignatureVerifierSelector;
 import pg.proj.pg.signature.type.SignatureType;
 import pg.proj.pg.signature.unlocker.SignatureExecutionerInfoUnlocker;
 import pg.proj.pg.signature.unlocker.SignatureExecutionerInfoUnlockerImpl;
+import pg.proj.pg.xml.parser.XadesXmlSignatureParser;
+import pg.proj.pg.xml.parser.XmlSignatureParser;
 import pg.proj.pg.xml.writer.SignatureXmlWriter;
 import pg.proj.pg.xml.writer.XadesSignatureXmlWriter;
 
@@ -166,26 +173,11 @@ public class MainApplication extends Application {
                                                                  FileContentOperator cipherFileContentOperator) {
         FileSelector publicKeySelector = new JavaFXFileSelector(stage,
                 "Select plain public key", Set.of(FileExtension.PUK));
-        FileDetector publicKeyDetector = new DesktopFileDetector("public_key", FileExtension.PUK);
-        FileSelector publicKeyPreDetectedFileSelector = new PreDetectedFileSelector(publicKeySelector, publicKeyDetector);
         KeyGen rsaKeyGen = new PublicRsaKeyGen();
-        Supplier<CipherInfo> cipherInfoSupplier = () -> CipherInfo.createFromPEMFile(publicKeyPreDetectedFileSelector,
+        Supplier<CipherInfo> cipherInfoSupplier = () -> CipherInfo.createFromPEMFile(publicKeySelector,
                 cipherFileContentOperator, rsaKeyGen, CipherType.RSA);
         CipherInitializer rsaCipherInitializer = new SimpleCipherInitializer();
         return new PlainCipherProvider("RSA", rsaCipherInitializer, cipherInfoSupplier);
-    }
-
-    private CipherProvider createPlainRsaPrivateKeyCipherProvider(Stage stage,
-                                                                  FileContentOperator cipherFileContentOperator) {
-        CipherInitializer rsaCipherInitializer = new SimpleCipherInitializer();
-        KeyGen rsaKeyGen = new PrivateRsaKeyGen();
-        FileSelector plainPrivateKeySelector = new JavaFXFileSelector(stage,
-                "Select plain private key", Set.of(FileExtension.PPK));
-        FileDetector plainPrivateKeyDetector = new DesktopFileDetector("private_key", FileExtension.PPK);
-        FileSelector plainCipherPreDetectedFileSelector = new PreDetectedFileSelector(plainPrivateKeySelector, plainPrivateKeyDetector);
-        Supplier<CipherInfo> plainCipherInfoSupplier = () -> CipherInfo.createFromPEMFile(plainCipherPreDetectedFileSelector,
-                cipherFileContentOperator, rsaKeyGen, CipherType.RSA);
-        return new PlainCipherProvider("PlainRSA", rsaCipherInitializer, plainCipherInfoSupplier);
     }
 
     private CipherProvider createEncryptedRsaPrivateKeyCipherProvider(Stage stage,
@@ -223,18 +215,45 @@ public class MainApplication extends Application {
 
     private SignerPlug createSignerPlug(Stage stage, ErrorHandlingLayer errorHandlingLayer, MainReceiver receiver) {
         Set<FileExtension> signerFileExtensions = createExtensionsPossibleToEncrypt();
-        FileSelector signFileSelector = new JavaFXFileSelector(stage, "Select source file", signerFileExtensions);
+        FileSelector signFileSelector = new JavaFXFileSelector(stage, "Select file to sign", signerFileExtensions);
+        FileSelector verifyFileSelector = new JavaFXFileSelector(stage, "Select file to verify", signerFileExtensions);
+        FileSelector signatureFileSelector = new JavaFXFileSelector(stage, "Select file with signature", Set.of(FileExtension.XML));
         FileContentOperator signerFileContentOperator = new SmallFilesContentOperator();
-        SignatureExecutionerSelector encryptExecutionerSelector = createEncryptExecutionerSelector(stage,
+        SignatureExecutionerSelector signatureExecutionerSelector = createExecutionerSelector(stage,
                 signerFileContentOperator, errorHandlingLayer);
         FileSigner fileSigner = createFileSigner();
-        SignerPlug signerPlug = new SignerPlugImpl(signFileSelector, encryptExecutionerSelector, fileSigner, this::createDocumentInfoProvider);
+        FileVerifier fileVerifier = createFileVerifier();
+        SignatureVerifierSelector signatureVerifierSelector = createVerifierSelector(stage,
+                signerFileContentOperator, errorHandlingLayer);
+        SignerPlug signerPlug = new SignerPlugImpl(signFileSelector, verifyFileSelector, signatureFileSelector,
+                signatureExecutionerSelector, signatureVerifierSelector, fileSigner, fileVerifier,
+                this::createDocumentInfoProvider, this::createDocumentInfoProvider);
         signerPlug.registerCommunicatesReceiver(receiver);
         return signerPlug;
     }
 
-    private SignatureExecutionerSelector createEncryptExecutionerSelector(Stage stage,
-            FileContentOperator contentOperator, ErrorHandlingLayer errorHandlingLayer) {
+    private SignatureVerifierSelector createVerifierSelector(Stage stage, FileContentOperator signerFileContentOperator, ErrorHandlingLayer errorHandlingLayer) {
+        SignatureVerifierProvider plainRsaProvider = createPlainRsaPublicKeyVerifierProvider(stage,
+                signerFileContentOperator);
+        List<SignatureVerifierProvider> verifierProviders = List.of(plainRsaProvider);
+        return new JavaFXSignatureVerifierSelector(verifierProviders, errorHandlingLayer);
+    }
+
+    private SignatureVerifierProvider createPlainRsaPublicKeyVerifierProvider(Stage stage,
+                                                                              FileContentOperator signerFileContentOperator) {
+        FileSelector publicKeySelector = new JavaFXFileSelector(stage,
+                "Select plain public key", Set.of(FileExtension.PUK));
+        PublicKeyGen rsaKeyGen = new PublicRsaKeyGen();
+        Supplier<SignatureVerifierInfo> verifierInfoSupplier = () ->
+                SignatureVerifierInfo.createFromPEMFile(publicKeySelector,
+                        signerFileContentOperator, rsaKeyGen, SignatureType.RSA);
+        SignatureVerifierInitializer verifierInitializer = new SignatureVerifierInitializerImpl();
+        return new PlainSignatureVerifierProvider("RSA", verifierInitializer, verifierInfoSupplier);
+    }
+
+    private SignatureExecutionerSelector createExecutionerSelector(Stage stage,
+                                                                   FileContentOperator contentOperator,
+                                                                   ErrorHandlingLayer errorHandlingLayer) {
         SignatureExecutionerProvider encryptedRsaProvider = createEncryptedRsaPrivateKeyExecutionerProvider(stage,
                 contentOperator, errorHandlingLayer);
         List<SignatureExecutionerProvider> encryptExecutionerProviders = List.of(encryptedRsaProvider);
@@ -247,7 +266,7 @@ public class MainApplication extends Application {
         SignatureExecutionerInitializer rsaExecutionerInitializer = new SignatureExecutionerInitializerImpl();
         FileSelector encryptedPrivateKeySelector = new JavaFXFileSelector(stage,
                 "Select encrypted private key", Set.of(FileExtension.EPK));
-        FileDetector encryptedPrivateKeyDetector = new DesktopFileDetector("private_key", FileExtension.EPK); //TODO swtich to usb
+        FileDetector encryptedPrivateKeyDetector = new UsbFileDetector("private_key", FileExtension.EPK);
         FileSelector encryptedCipherPreDetectedFileSelector = new PreDetectedFileSelector(encryptedPrivateKeySelector, encryptedPrivateKeyDetector);
         PrivateKeyGen rsaKeyGen = new PrivateRsaKeyGen();
         JavaFXPasswordSelector passwordSelector = new JavaFXPasswordSelector(errorHandlingLayer);
@@ -270,6 +289,15 @@ public class MainApplication extends Application {
         FileContentOperator signerFileContentOperator = new SmallFilesContentOperator();
         SignatureXmlWriter signatureXmlWriter = new XadesSignatureXmlWriter();
         return new SmallFilesSigner(signerFileContentOperator, signatureXmlWriter);
+    }
+
+    private FileVerifier createFileVerifier() {
+        FileContentOperator verifierFileContentOperator = new SmallFilesContentOperator();
+        FileContentOperator signatureProviderContentOperator = new SmallFilesContentOperator();
+        XmlSignatureParser signatureParser = new XadesXmlSignatureParser();
+        SignatureInfoProvider signatureInfoProvider = new XmlSignatureInfoProvider(signatureParser,
+                signatureProviderContentOperator);
+        return new SmallFilesVerifier(verifierFileContentOperator, signatureInfoProvider);
     }
 
     private DocumentInfoProvider createDocumentInfoProvider() {

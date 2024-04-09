@@ -16,7 +16,7 @@ public class DocumentDetailsProviderImpl implements DocumentDetailsProvider {
             Path filePath = Path.of(fileInfo.canonicalPath());
             BasicFileAttributes fileAttributes = Files.readAttributes(filePath, BasicFileAttributes.class);
             return new DocumentDetails(fileAttributes.size(), fileAttributes.creationTime().toInstant(),
-                    fileAttributes.lastModifiedTime().toInstant(), fileInfo);
+                    fileAttributes.lastModifiedTime().toInstant(), fileInfo.fileName(), fileInfo.extension());
         } catch (IOException e) {
             throw new BasicAppError("Unable to get details from file");
         }

@@ -2,11 +2,11 @@ package pg.proj.pg.file.cryptography.container;
 
 import pg.proj.pg.document.info.DocumentInfo;
 import pg.proj.pg.file.info.FileInfo;
-import pg.proj.pg.signature.executioner.SignatureExecutioner;
+import pg.proj.pg.signature.verifier.SignatureVerifier;
 
-public interface FileSignerInformationContainer {
+public interface FileVerifierInformationContainer {
     FileInfo getSourceFileInfo();
-    FileInfo getDestinationFileInfo();
     DocumentInfo getSourceDocumentInfo();
-    SignatureExecutioner getSignatureExecutioner();
+    FileInfo getSignatureFileInfo();
+    SignatureVerifier getSignatureVerifier();
 }

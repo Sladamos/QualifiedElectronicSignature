@@ -1,7 +1,5 @@
 package pg.proj.pg.signature.info;
 
-import pg.proj.pg.cipher.info.CipherInfo;
-import pg.proj.pg.cipher.type.CipherType;
 import pg.proj.pg.error.definition.BasicAppError;
 import pg.proj.pg.file.info.FileInfo;
 import pg.proj.pg.file.operator.FileContentOperator;
@@ -11,8 +9,6 @@ import pg.proj.pg.key.generator.PrivateKeyGen;
 import pg.proj.pg.key.info.KeyInfo;
 import pg.proj.pg.signature.type.SignatureType;
 
-import javax.crypto.Cipher;
-import javax.crypto.NoSuchPaddingException;
 import java.security.NoSuchAlgorithmException;
 import java.security.Signature;
 
@@ -30,7 +26,7 @@ public record SignatureExecutionerInfo(Signature signature, PrivateKeyGen keyGen
             Signature signature = Signature.getInstance(signatureType.getSignatureType());
             return new SignatureExecutionerInfo(signature, rsaKeyGen, keyInfo, signatureType);
         } catch (NoSuchAlgorithmException e) {
-            throw new BasicAppError("Unable to get all necessary cipher information");
+            throw new BasicAppError("Unable to get all necessary signer information");
         }
     }
 }

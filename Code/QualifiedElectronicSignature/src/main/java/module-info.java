@@ -7,6 +7,7 @@ module pg.proj.pg {
     requires lombok;
     requires org.apache.commons.lang3;
     requires usbdrivedetector;
+    requires java.xml;
 
     exports pg.proj.pg;
     exports pg.proj.pg.error.receiver.api;

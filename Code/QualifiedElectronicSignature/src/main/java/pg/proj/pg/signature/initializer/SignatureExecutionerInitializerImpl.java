@@ -20,7 +20,7 @@ public class SignatureExecutionerInitializerImpl implements SignatureExecutioner
             signature.initSign(key);
             return signature;
         } catch (InvalidKeyException e) {
-            throw new BasicAppError("Unable to init cipher");
+            throw new BasicAppError("Unable to init signer");
         }
     }
 }

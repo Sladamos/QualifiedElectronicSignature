@@ -7,34 +7,34 @@ import javafx.stage.Stage;
 import lombok.AllArgsConstructor;
 import pg.proj.pg.error.definition.CriticalAppError;
 import pg.proj.pg.error.layer.ErrorHandlingLayer;
-import pg.proj.pg.signature.provider.SignatureExecutionerProvider;
+import pg.proj.pg.signature.provider.SignatureVerifierProvider;
 
 import java.io.IOException;
 import java.util.List;
 
 @AllArgsConstructor
-public class JavaFXSignatureExecutionerSelector implements SignatureExecutionerSelector {
+public class JavaFXSignatureVerifierSelector implements SignatureVerifierSelector {
 
-    private final List<SignatureExecutionerProvider> signatureExecutionerProviders;
+    private final List<SignatureVerifierProvider> signatureVerifierProviders;
 
     private final ErrorHandlingLayer errorHandlingLayer;
 
     @Override
-    public SignatureExecutionerProvider selectExecutioner() {
+    public SignatureVerifierProvider selectVerifier() {
         try {
-            FXMLLoader loader = new FXMLLoader(JavaFXSignatureExecutionerSelector.class.getResource("executioner-selector.fxml"));
+            FXMLLoader loader = new FXMLLoader(JavaFXSignatureVerifierSelector.class.getResource("verifier-selector.fxml"));
             Stage stage = initializeGuiAndCreateStage(loader);
-            JavaFXSignatureExecutionerSelectorController controller = loader.getController();
+            JavaFXSignatureVerifierSelectorController controller = loader.getController();
             initializeControllerWithNecessaryInformation(controller, stage);
             stage.showAndWait();
-            return controller.getSelectedSignatureExecutionerProvider();
+            return controller.getSelectedSignatureVerifierProvider();
         } catch (IOException | IllegalStateException e) {
-            throw new CriticalAppError("Unable to load select executioner scene");
+            throw new CriticalAppError("Unable to load select verifier scene");
         }
     }
 
-    private void initializeControllerWithNecessaryInformation(JavaFXSignatureExecutionerSelectorController controller, Stage stage) {
-        controller.addExecutionerProviders(signatureExecutionerProviders);
+    private void initializeControllerWithNecessaryInformation(JavaFXSignatureVerifierSelectorController controller, Stage stage) {
+        controller.addVerifierProviders(signatureVerifierProviders);
         controller.setErrorHandlingLayer(errorHandlingLayer);
         controller.registerOnCloseStageRequested(stage::close);
     }
