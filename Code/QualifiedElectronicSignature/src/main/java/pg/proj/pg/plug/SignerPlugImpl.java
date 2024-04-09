@@ -57,10 +57,12 @@ public class SignerPlugImpl implements SignerPlug {
         FileProvider sourceFileProvider = verifyFileSelector.selectFile();
         sendCommunicate("Select file with signature");
         FileProvider signatureFileProvider = signatureFileSelector.selectFile();
+        sendCommunicate("Select verifier");
         //create signature info (XadesSignatureXmlParser: SignatureInfoProvider)
         //select verifier provider - SignatureVerifierSelector
         //FileVerifierInformationContainer - signatureInfo + sourceInfo + verifierProvider
         //verify file - FileVerifier: boolean
+        sendCommunicate("Verifying signature");
         //  verify : 1. is it hash of same document 2. are attributes correct
         //send communicate if is Signed or not
     }

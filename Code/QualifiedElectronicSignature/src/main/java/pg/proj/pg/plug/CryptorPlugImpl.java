@@ -47,6 +47,7 @@ public class CryptorPlugImpl implements CryptorPlug {
                 FileExtension.CYP, "enc");
         FileCryptoInformationContainer informationContainer = new FileCryptoInformationContainerImpl(sourceFileProvider,
                 destinationFileProvider, encryptCipherProvider);
+        sendCommunicate("Encrypting file");
         encryptor.encryptFile(informationContainer);
         sendCommunicate("File encrypted properly");
     }
@@ -61,6 +62,7 @@ public class CryptorPlugImpl implements CryptorPlug {
                 FileExtension.TXT, "dec");
         FileCryptoInformationContainer informationContainer = new FileCryptoInformationContainerImpl(sourceFileProvider,
                 destinationFileProvider, decryptCipherProvider);
+        sendCommunicate("Decrypting file");
         decryptor.decryptFile(informationContainer);
         sendCommunicate("File decrypted properly");
     }
