@@ -30,7 +30,7 @@ public record SignatureExecutionerInfo(Signature signature, PrivateKeyGen keyGen
             Signature signature = Signature.getInstance(signatureType.getSignatureType());
             return new SignatureExecutionerInfo(signature, rsaKeyGen, keyInfo, signatureType);
         } catch (NoSuchAlgorithmException e) {
-            throw new BasicAppError("Unable to get all necessary cipher information");
+            throw new BasicAppError("Unable to get all necessary signer information");
         }
     }
 }
