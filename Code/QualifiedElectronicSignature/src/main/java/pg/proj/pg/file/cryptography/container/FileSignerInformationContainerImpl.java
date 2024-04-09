@@ -20,7 +20,12 @@ public class FileSignerInformationContainerImpl implements FileSignerInformation
     private final SignatureExecutionerProvider signatureExecutionerProvider;
 
     @Override
-    public DocumentInfo getSourceFileInfo() {
+    public FileInfo getSourceFileInfo() {
+        return sourceFileInfoProvider.getFileInfo();
+    }
+
+    @Override
+    public DocumentInfo getSourceDocumentInfo() {
         return documentInfoProvider.getDocumentInfo(sourceFileInfoProvider.getFileInfo());
     }
 

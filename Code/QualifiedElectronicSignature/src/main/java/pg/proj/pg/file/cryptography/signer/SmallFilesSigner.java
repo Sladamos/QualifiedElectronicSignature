@@ -20,11 +20,11 @@ public class SmallFilesSigner implements FileSigner {
     @Override
     public void signFile(FileSignerInformationContainer informationContainer) {
         SignatureExecutioner executioner = informationContainer.getSignatureExecutioner();
-        DocumentInfo sourceInfo = informationContainer.getSourceFileInfo();
-        FileInfo sourceFileInfo = sourceInfo.documentDetails().fileInfo();
+        DocumentInfo documentInfo = informationContainer.getSourceDocumentInfo();
+        FileInfo sourceFileInfo = informationContainer.getSourceFileInfo();
         byte[] sourceContent = contentOperator.loadByteFileContent(sourceFileInfo);
         byte[] signedValue = executioner.sign(sourceContent);
-        SignatureInfo xmlInfo = new SignatureInfo(sourceInfo, signedValue);
+        SignatureInfo xmlInfo = new SignatureInfo(documentInfo, signedValue);
         String xml = xmlWriter.toXml(xmlInfo);
         contentOperator.saveStrFileContent(informationContainer.getDestinationFileInfo(), xml);
     }

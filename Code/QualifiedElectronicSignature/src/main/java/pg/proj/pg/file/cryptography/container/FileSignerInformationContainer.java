@@ -5,10 +5,8 @@ import pg.proj.pg.file.info.FileInfo;
 import pg.proj.pg.signature.executioner.SignatureExecutioner;
 
 public interface FileSignerInformationContainer {
-
-    DocumentInfo getSourceFileInfo();
-
+    FileInfo getSourceFileInfo();
     FileInfo getDestinationFileInfo();
-
+    DocumentInfo getSourceDocumentInfo();
     SignatureExecutioner getSignatureExecutioner();
 }
