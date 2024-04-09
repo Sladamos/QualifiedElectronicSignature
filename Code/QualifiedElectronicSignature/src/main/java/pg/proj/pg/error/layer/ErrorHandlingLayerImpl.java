@@ -27,7 +27,7 @@ public class ErrorHandlingLayerImpl implements ErrorHandlingLayer {
         } catch (BasicAppError err) {
             basicErrorEvent.invoke(err);
         } catch (Exception err) {
-            notifyAboutUnspecifiedException(err);
+            notifyAboutUnspecifiedException();
         }
     }
 
@@ -41,7 +41,7 @@ public class ErrorHandlingLayerImpl implements ErrorHandlingLayer {
         criticalErrorEvent.addListener(errorReceiver::onCriticalErrorOccurred);
     }
 
-    private void notifyAboutUnspecifiedException(Exception err) {
+    private void notifyAboutUnspecifiedException() {
         CriticalAppError criticalError = new CriticalAppError("Something went very wrong");
         criticalErrorEvent.invoke(criticalError);
     }

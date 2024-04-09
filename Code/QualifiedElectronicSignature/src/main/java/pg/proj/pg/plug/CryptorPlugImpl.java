@@ -12,13 +12,9 @@ import pg.proj.pg.file.cryptography.container.FileCryptoInformationContainerImpl
 import pg.proj.pg.file.cryptography.decryptor.FileDecryptor;
 import pg.proj.pg.file.cryptography.encryptor.FileEncryptor;
 import pg.proj.pg.file.extension.FileExtension;
-import pg.proj.pg.file.info.FileInfo;
 import pg.proj.pg.file.provider.FileProvider;
 import pg.proj.pg.file.provider.FileProviderImpl;
 import pg.proj.pg.file.selector.FileSelector;
-
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
 
 @AllArgsConstructor
 public class CryptorPlugImpl implements CryptorPlug {

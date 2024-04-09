@@ -183,26 +183,13 @@ public class MainApplication extends Application {
         return new PlainCipherProvider("RSA", rsaCipherInitializer, cipherInfoSupplier);
     }
 
-    private CipherProvider createPlainRsaPrivateKeyCipherProvider(Stage stage,
-                                                                  FileContentOperator cipherFileContentOperator) {
-        CipherInitializer rsaCipherInitializer = new SimpleCipherInitializer();
-        KeyGen rsaKeyGen = new PrivateRsaKeyGen();
-        FileSelector plainPrivateKeySelector = new JavaFXFileSelector(stage,
-                "Select plain private key", Set.of(FileExtension.PPK));
-        FileDetector plainPrivateKeyDetector = new DesktopFileDetector("private_key", FileExtension.PPK);
-        FileSelector plainCipherPreDetectedFileSelector = new PreDetectedFileSelector(plainPrivateKeySelector, plainPrivateKeyDetector);
-        Supplier<CipherInfo> plainCipherInfoSupplier = () -> CipherInfo.createFromPEMFile(plainCipherPreDetectedFileSelector,
-                cipherFileContentOperator, rsaKeyGen, CipherType.RSA);
-        return new PlainCipherProvider("PlainRSA", rsaCipherInitializer, plainCipherInfoSupplier);
-    }
-
     private CipherProvider createEncryptedRsaPrivateKeyCipherProvider(Stage stage,
                                                                       FileContentOperator cipherFileContentOperator,
                                                                       ErrorHandlingLayer errorHandlingLayer) {
         CipherInitializer rsaCipherInitializer = new SimpleCipherInitializer();
         FileSelector encryptedPrivateKeySelector = new JavaFXFileSelector(stage,
                 "Select encrypted private key", Set.of(FileExtension.EPK));
-        FileDetector encryptedPrivateKeyDetector = new UsbFileDetector("private_key", FileExtension.EPK);
+        FileDetector encryptedPrivateKeyDetector = new DesktopFileDetector("private_key", FileExtension.EPK);
         FileSelector encryptedCipherPreDetectedFileSelector = new PreDetectedFileSelector(encryptedPrivateKeySelector, encryptedPrivateKeyDetector);
         KeyGen rsaKeyGen = new PrivateRsaKeyGen();
         JavaFXPasswordSelector passwordSelector = new JavaFXPasswordSelector(errorHandlingLayer);

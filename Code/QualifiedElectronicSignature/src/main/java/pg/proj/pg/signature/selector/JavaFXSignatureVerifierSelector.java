@@ -7,7 +7,6 @@ import javafx.stage.Stage;
 import lombok.AllArgsConstructor;
 import pg.proj.pg.error.definition.CriticalAppError;
 import pg.proj.pg.error.layer.ErrorHandlingLayer;
-import pg.proj.pg.signature.provider.SignatureExecutionerProvider;
 import pg.proj.pg.signature.provider.SignatureVerifierProvider;
 
 import java.io.IOException;
