@@ -1,7 +1,5 @@
 package pg.proj.pg.author.info;
 
-import pg.proj.pg.document.info.DocumentInfo;
-
 public record AuthorInfo(String name) {
     @Override
     public boolean equals(Object obj) {
