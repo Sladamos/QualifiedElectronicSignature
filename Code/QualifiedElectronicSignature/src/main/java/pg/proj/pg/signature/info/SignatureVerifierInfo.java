@@ -1,14 +1,10 @@
 package pg.proj.pg.signature.info;
 
-import pg.proj.pg.cipher.info.CipherInfo;
-import pg.proj.pg.cipher.type.CipherType;
 import pg.proj.pg.error.definition.BasicAppError;
 import pg.proj.pg.file.info.FileInfo;
 import pg.proj.pg.file.operator.FileContentOperator;
 import pg.proj.pg.file.provider.FileProvider;
 import pg.proj.pg.file.selector.FileSelector;
-import pg.proj.pg.key.generator.KeyGen;
-import pg.proj.pg.key.generator.PrivateKeyGen;
 import pg.proj.pg.key.generator.PublicKeyGen;
 import pg.proj.pg.key.info.KeyInfo;
 import pg.proj.pg.signature.type.SignatureType;
