@@ -23,6 +23,10 @@ public class SignerPlugImpl implements SignerPlug {
 
     private final FileSelector signFileSelector;
 
+    private final FileSelector verifyFileSelector;
+
+    private final FileSelector signatureFileSelector;
+
     private final SignatureExecutionerSelector signatureExecutionerSelector;
 
     private final FileSigner signer;
@@ -35,7 +39,7 @@ public class SignerPlugImpl implements SignerPlug {
     public void onSignCalled() {
         sendCommunicate("Select file to sign");
         FileProvider sourceFileProvider = signFileSelector.selectFile();
-        sendCommunicate("Select cipher");
+        sendCommunicate("Select signature");
         SignatureExecutionerProvider signatureExecutionerProvider = signatureExecutionerSelector.selectExecutioner();
         FileProvider destinationFileProvider = FileProviderImpl.fromSource(sourceFileProvider,
                 FileExtension.XML, "xades");
@@ -49,11 +53,15 @@ public class SignerPlugImpl implements SignerPlug {
 
     @Override
     public void onVerifyCalled() {
-        //select file to verify - typical FileSelector
-        //select signature ~ FileSelector + (XadesSignatureXmlParser: SignatureInfoProvider)
-        //select verifier type - SignatureVerifierSelector
-        //FileVerifierInformationContainer - signatureInfo +
+        sendCommunicate("Select file to verify");
+        FileProvider sourceFileProvider = verifyFileSelector.selectFile();
+        sendCommunicate("Select file with signature");
+        FileProvider signatureFileProvider = signatureFileSelector.selectFile();
+        //create signature info (XadesSignatureXmlParser: SignatureInfoProvider)
+        //select verifier provider - SignatureVerifierSelector
+        //FileVerifierInformationContainer - signatureInfo + sourceInfo + verifierProvider
         //verify file - FileVerifier: boolean
+        //  verify : 1. is it hash of same document 2. are attributes correct
         //send communicate if is Signed or not
     }
 
