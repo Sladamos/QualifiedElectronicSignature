@@ -223,12 +223,15 @@ public class MainApplication extends Application {
 
     private SignerPlug createSignerPlug(Stage stage, ErrorHandlingLayer errorHandlingLayer, MainReceiver receiver) {
         Set<FileExtension> signerFileExtensions = createExtensionsPossibleToEncrypt();
-        FileSelector signFileSelector = new JavaFXFileSelector(stage, "Select source file", signerFileExtensions);
+        FileSelector signFileSelector = new JavaFXFileSelector(stage, "Select file to sign", signerFileExtensions);
+        FileSelector verifyFileSelector = new JavaFXFileSelector(stage, "Select file to verify", signerFileExtensions);
+        FileSelector signatureFileSelector = new JavaFXFileSelector(stage, "Select file with signature", Set.of(FileExtension.XML));
         FileContentOperator signerFileContentOperator = new SmallFilesContentOperator();
         SignatureExecutionerSelector encryptExecutionerSelector = createEncryptExecutionerSelector(stage,
                 signerFileContentOperator, errorHandlingLayer);
         FileSigner fileSigner = createFileSigner();
-        SignerPlug signerPlug = new SignerPlugImpl(signFileSelector, encryptExecutionerSelector, fileSigner, this::createDocumentInfoProvider);
+        SignerPlug signerPlug = new SignerPlugImpl(signFileSelector, verifyFileSelector, signatureFileSelector,
+                encryptExecutionerSelector, fileSigner, this::createDocumentInfoProvider);
         signerPlug.registerCommunicatesReceiver(receiver);
         return signerPlug;
     }

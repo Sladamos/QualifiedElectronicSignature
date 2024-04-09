@@ -8,12 +8,17 @@ import pg.proj.pg.event.entity.api.OneArgEvent;
 import pg.proj.pg.event.entity.impl.OneArgEventImpl;
 import pg.proj.pg.file.cryptography.container.FileSignerInformationContainer;
 import pg.proj.pg.file.cryptography.container.FileSignerInformationContainerImpl;
+import pg.proj.pg.file.cryptography.container.FileVerifierInformationContainer;
+import pg.proj.pg.file.cryptography.container.FileVerifierInformationContainerImpl;
 import pg.proj.pg.file.cryptography.signer.FileSigner;
+import pg.proj.pg.file.cryptography.verifier.FileVerifier;
 import pg.proj.pg.file.extension.FileExtension;
 import pg.proj.pg.file.provider.FileProvider;
 import pg.proj.pg.file.provider.FileProviderImpl;
 import pg.proj.pg.file.selector.FileSelector;
+import pg.proj.pg.signature.info.SignatureInfo;
 import pg.proj.pg.signature.provider.SignatureExecutionerProvider;
+import pg.proj.pg.signature.provider.SignatureInfoProvider;
 import pg.proj.pg.signature.selector.SignatureExecutionerSelector;
 
 import java.util.function.Supplier;
@@ -31,7 +36,11 @@ public class SignerPlugImpl implements SignerPlug {
 
     private final FileSigner signer;
 
+    private final FileVerifier verifier;
+
     private final Supplier<DocumentInfoProvider> signerDocumentInfoProviderSupplier;
+
+    private final Supplier<SignatureInfoProvider> verifierSignatureInfoProvider;
 
     private final OneArgEvent<Communicate> communicateEvent = new OneArgEventImpl<>();
 
@@ -58,13 +67,15 @@ public class SignerPlugImpl implements SignerPlug {
         sendCommunicate("Select file with signature");
         FileProvider signatureFileProvider = signatureFileSelector.selectFile();
         sendCommunicate("Select verifier");
-        //create signature info (XadesSignatureXmlParser: SignatureInfoProvider)
         //select verifier provider - SignatureVerifierSelector
         //FileVerifierInformationContainer - signatureInfo + sourceInfo + verifierProvider
-        //verify file - FileVerifier: boolean
+        SignatureInfoProvider signatureInfoProvider = verifierSignatureInfoProvider.get();
+        FileVerifierInformationContainer informationContainer =
+                new FileVerifierInformationContainerImpl(sourceFileProvider, signatureFileProvider,
+                        signatureInfoProvider);
         sendCommunicate("Verifying signature");
-        //  verify : 1. is it hash of same document 2. are attributes correct
-        //send communicate if is Signed or not
+        boolean isSigned = verifier.isFileSigned(informationContainer);
+        sendCommunicateAboutVerifiedFile(isSigned);
     }
 
     @Override
@@ -75,5 +86,13 @@ public class SignerPlugImpl implements SignerPlug {
     private void sendCommunicate(String content) {
         Communicate communicate = new Communicate(content);
         communicateEvent.invoke(communicate);
+    }
+
+    private void sendCommunicateAboutVerifiedFile(boolean isSigned) {
+        if(isSigned) {
+            sendCommunicate("File is signed");
+        } else {
+            sendCommunicate("File is not signed");
+        }
     }
 }

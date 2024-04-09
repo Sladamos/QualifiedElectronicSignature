@@ -6,7 +6,6 @@ import pg.proj.pg.document.details.DocumentDetails;
 import pg.proj.pg.document.info.DocumentInfo;
 import pg.proj.pg.error.definition.BasicAppError;
 import pg.proj.pg.file.extension.FileExtension;
-import pg.proj.pg.file.info.FileInfo;
 import pg.proj.pg.signature.info.SignatureInfo;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -19,7 +18,7 @@ import java.time.Instant;
 import java.util.Base64;
 
 
-public class XadesSignatureXmlParser implements SignatureXmlParser {
+public class XadesXmlSignatureParser implements XmlSignatureParser {
     @Override
     public SignatureInfo fromXml(String xml) {
         try {
