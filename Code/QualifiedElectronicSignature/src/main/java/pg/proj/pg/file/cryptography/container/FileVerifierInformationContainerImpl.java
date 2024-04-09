@@ -1,8 +1,11 @@
 package pg.proj.pg.file.cryptography.container;
 
 import lombok.AllArgsConstructor;
+import pg.proj.pg.document.info.DocumentInfo;
+import pg.proj.pg.document.info.provider.DocumentInfoProvider;
+import pg.proj.pg.file.info.FileInfo;
 import pg.proj.pg.file.provider.FileProvider;
-import pg.proj.pg.signature.provider.SignatureInfoProvider;
+import pg.proj.pg.signature.verifier.SignatureVerifier;
 
 @AllArgsConstructor
 public class FileVerifierInformationContainerImpl implements FileVerifierInformationContainer {
@@ -11,5 +14,25 @@ public class FileVerifierInformationContainerImpl implements FileVerifierInforma
 
     private final FileProvider signatureFileProvider;
 
-    private final SignatureInfoProvider signatureInfoProvider;
+    private final DocumentInfoProvider documentInfoProvider;
+
+    @Override
+    public FileInfo getSourceFileInfo() {
+        return sourceFileProvider.getFileInfo();
+    }
+
+    @Override
+    public DocumentInfo getSourceDocumentInfo() {
+        return documentInfoProvider.getDocumentInfo(sourceFileProvider.getFileInfo());
+    }
+
+    @Override
+    public FileInfo getSignatureFileInfo() {
+        return signatureFileProvider.getFileInfo();
+    }
+
+    @Override
+    public SignatureVerifier getSignatureVerifier() {
+        return null;
+    }
 }

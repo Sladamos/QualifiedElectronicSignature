@@ -23,6 +23,8 @@ import pg.proj.pg.document.info.provider.DocumentInfoProvider;
 import pg.proj.pg.document.info.provider.DocumentInfoProviderImpl;
 import pg.proj.pg.file.cryptography.signer.FileSigner;
 import pg.proj.pg.file.cryptography.signer.SmallFilesSigner;
+import pg.proj.pg.file.cryptography.verifier.FileVerifier;
+import pg.proj.pg.file.cryptography.verifier.SmallFilesVerifier;
 import pg.proj.pg.file.detector.DesktopFileDetector;
 import pg.proj.pg.file.detector.FileDetector;
 import pg.proj.pg.file.detector.UsbFileDetector;
@@ -58,11 +60,15 @@ import pg.proj.pg.signature.initializer.SignatureExecutionerInitializer;
 import pg.proj.pg.signature.initializer.SignatureExecutionerInitializerImpl;
 import pg.proj.pg.signature.provider.EncryptedSignatureExecutionerProvider;
 import pg.proj.pg.signature.provider.SignatureExecutionerProvider;
+import pg.proj.pg.signature.provider.SignatureInfoProvider;
+import pg.proj.pg.signature.provider.XmlSignatureInfoProvider;
 import pg.proj.pg.signature.selector.JavaFXSignatureExecutionerSelector;
 import pg.proj.pg.signature.selector.SignatureExecutionerSelector;
 import pg.proj.pg.signature.type.SignatureType;
 import pg.proj.pg.signature.unlocker.SignatureExecutionerInfoUnlocker;
 import pg.proj.pg.signature.unlocker.SignatureExecutionerInfoUnlockerImpl;
+import pg.proj.pg.xml.parser.XadesXmlSignatureParser;
+import pg.proj.pg.xml.parser.XmlSignatureParser;
 import pg.proj.pg.xml.writer.SignatureXmlWriter;
 import pg.proj.pg.xml.writer.XadesSignatureXmlWriter;
 
@@ -230,8 +236,10 @@ public class MainApplication extends Application {
         SignatureExecutionerSelector encryptExecutionerSelector = createEncryptExecutionerSelector(stage,
                 signerFileContentOperator, errorHandlingLayer);
         FileSigner fileSigner = createFileSigner();
+        FileVerifier fileVerifier = createFileVerifier();
         SignerPlug signerPlug = new SignerPlugImpl(signFileSelector, verifyFileSelector, signatureFileSelector,
-                encryptExecutionerSelector, fileSigner, this::createDocumentInfoProvider);
+                encryptExecutionerSelector, fileSigner, fileVerifier,
+                this::createDocumentInfoProvider, this::createDocumentInfoProvider);
         signerPlug.registerCommunicatesReceiver(receiver);
         return signerPlug;
     }
@@ -273,6 +281,15 @@ public class MainApplication extends Application {
         FileContentOperator signerFileContentOperator = new SmallFilesContentOperator();
         SignatureXmlWriter signatureXmlWriter = new XadesSignatureXmlWriter();
         return new SmallFilesSigner(signerFileContentOperator, signatureXmlWriter);
+    }
+
+    private FileVerifier createFileVerifier() {
+        FileContentOperator verifierFileContentOperator = new SmallFilesContentOperator();
+        FileContentOperator signatureProviderContentOperator = new SmallFilesContentOperator();
+        XmlSignatureParser signatureParser = new XadesXmlSignatureParser();
+        SignatureInfoProvider signatureInfoProvider = new XmlSignatureInfoProvider(signatureParser,
+                signatureProviderContentOperator);
+        return new SmallFilesVerifier(verifierFileContentOperator, signatureInfoProvider);
     }
 
     private DocumentInfoProvider createDocumentInfoProvider() {

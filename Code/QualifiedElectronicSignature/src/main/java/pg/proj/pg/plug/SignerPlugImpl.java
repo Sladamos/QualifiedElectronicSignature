@@ -40,7 +40,7 @@ public class SignerPlugImpl implements SignerPlug {
 
     private final Supplier<DocumentInfoProvider> signerDocumentInfoProviderSupplier;
 
-    private final Supplier<SignatureInfoProvider> verifierSignatureInfoProvider;
+    private final Supplier<DocumentInfoProvider> verifierDocumentInfoProviderSupplier;
 
     private final OneArgEvent<Communicate> communicateEvent = new OneArgEventImpl<>();
 
@@ -69,10 +69,10 @@ public class SignerPlugImpl implements SignerPlug {
         sendCommunicate("Select verifier");
         //select verifier provider - SignatureVerifierSelector
         //FileVerifierInformationContainer - signatureInfo + sourceInfo + verifierProvider
-        SignatureInfoProvider signatureInfoProvider = verifierSignatureInfoProvider.get();
+        DocumentInfoProvider documentInfoProvider = verifierDocumentInfoProviderSupplier.get();
         FileVerifierInformationContainer informationContainer =
                 new FileVerifierInformationContainerImpl(sourceFileProvider, signatureFileProvider,
-                        signatureInfoProvider);
+                        documentInfoProvider);
         sendCommunicate("Verifying signature");
         boolean isSigned = verifier.isFileSigned(informationContainer);
         sendCommunicateAboutVerifiedFile(isSigned);
