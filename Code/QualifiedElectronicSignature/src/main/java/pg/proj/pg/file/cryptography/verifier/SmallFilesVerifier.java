@@ -2,11 +2,18 @@ package pg.proj.pg.file.cryptography.verifier;
 
 import lombok.AllArgsConstructor;
 import pg.proj.pg.file.cryptography.container.FileVerifierInformationContainer;
+import pg.proj.pg.file.detector.DesktopFileDetector;
+import pg.proj.pg.file.extension.FileExtension;
 import pg.proj.pg.file.info.FileInfo;
 import pg.proj.pg.file.operator.FileContentOperator;
+import pg.proj.pg.file.selector.JavaFXFileSelector;
+import pg.proj.pg.file.selector.PreDetectedFileSelector;
 import pg.proj.pg.signature.info.SignatureInfo;
+import pg.proj.pg.signature.info.SignatureVerifierInfo;
+import pg.proj.pg.signature.initializer.SignatureVerifierInitializerImpl;
 import pg.proj.pg.signature.provider.SignatureInfoProvider;
 import pg.proj.pg.signature.verifier.SignatureVerifier;
+import pg.proj.pg.signature.verifier.SignatureVerifierImpl;
 
 @AllArgsConstructor
 public class SmallFilesVerifier implements FileVerifier {

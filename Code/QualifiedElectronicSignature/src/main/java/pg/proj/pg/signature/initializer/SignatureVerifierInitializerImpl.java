@@ -1,12 +1,10 @@
 package pg.proj.pg.signature.initializer;
 
 import pg.proj.pg.error.definition.BasicAppError;
-import pg.proj.pg.key.generator.PrivateKeyGen;
 import pg.proj.pg.key.generator.PublicKeyGen;
 import pg.proj.pg.signature.info.SignatureVerifierInfo;
 
 import java.security.InvalidKeyException;
-import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Signature;
 

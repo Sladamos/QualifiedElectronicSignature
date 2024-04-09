@@ -22,8 +22,6 @@ public class PlainCipherProvider implements CipherProvider {
     @Override
     public CipherExecutioner getCipher() {
         CipherInfo cipherInfo = cipherInfoSupplier.get();
-        CipherInfo newCipherInfo = new CipherInfo(cipherInfo.cipher(),
-                cipherInfo.keyGen(), cipherInfo.keyInfo(), cipherInfo.cipherType());
-        return new CipherExecutionerImpl(newCipherInfo, cipherInitializer);
+        return new CipherExecutionerImpl(cipherInfo, cipherInitializer);
     }
 }
