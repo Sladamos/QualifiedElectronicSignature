@@ -28,6 +28,7 @@ import pg.proj.pg.file.cryptography.signer.FileSigner;
 import pg.proj.pg.file.cryptography.signer.SmallFilesSigner;
 import pg.proj.pg.file.cryptography.verifier.FileVerifier;
 import pg.proj.pg.file.cryptography.verifier.SmallFilesVerifier;
+import pg.proj.pg.file.detector.DesktopFileDetector;
 import pg.proj.pg.file.detector.FileDetector;
 import pg.proj.pg.file.detector.UsbFileDetector;
 import pg.proj.pg.file.selector.PreDetectedFileSelector;
@@ -89,7 +90,7 @@ public class MainApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("main-app.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 512*3/2, 384*3/2);
+        Scene scene = new Scene(fxmlLoader.load(), (double) (512 * 3) /2, (double) (384 * 3) /2);
         stage.setTitle("Emulator");
         stage.setScene(scene);
         MainController controller = fxmlLoader.getController();
@@ -185,11 +186,7 @@ public class MainApplication extends Application {
                                                                       FileContentOperator cipherFileContentOperator,
                                                                       ErrorHandlingLayer errorHandlingLayer) {
         CipherInitializer rsaCipherInitializer = new SimpleCipherInitializer();
-        FileSelector encryptedPrivateKeySelector = new JavaFXFileSelector(stage,
-                "Select encrypted private key", Set.of(FileExtension.EPK));
-        FileDetector encryptedPrivateKeyDetector = new UsbFileDetector("private_key", FileExtension.EPK);
-        FileSelector encryptedCipherPreDetectedFileSelector = new PreDetectedFileSelector(encryptedPrivateKeySelector,
-                encryptedPrivateKeyDetector);
+        FileSelector encryptedCipherPreDetectedFileSelector = getPreDetectedFileSelector(stage);
         KeyGen rsaKeyGen = new PrivateRsaKeyGen();
         JavaFXPasswordSelector passwordSelector = new JavaFXPasswordSelector(errorHandlingLayer);
         CipherInfoUnlocker unlocker = createCipherInfoUnlocker();
@@ -198,6 +195,15 @@ public class MainApplication extends Application {
                         cipherFileContentOperator, new HardcodedCipherExtractor(), rsaKeyGen, CipherType.RSA);
         return new EncryptedCipherProvider("EncRSA", unlocker, passwordSelector,
                 rsaCipherInitializer, encryptedCipherInfoSupplier);
+    }
+
+    private static FileSelector getPreDetectedFileSelector(Stage stage) {
+        FileSelector encryptedPrivateKeySelector = new JavaFXFileSelector(stage,
+                "Select encrypted private key", Set.of(FileExtension.EPK));
+        FileDetector usbDetector = new UsbFileDetector("private_key", FileExtension.EPK);
+        FileDetector desktopDetector = new DesktopFileDetector("private_key", FileExtension.EPK);
+        return new PreDetectedFileSelector(encryptedPrivateKeySelector,
+                List.of(usbDetector, desktopDetector));
     }
 
     private CipherInfoUnlocker createCipherInfoUnlocker() {
@@ -266,10 +272,7 @@ public class MainApplication extends Application {
                                                                                          FileContentOperator contentOperator,
                                                                                          ErrorHandlingLayer errorHandlingLayer) {
         SignatureExecutionerInitializer rsaExecutionerInitializer = new SignatureExecutionerInitializerImpl();
-        FileSelector encryptedPrivateKeySelector = new JavaFXFileSelector(stage,
-                "Select encrypted private key", Set.of(FileExtension.EPK));
-        FileDetector encryptedPrivateKeyDetector = new UsbFileDetector("private_key", FileExtension.EPK);
-        FileSelector encryptedCipherPreDetectedFileSelector = new PreDetectedFileSelector(encryptedPrivateKeySelector, encryptedPrivateKeyDetector);
+        FileSelector encryptedCipherPreDetectedFileSelector = getPreDetectedFileSelector(stage);
         PrivateKeyGen rsaKeyGen = new PrivateRsaKeyGen();
         JavaFXPasswordSelector passwordSelector = new JavaFXPasswordSelector(errorHandlingLayer);
         SignatureExecutionerInfoUnlocker unlocker = createExecutionerInfoUnlocker();
