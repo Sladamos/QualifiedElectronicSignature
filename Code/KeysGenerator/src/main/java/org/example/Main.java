@@ -8,12 +8,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.security.*;
+import java.util.Arrays;
 import java.util.Base64;
 
 public class Main {
 
-    private static final byte[] hardcodedNonce =
-            new byte[]{'T', 'h', 'i', 's', 'I', 's', 'A', 'S', 'e', 'c', 'r', 'e', 't', 'K', 'e', 'y'};
+    private static final int IV_LENGTH = 16;
 
     public static void main(String[] args) throws Exception {
         System.out.println("Welcome to RSA Key Pair Generator!");
@@ -65,13 +65,25 @@ public class Main {
     }
 
     private static void saveEncryptedPEMKey(PrivateKey privateKey, byte[] pin, String path) throws Exception {
-        byte[] encryptedKey = encryptPrivateKey(keyTo64(privateKey.getEncoded()), pin);
-        savePEMKey(encryptedKey, path);
+        SecureRandom random = new SecureRandom();
+        byte[] nonce = new byte[IV_LENGTH];
+        random.nextBytes(nonce);
+        byte[] encryptedKey = encryptPrivateKey(keyTo64(privateKey.getEncoded()), pin, nonce);
+        savePEMKey(concat(nonce, encryptedKey), path);
     }
 
-    private static byte[] encryptPrivateKey(byte[] key, byte[] hashedPin) throws Exception {
+    private static byte[] encryptPrivateKey(byte[] key, byte[] hashedPin, byte[] nonce) throws Exception {
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(hashedPin, "AES"), new IvParameterSpec(hardcodedNonce));
+        cipher.init(Cipher.ENCRYPT_MODE,
+                new SecretKeySpec(hashedPin, "AES"),
+                new IvParameterSpec(nonce));
         return cipher.doFinal(key);
+    }
+
+    private static byte[] concat(byte[] x, byte[] y) {
+        byte[] result = new byte[x.length + y.length];
+        System.arraycopy(x, 0, result, 0, x.length);
+        System.arraycopy(y, 0, result, x.length, y.length);
+        return result;
     }
 }
