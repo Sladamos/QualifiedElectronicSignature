@@ -88,7 +88,7 @@ public class MainApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("main-app.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 512, 384);
+        Scene scene = new Scene(fxmlLoader.load(), 512*3/2, 384*3/2);
         stage.setTitle("Emulator");
         stage.setScene(scene);
         MainController controller = fxmlLoader.getController();
@@ -187,7 +187,8 @@ public class MainApplication extends Application {
         FileSelector encryptedPrivateKeySelector = new JavaFXFileSelector(stage,
                 "Select encrypted private key", Set.of(FileExtension.EPK));
         FileDetector encryptedPrivateKeyDetector = new UsbFileDetector("private_key", FileExtension.EPK);
-        FileSelector encryptedCipherPreDetectedFileSelector = new PreDetectedFileSelector(encryptedPrivateKeySelector, encryptedPrivateKeyDetector);
+        FileSelector encryptedCipherPreDetectedFileSelector = new PreDetectedFileSelector(encryptedPrivateKeySelector,
+                encryptedPrivateKeyDetector);
         KeyGen rsaKeyGen = new PrivateRsaKeyGen();
         JavaFXPasswordSelector passwordSelector = new JavaFXPasswordSelector(errorHandlingLayer);
         CipherInfoUnlocker unlocker = createCipherInfoUnlocker();
