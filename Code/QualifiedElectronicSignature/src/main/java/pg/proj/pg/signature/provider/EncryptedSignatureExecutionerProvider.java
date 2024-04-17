@@ -8,6 +8,7 @@ import pg.proj.pg.password.provider.PasswordProvider;
 import pg.proj.pg.password.selector.PasswordSelector;
 import pg.proj.pg.signature.executioner.SignatureExecutioner;
 import pg.proj.pg.signature.executioner.SignatureExecutionerImpl;
+import pg.proj.pg.signature.info.EncryptedSignatureExecutionerInfo;
 import pg.proj.pg.signature.info.SignatureExecutionerInfo;
 import pg.proj.pg.signature.initializer.SignatureExecutionerInitializer;
 import pg.proj.pg.signature.unlocker.SignatureExecutionerInfoUnlocker;
@@ -26,10 +27,10 @@ public class EncryptedSignatureExecutionerProvider implements SignatureExecution
 
     private final SignatureExecutionerInitializer signatureExecutionerInitializer;
 
-    private final Supplier<SignatureExecutionerInfo> signatureExecutionerInfoSupplier;
+    private final Supplier<EncryptedSignatureExecutionerInfo> signatureExecutionerInfoSupplier;
     @Override
     public SignatureExecutioner getSignatureExecutioner() {
-        SignatureExecutionerInfo executionerInfo = signatureExecutionerInfoSupplier.get();
+        EncryptedSignatureExecutionerInfo executionerInfo = signatureExecutionerInfoSupplier.get();
         PasswordProvider passwordProvider = passwordSelector.selectPassword();
         PasswordInfo password = passwordProvider.getPasswordInfo();
         SignatureExecutionerInfo unlockedExecutionerInfo =

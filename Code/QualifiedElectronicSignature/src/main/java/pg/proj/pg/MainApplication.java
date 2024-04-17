@@ -7,6 +7,9 @@ import javafx.stage.Stage;
 import pg.proj.pg.author.provider.HardcodedAuthorProvider;
 import pg.proj.pg.cipher.executioner.CipherExecutioner;
 import pg.proj.pg.cipher.executioner.CipherExecutionerImpl;
+import pg.proj.pg.cipher.extractor.CipherExtractor;
+import pg.proj.pg.cipher.extractor.HardcodedCipherExtractor;
+import pg.proj.pg.cipher.info.EncryptedCipherInfo;
 import pg.proj.pg.cipher.initializer.CipherInitializer;
 import pg.proj.pg.cipher.initializer.NonceCipherInitializer;
 import pg.proj.pg.cipher.initializer.SimpleCipherInitializer;
@@ -28,6 +31,7 @@ import pg.proj.pg.file.cryptography.verifier.SmallFilesVerifier;
 import pg.proj.pg.file.detector.FileDetector;
 import pg.proj.pg.file.detector.UsbFileDetector;
 import pg.proj.pg.file.selector.PreDetectedFileSelector;
+import pg.proj.pg.iv.InitializationVector;
 import pg.proj.pg.key.generator.*;
 import pg.proj.pg.cipher.info.CipherInfo;
 import pg.proj.pg.cipher.provider.CipherProvider;
@@ -54,6 +58,7 @@ import pg.proj.pg.plug.CryptorPlug;
 import pg.proj.pg.plug.CryptorPlugImpl;
 import pg.proj.pg.plug.SignerPlug;
 import pg.proj.pg.plug.SignerPlugImpl;
+import pg.proj.pg.signature.info.EncryptedSignatureExecutionerInfo;
 import pg.proj.pg.signature.info.SignatureExecutionerInfo;
 import pg.proj.pg.signature.info.SignatureVerifierInfo;
 import pg.proj.pg.signature.initializer.SignatureExecutionerInitializer;
@@ -73,7 +78,6 @@ import pg.proj.pg.xml.parser.XmlSignatureParser;
 import pg.proj.pg.xml.writer.SignatureXmlWriter;
 import pg.proj.pg.xml.writer.XadesSignatureXmlWriter;
 
-import javax.crypto.spec.IvParameterSpec;
 import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -81,9 +85,6 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 public class MainApplication extends Application {
-
-    private static final byte[] hardcodedNonce =
-            new byte[]{'T', 'h', 'i', 's', 'I', 's', 'A', 'S', 'e', 'c', 'r', 'e', 't', 'K', 'e', 'y'};
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -192,9 +193,9 @@ public class MainApplication extends Application {
         KeyGen rsaKeyGen = new PrivateRsaKeyGen();
         JavaFXPasswordSelector passwordSelector = new JavaFXPasswordSelector(errorHandlingLayer);
         CipherInfoUnlocker unlocker = createCipherInfoUnlocker();
-        Supplier<CipherInfo> encryptedCipherInfoSupplier = () ->
-                CipherInfo.createFromBinaryFile(encryptedCipherPreDetectedFileSelector
-                        , cipherFileContentOperator, rsaKeyGen, CipherType.RSA);
+        Supplier<EncryptedCipherInfo> encryptedCipherInfoSupplier = () ->
+                CipherInfo.createFromBinaryFile(encryptedCipherPreDetectedFileSelector,
+                        cipherFileContentOperator, new HardcodedCipherExtractor(), rsaKeyGen, CipherType.RSA);
         return new EncryptedCipherProvider("EncRSA", unlocker, passwordSelector,
                 rsaCipherInitializer, encryptedCipherInfoSupplier);
     }
@@ -206,11 +207,11 @@ public class MainApplication extends Application {
         return new CipherInfoUnlockerImpl(keyInfoUnlocker);
     }
 
-    private CipherExecutioner createAesDecryptor(KeyInfo keyInfo)  {
+    private CipherExecutioner createAesDecryptor(KeyInfo keyInfo, InitializationVector iv)  {
         CipherType cipherType = CipherType.AES;
         KeyGen keyGen = new SecretKeyGen();
         CipherInfo cipherInfo = CipherInfo.createFromProvidedKey(keyGen, keyInfo, cipherType);
-        CipherInitializer aesCipherInitializer = new NonceCipherInitializer(new IvParameterSpec(hardcodedNonce));
+        CipherInitializer aesCipherInitializer = new NonceCipherInitializer(iv);
         return new CipherExecutionerImpl(cipherInfo, aesCipherInitializer);
     }
 
@@ -272,9 +273,12 @@ public class MainApplication extends Application {
         PrivateKeyGen rsaKeyGen = new PrivateRsaKeyGen();
         JavaFXPasswordSelector passwordSelector = new JavaFXPasswordSelector(errorHandlingLayer);
         SignatureExecutionerInfoUnlocker unlocker = createExecutionerInfoUnlocker();
-        Supplier<SignatureExecutionerInfo> encryptedSignatureInfoSupplier = () ->
-                SignatureExecutionerInfo.createFromBinaryFile(encryptedCipherPreDetectedFileSelector
-                        ,contentOperator, rsaKeyGen, SignatureType.RSA);
+        CipherExtractor cipherExtractor = new HardcodedCipherExtractor();
+        Supplier<EncryptedSignatureExecutionerInfo> encryptedSignatureInfoSupplier = () ->
+                SignatureExecutionerInfo.createFromBinaryFile(encryptedCipherPreDetectedFileSelector,
+                        contentOperator,
+                        cipherExtractor,
+                        rsaKeyGen, SignatureType.RSA);
         return new EncryptedSignatureExecutionerProvider("EncRSA", unlocker, passwordSelector,
                 rsaExecutionerInitializer, encryptedSignatureInfoSupplier);
     }

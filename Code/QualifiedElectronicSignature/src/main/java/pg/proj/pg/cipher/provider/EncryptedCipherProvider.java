@@ -5,6 +5,7 @@ import lombok.Getter;
 import pg.proj.pg.cipher.executioner.CipherExecutioner;
 import pg.proj.pg.cipher.executioner.CipherExecutionerImpl;
 import pg.proj.pg.cipher.info.CipherInfo;
+import pg.proj.pg.cipher.info.EncryptedCipherInfo;
 import pg.proj.pg.cipher.initializer.CipherInitializer;
 import pg.proj.pg.cipher.unlocker.CipherInfoUnlocker;
 import pg.proj.pg.error.definition.BasicAppError;
@@ -26,11 +27,11 @@ public class EncryptedCipherProvider implements CipherProvider {
 
     private final CipherInitializer cipherInitializer;
 
-    private final Supplier<CipherInfo> cipherInfoSupplier;
+    private final Supplier<EncryptedCipherInfo> cipherInfoSupplier;
 
     @Override
     public CipherExecutioner getCipher() {
-        CipherInfo cipherInfo = cipherInfoSupplier.get();
+        EncryptedCipherInfo cipherInfo = cipherInfoSupplier.get();
         PasswordProvider passwordProvider = passwordSelector.selectPassword();
         PasswordInfo password = passwordProvider.getPasswordInfo();
         CipherInfo unlockedCipherInfo = cipherInfoUnlocker.unlock(cipherInfo, password);
