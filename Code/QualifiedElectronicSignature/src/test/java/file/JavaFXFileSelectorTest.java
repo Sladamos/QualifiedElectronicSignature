@@ -14,7 +14,7 @@ public class JavaFXFileSelectorTest {
 
     @Test
     void should_throwCriticalAppErrorOnSelectFile_when_stageIsNotSet(){
-        FileSelector selector = new JavaFXFileSelector(null, "Title", Set.of(FileExtension.CPP));
+        FileSelector selector = new JavaFXFileSelector(null, "Title", Set.of(FileExtension.PDF));
         assertThatThrownBy(selector::selectFile)
                 .isInstanceOf(CriticalAppError.class);
     }

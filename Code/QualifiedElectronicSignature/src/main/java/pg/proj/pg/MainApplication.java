@@ -28,7 +28,6 @@ import pg.proj.pg.file.cryptography.signer.FileSigner;
 import pg.proj.pg.file.cryptography.signer.SmallFilesSigner;
 import pg.proj.pg.file.cryptography.verifier.FileVerifier;
 import pg.proj.pg.file.cryptography.verifier.SmallFilesVerifier;
-import pg.proj.pg.file.detector.DesktopFileDetector;
 import pg.proj.pg.file.detector.FileDetector;
 import pg.proj.pg.file.detector.UsbFileDetector;
 import pg.proj.pg.file.selector.PreDetectedFileSelector;
@@ -139,7 +138,7 @@ public class MainApplication extends Application {
 
     private Set<FileExtension> createExtensionsPossibleToEncrypt() {
         Set<FileExtension> fileExtensions = new LinkedHashSet<>();
-        fileExtensions.add(FileExtension.CPP);
+        fileExtensions.add(FileExtension.PDF);
         fileExtensions.add(FileExtension.TXT);
         return fileExtensions;
     }
@@ -201,9 +200,8 @@ public class MainApplication extends Application {
         FileSelector encryptedPrivateKeySelector = new JavaFXFileSelector(stage,
                 "Select encrypted private key", Set.of(FileExtension.EPK));
         FileDetector usbDetector = new UsbFileDetector("private_key", FileExtension.EPK);
-        FileDetector desktopDetector = new DesktopFileDetector("private_key", FileExtension.EPK);
         return new PreDetectedFileSelector(encryptedPrivateKeySelector,
-                List.of(usbDetector, desktopDetector));
+                List.of(usbDetector));
     }
 
     private CipherInfoUnlocker createCipherInfoUnlocker() {

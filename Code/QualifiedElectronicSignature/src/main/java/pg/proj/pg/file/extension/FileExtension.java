@@ -2,7 +2,7 @@ package pg.proj.pg.file.extension;
 
 public enum FileExtension {
     TXT,
-    CPP,
+    PDF,
     CYP,
     EPK,
     PUK,
@@ -16,25 +16,25 @@ public enum FileExtension {
      */
     public static FileExtension fromString(String substring) {
         switch (substring) {
-            case "cpp": {
-                return CPP;
+            case "pdf" -> {
+                return PDF;
             }
-            case "txt": {
+            case "txt" -> {
                 return TXT;
             }
-            case "cyp": {
+            case "cyp" -> {
                 return CYP;
             }
-            case "epk": {
+            case "epk" -> {
                 return EPK;
             }
-            case "puk": {
+            case "puk" -> {
                 return PUK;
             }
-            case "ppk": {
+            case "ppk" -> {
                 return PPK;
             }
-            case "xml": {
+            case "xml" -> {
                 return XML;
             }
         }

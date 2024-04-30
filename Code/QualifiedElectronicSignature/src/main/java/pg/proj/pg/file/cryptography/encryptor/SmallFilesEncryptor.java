@@ -16,7 +16,7 @@ public class SmallFilesEncryptor implements FileEncryptor {
         FileInfo sourceFileInfo = informationContainer.getSourceFileInfo();
         byte[] content = contentOperator.loadByteFileContent(sourceFileInfo);
         CipherExecutioner cipherExecutioner = informationContainer.getCipherContainer();
-        byte[] encryptedContent = cipherExecutioner.encrypt(content);
+        byte[] encryptedContent = cipherExecutioner.batchEncrypt(content);
         FileInfo destinationFileInfo = informationContainer.getDestinationFileInfo();
         contentOperator.saveByteFileContent(destinationFileInfo, encryptedContent);
     }

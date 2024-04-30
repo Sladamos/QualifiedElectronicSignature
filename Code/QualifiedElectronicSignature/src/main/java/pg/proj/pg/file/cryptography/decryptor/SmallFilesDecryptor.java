@@ -16,7 +16,7 @@ public class SmallFilesDecryptor implements FileDecryptor {
         FileInfo sourceFileInfo = informationContainer.getSourceFileInfo();
         byte[] content = contentOperator.loadByteFileContent(sourceFileInfo);
         CipherExecutioner cipherExecutioner = informationContainer.getCipherContainer();
-        byte[] decryptedContent = cipherExecutioner.decrypt(content);
+        byte[] decryptedContent = cipherExecutioner.batchDecrypt(content);
         FileInfo destinationFileInfo = informationContainer.getDestinationFileInfo();
         contentOperator.saveByteFileContent(destinationFileInfo, decryptedContent);
     }

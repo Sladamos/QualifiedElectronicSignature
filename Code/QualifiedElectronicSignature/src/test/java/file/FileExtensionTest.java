@@ -15,7 +15,7 @@ public class FileExtensionTest {
 
     @Test
     public void should_returnCppString_when_cppExtensionProvided() {
-        FileExtension extension = FileExtension.CPP;
+        FileExtension extension = FileExtension.PDF;
         String value = extension.strValue();
         assertThat(value).isEqualTo("cpp");
     }
@@ -69,7 +69,7 @@ public class FileExtensionTest {
     @Test
     public void should_returnCppExtension_when_fromCppStringCreated() {
         var extension = FileExtension.fromString("cpp");
-        assertThat(extension).isEqualTo(FileExtension.CPP);
+        assertThat(extension).isEqualTo(FileExtension.PDF);
     }
 
     @Test
