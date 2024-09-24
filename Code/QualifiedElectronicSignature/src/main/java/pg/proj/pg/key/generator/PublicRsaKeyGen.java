@@ -1,6 +1,7 @@
 package pg.proj.pg.key.generator;
 
 import pg.proj.pg.error.definition.BasicAppError;
+import pg.proj.pg.error.definition.CriticalAppError;
 
 import java.security.Key;
 import java.security.KeyFactory;
@@ -17,6 +18,9 @@ public class PublicRsaKeyGen implements KeyGen, PublicKeyGen {
 
     @Override
     public PublicKey generatePublicKey(byte[] bytes, String cipherType) {
+        if(bytes == null || cipherType == null) {
+            throw new CriticalAppError("Incorrect key gen arguments");
+        }
         X509EncodedKeySpec spec = new X509EncodedKeySpec(bytes);
         try {
             KeyFactory kf = KeyFactory.getInstance(cipherType);
