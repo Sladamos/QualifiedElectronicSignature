@@ -9,10 +9,16 @@ import pg.proj.pg.cipher.executioner.CipherExecutioner;
 import pg.proj.pg.cipher.executioner.CipherExecutionerImpl;
 import pg.proj.pg.cipher.extractor.CipherExtractor;
 import pg.proj.pg.cipher.extractor.HardcodedCipherExtractor;
+import pg.proj.pg.cipher.info.CipherInfo;
 import pg.proj.pg.cipher.info.EncryptedCipherInfo;
 import pg.proj.pg.cipher.initializer.CipherInitializer;
 import pg.proj.pg.cipher.initializer.NonceCipherInitializer;
 import pg.proj.pg.cipher.initializer.SimpleCipherInitializer;
+import pg.proj.pg.cipher.provider.CipherProvider;
+import pg.proj.pg.cipher.provider.EncryptedCipherProvider;
+import pg.proj.pg.cipher.provider.PlainCipherProvider;
+import pg.proj.pg.cipher.selector.CipherSelector;
+import pg.proj.pg.cipher.selector.JavaFXCipherSelector;
 import pg.proj.pg.cipher.type.CipherType;
 import pg.proj.pg.cipher.unlocker.CipherInfoUnlocker;
 import pg.proj.pg.cipher.unlocker.CipherInfoUnlockerImpl;
@@ -24,32 +30,27 @@ import pg.proj.pg.date.provider.CurrentDateProvider;
 import pg.proj.pg.document.details.provider.DocumentDetailsProviderImpl;
 import pg.proj.pg.document.info.provider.DocumentInfoProvider;
 import pg.proj.pg.document.info.provider.DocumentInfoProviderImpl;
-import pg.proj.pg.file.cryptography.signer.FileSigner;
-import pg.proj.pg.file.cryptography.signer.SmallFilesSigner;
-import pg.proj.pg.file.cryptography.verifier.FileVerifier;
-import pg.proj.pg.file.cryptography.verifier.SmallFilesVerifier;
-import pg.proj.pg.file.detector.FileDetector;
-import pg.proj.pg.file.detector.UsbFileDetector;
-import pg.proj.pg.file.selector.PreDetectedFileSelector;
-import pg.proj.pg.iv.InitializationVector;
-import pg.proj.pg.key.generator.*;
-import pg.proj.pg.cipher.info.CipherInfo;
-import pg.proj.pg.cipher.provider.CipherProvider;
-import pg.proj.pg.cipher.provider.EncryptedCipherProvider;
-import pg.proj.pg.cipher.provider.PlainCipherProvider;
-import pg.proj.pg.cipher.selector.CipherSelector;
-import pg.proj.pg.cipher.selector.JavaFXCipherSelector;
+import pg.proj.pg.error.layer.ErrorHandlingLayer;
+import pg.proj.pg.error.layer.ErrorHandlingLayerImpl;
 import pg.proj.pg.file.cryptography.decryptor.FileDecryptor;
 import pg.proj.pg.file.cryptography.decryptor.SmallFilesDecryptor;
 import pg.proj.pg.file.cryptography.encryptor.FileEncryptor;
 import pg.proj.pg.file.cryptography.encryptor.SmallFilesEncryptor;
-import pg.proj.pg.error.layer.ErrorHandlingLayer;
-import pg.proj.pg.error.layer.ErrorHandlingLayerImpl;
+import pg.proj.pg.file.cryptography.signer.FileSigner;
+import pg.proj.pg.file.cryptography.signer.SmallFilesSigner;
+import pg.proj.pg.file.cryptography.verifier.FileVerifier;
+import pg.proj.pg.file.cryptography.verifier.SmallFilesVerifier;
+import pg.proj.pg.file.detector.DesktopFileDetector;
+import pg.proj.pg.file.detector.FileDetector;
+import pg.proj.pg.file.detector.UsbFileDetector;
 import pg.proj.pg.file.extension.FileExtension;
 import pg.proj.pg.file.operator.FileContentOperator;
 import pg.proj.pg.file.operator.SmallFilesContentOperator;
 import pg.proj.pg.file.selector.FileSelector;
 import pg.proj.pg.file.selector.JavaFXFileSelector;
+import pg.proj.pg.file.selector.PreDetectedFileSelector;
+import pg.proj.pg.iv.InitializationVector;
+import pg.proj.pg.key.generator.*;
 import pg.proj.pg.key.info.KeyInfo;
 import pg.proj.pg.key.unlocker.KeyInfoUnlocker;
 import pg.proj.pg.key.unlocker.RsaKeyInfoUnlocker;
@@ -81,6 +82,7 @@ import pg.proj.pg.xml.writer.XadesSignatureXmlWriter;
 import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -199,9 +201,13 @@ public class MainApplication extends Application {
     private static FileSelector getPreDetectedFileSelector(Stage stage) {
         FileSelector encryptedPrivateKeySelector = new JavaFXFileSelector(stage,
                 "Select encrypted private key", Set.of(FileExtension.EPK));
-        FileDetector usbDetector = new UsbFileDetector("private_key", FileExtension.EPK);
-        return new PreDetectedFileSelector(encryptedPrivateKeySelector,
-                List.of(usbDetector));
+        FileDetector desktopFileDetector = new DesktopFileDetector("private_key", FileExtension.EPK);
+        FileDetector usbDetector = UsbFileDetector.builder()
+                .fileDetector(Optional.of(desktopFileDetector))
+                .fileExtension(FileExtension.EPK)
+                .fileName("private_key")
+                .build();
+        return new PreDetectedFileSelector(encryptedPrivateKeySelector, usbDetector);
     }
 
     private CipherInfoUnlocker createCipherInfoUnlocker() {

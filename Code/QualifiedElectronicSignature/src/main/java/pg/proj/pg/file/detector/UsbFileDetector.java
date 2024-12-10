@@ -1,6 +1,7 @@
 package pg.proj.pg.file.detector;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import net.samuelcampos.usbdrivedetector.USBDeviceDetectorManager;
 import net.samuelcampos.usbdrivedetector.USBStorageDevice;
 import pg.proj.pg.file.extension.FileExtension;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @AllArgsConstructor
+@Builder
 public class UsbFileDetector implements FileDetector {
 
     private final USBDeviceDetectorManager usbDeviceDetectorManager = new USBDeviceDetectorManager();
@@ -21,8 +23,26 @@ public class UsbFileDetector implements FileDetector {
 
     private final FileExtension fileExtension;
 
+    private final Optional<FileDetector> fileDetector;
+
     @Override
     public FileProvider detectFile() throws FileNotFoundException {
+        if(fileDetector.isPresent()) {
+            return detectFileFromInjectedDetector(fileDetector.get());
+        } else {
+            return detectFileFromUsb();
+        }
+    }
+
+    private FileProvider detectFileFromInjectedDetector(FileDetector fileDetector) throws FileNotFoundException {
+        try {
+            return fileDetector.detectFile();
+        } catch (FileNotFoundException ignored) {
+            return detectFileFromUsb();
+        }
+    }
+
+    private FileProvider detectFileFromUsb() throws FileNotFoundException {
         List<USBStorageDevice> devices = usbDeviceDetectorManager.getRemovableDevices();
         File file = devices.stream()
                 .map(USBStorageDevice::getRootDirectory)
