@@ -8,7 +8,7 @@ import pg.proj.pg.cipher.info.CipherInfo;
 import pg.proj.pg.cipher.info.EncryptedCipherInfo;
 import pg.proj.pg.cipher.initializer.CipherInitializer;
 import pg.proj.pg.cipher.unlocker.CipherInfoUnlocker;
-import pg.proj.pg.error.definition.BasicAppError;
+import pg.proj.pg.error.BasicAppError;
 import pg.proj.pg.password.info.PasswordInfo;
 import pg.proj.pg.password.provider.PasswordProvider;
 import pg.proj.pg.password.selector.PasswordSelector;

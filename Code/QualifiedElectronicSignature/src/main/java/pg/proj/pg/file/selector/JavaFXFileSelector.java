@@ -4,12 +4,9 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import pg.proj.pg.error.definition.BasicAppError;
-import pg.proj.pg.error.definition.CriticalAppError;
+import pg.proj.pg.error.BasicAppError;
+import pg.proj.pg.error.CriticalAppError;
 import pg.proj.pg.file.extension.FileExtension;
-import pg.proj.pg.file.extension.FileExtensionProvider;
-import pg.proj.pg.file.extension.FileExtensionProviderImpl;
-import pg.proj.pg.file.info.FileInfo;
 import pg.proj.pg.file.provider.FileProvider;
 import pg.proj.pg.file.provider.FileProviderImpl;
 
@@ -31,7 +28,7 @@ public class JavaFXFileSelector implements FileSelector {
     public FileProvider selectFile() {
         sendErrorIfNoExtensionsAreAllowed();
         sendErrorIfStageIsNotSpecified();
-        FileChooser fileChooser = new FileChooser();
+        FileChooser fileChooser = new FileChooser(); //TODO: FileChooserProvider inject
         fileChooser.setTitle(title);
         fileChooser.getExtensionFilters().addAll(getFiltersFromExtensions());
         File file = fileChooser.showOpenDialog(stage);

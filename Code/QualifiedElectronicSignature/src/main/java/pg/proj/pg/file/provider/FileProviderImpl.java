@@ -1,8 +1,8 @@
 package pg.proj.pg.file.provider;
 
 import lombok.AllArgsConstructor;
-import pg.proj.pg.error.definition.BasicAppError;
-import pg.proj.pg.error.definition.CriticalAppError;
+import pg.proj.pg.error.BasicAppError;
+import pg.proj.pg.error.CriticalAppError;
 import pg.proj.pg.file.extension.FileExtension;
 import pg.proj.pg.file.extension.FileExtensionProvider;
 import pg.proj.pg.file.extension.FileExtensionProviderImpl;

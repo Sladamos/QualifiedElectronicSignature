@@ -1,7 +1,7 @@
 package pg.proj.pg.key.generator;
 
-import pg.proj.pg.error.definition.BasicAppError;
-import pg.proj.pg.error.definition.CriticalAppError;
+import pg.proj.pg.error.BasicAppError;
+import pg.proj.pg.error.CriticalAppError;
 
 import java.security.Key;
 import java.security.KeyFactory;

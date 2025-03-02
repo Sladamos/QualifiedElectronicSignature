@@ -1,18 +1,17 @@
 package pg.proj.pg.xml.parser;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 import pg.proj.pg.author.info.AuthorInfo;
 import pg.proj.pg.document.details.DocumentDetails;
 import pg.proj.pg.document.info.DocumentInfo;
-import pg.proj.pg.error.definition.BasicAppError;
+import pg.proj.pg.error.BasicAppError;
 import pg.proj.pg.file.extension.FileExtension;
 import pg.proj.pg.signature.info.SignatureInfo;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
 import java.io.StringReader;
 import java.time.Instant;
 import java.util.Base64;

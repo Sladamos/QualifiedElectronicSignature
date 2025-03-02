@@ -1,7 +1,7 @@
 package pg.proj.pg.signature.executioner;
 
 import lombok.AllArgsConstructor;
-import pg.proj.pg.error.definition.BasicAppError;
+import pg.proj.pg.error.BasicAppError;
 import pg.proj.pg.signature.info.SignatureExecutionerInfo;
 import pg.proj.pg.signature.initializer.SignatureExecutionerInitializer;
 

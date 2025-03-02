@@ -1,7 +1,7 @@
 package pg.proj.pg.signature.verifier;
 
 import lombok.AllArgsConstructor;
-import pg.proj.pg.error.definition.BasicAppError;
+import pg.proj.pg.error.BasicAppError;
 import pg.proj.pg.signature.info.SignatureVerifierInfo;
 import pg.proj.pg.signature.initializer.SignatureVerifierInitializer;
 

@@ -1,7 +1,7 @@
 package pg.proj.pg.document.details.provider;
 
 import pg.proj.pg.document.details.DocumentDetails;
-import pg.proj.pg.error.definition.BasicAppError;
+import pg.proj.pg.error.BasicAppError;
 import pg.proj.pg.file.info.FileInfo;
 
 import java.io.IOException;

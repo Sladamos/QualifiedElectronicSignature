@@ -7,10 +7,10 @@ public record AuthorInfo(String name) {
             return true;
         }
 
-        if(!(obj instanceof AuthorInfo other)) {
+        if(!(obj instanceof AuthorInfo(String name1))) {
             return false;
         }
 
-        return other.name.equals(name);
+        return name1.equals(name);
     }
 }

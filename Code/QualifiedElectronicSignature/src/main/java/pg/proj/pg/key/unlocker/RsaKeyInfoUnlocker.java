@@ -2,8 +2,8 @@ package pg.proj.pg.key.unlocker;
 
 import lombok.AllArgsConstructor;
 import pg.proj.pg.data.unlocker.DataUnlocker;
+import pg.proj.pg.error.CriticalAppError;
 import pg.proj.pg.iv.InitializationVector;
-import pg.proj.pg.error.definition.CriticalAppError;
 import pg.proj.pg.key.info.KeyInfo;
 import pg.proj.pg.password.info.PasswordInfo;
 

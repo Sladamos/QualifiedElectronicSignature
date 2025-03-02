@@ -5,7 +5,7 @@ import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import lombok.AllArgsConstructor;
-import pg.proj.pg.error.definition.CriticalAppError;
+import pg.proj.pg.error.CriticalAppError;
 import pg.proj.pg.error.layer.ErrorHandlingLayer;
 import pg.proj.pg.password.provider.PasswordProvider;
 

@@ -1,6 +1,6 @@
 package pg.proj.pg.signature.info;
 
-import pg.proj.pg.error.definition.BasicAppError;
+import pg.proj.pg.error.BasicAppError;
 import pg.proj.pg.file.info.FileInfo;
 import pg.proj.pg.file.operator.FileContentOperator;
 import pg.proj.pg.file.provider.FileProvider;

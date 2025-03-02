@@ -60,7 +60,6 @@ import pg.proj.pg.plug.CryptorPlugImpl;
 import pg.proj.pg.plug.SignerPlug;
 import pg.proj.pg.plug.SignerPlugImpl;
 import pg.proj.pg.signature.info.EncryptedSignatureExecutionerInfo;
-import pg.proj.pg.signature.info.SignatureExecutionerInfo;
 import pg.proj.pg.signature.info.SignatureVerifierInfo;
 import pg.proj.pg.signature.initializer.SignatureExecutionerInitializer;
 import pg.proj.pg.signature.initializer.SignatureExecutionerInitializerImpl;
@@ -282,7 +281,7 @@ public class MainApplication extends Application {
         SignatureExecutionerInfoUnlocker unlocker = createExecutionerInfoUnlocker();
         CipherExtractor cipherExtractor = new HardcodedCipherExtractor();
         Supplier<EncryptedSignatureExecutionerInfo> encryptedSignatureInfoSupplier = () ->
-                SignatureExecutionerInfo.createFromBinaryFile(encryptedCipherPreDetectedFileSelector,
+                EncryptedSignatureExecutionerInfo.createFromBinaryFile(encryptedCipherPreDetectedFileSelector,
                         contentOperator,
                         cipherExtractor,
                         rsaKeyGen, SignatureType.RSA);

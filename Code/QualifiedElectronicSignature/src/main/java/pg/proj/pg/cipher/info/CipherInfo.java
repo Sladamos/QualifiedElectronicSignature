@@ -2,14 +2,14 @@ package pg.proj.pg.cipher.info;
 
 import pg.proj.pg.cipher.extractor.CipherExtractor;
 import pg.proj.pg.cipher.type.CipherType;
-import pg.proj.pg.error.definition.BasicAppError;
-import pg.proj.pg.iv.InitializationVector;
-import pg.proj.pg.key.generator.KeyGen;
-import pg.proj.pg.error.definition.CriticalAppError;
+import pg.proj.pg.error.BasicAppError;
+import pg.proj.pg.error.CriticalAppError;
 import pg.proj.pg.file.info.FileInfo;
 import pg.proj.pg.file.operator.FileContentOperator;
 import pg.proj.pg.file.provider.FileProvider;
 import pg.proj.pg.file.selector.FileSelector;
+import pg.proj.pg.iv.InitializationVector;
+import pg.proj.pg.key.generator.KeyGen;
 import pg.proj.pg.key.info.KeyInfo;
 
 import javax.crypto.Cipher;

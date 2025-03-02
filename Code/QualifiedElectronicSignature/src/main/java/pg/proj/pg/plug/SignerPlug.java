@@ -1,6 +1,6 @@
 package pg.proj.pg.plug;
 
-import pg.proj.pg.communicate.receiver.api.CommunicateReceiver;
+import pg.proj.pg.communicate.CommunicateReceiver;
 
 public interface SignerPlug {
     void onSignCalled();

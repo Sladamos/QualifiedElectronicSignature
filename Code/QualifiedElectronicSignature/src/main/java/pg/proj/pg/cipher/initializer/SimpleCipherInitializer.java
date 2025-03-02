@@ -1,7 +1,7 @@
 package pg.proj.pg.cipher.initializer;
 
 import pg.proj.pg.cipher.info.CipherInfo;
-import pg.proj.pg.error.definition.BasicAppError;
+import pg.proj.pg.error.BasicAppError;
 import pg.proj.pg.key.generator.KeyGen;
 
 import javax.crypto.Cipher;

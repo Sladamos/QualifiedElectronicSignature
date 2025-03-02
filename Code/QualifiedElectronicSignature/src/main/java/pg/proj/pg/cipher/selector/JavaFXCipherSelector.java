@@ -1,15 +1,13 @@
 package pg.proj.pg.cipher.selector;
 
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import lombok.AllArgsConstructor;
 import pg.proj.pg.cipher.provider.CipherProvider;
-import pg.proj.pg.error.definition.CriticalAppError;
+import pg.proj.pg.error.CriticalAppError;
 import pg.proj.pg.error.layer.ErrorHandlingLayer;
-import pg.proj.pg.error.layer.ErrorHandlingLayerImpl;
 
 import java.io.IOException;
 import java.util.List;

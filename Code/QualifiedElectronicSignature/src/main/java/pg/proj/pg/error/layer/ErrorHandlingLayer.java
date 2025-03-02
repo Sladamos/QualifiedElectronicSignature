@@ -1,7 +1,7 @@
 package pg.proj.pg.error.layer;
 
-import pg.proj.pg.error.receiver.api.BasicErrorReceiver;
-import pg.proj.pg.error.receiver.api.CriticalErrorReceiver;
+import pg.proj.pg.error.BasicErrorReceiver;
+import pg.proj.pg.error.CriticalErrorReceiver;
 
 public interface ErrorHandlingLayer {
     void runInErrorHandler(Runnable runnable);

@@ -2,7 +2,7 @@ package pg.proj.pg.signature.provider;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import pg.proj.pg.error.definition.BasicAppError;
+import pg.proj.pg.error.BasicAppError;
 import pg.proj.pg.password.info.PasswordInfo;
 import pg.proj.pg.password.provider.PasswordProvider;
 import pg.proj.pg.password.selector.PasswordSelector;
@@ -28,6 +28,7 @@ public class EncryptedSignatureExecutionerProvider implements SignatureExecution
     private final SignatureExecutionerInitializer signatureExecutionerInitializer;
 
     private final Supplier<EncryptedSignatureExecutionerInfo> signatureExecutionerInfoSupplier;
+
     @Override
     public SignatureExecutioner getSignatureExecutioner() {
         EncryptedSignatureExecutionerInfo executionerInfo = signatureExecutionerInfoSupplier.get();

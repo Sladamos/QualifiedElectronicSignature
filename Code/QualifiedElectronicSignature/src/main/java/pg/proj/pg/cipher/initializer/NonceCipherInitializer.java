@@ -2,7 +2,7 @@ package pg.proj.pg.cipher.initializer;
 
 import lombok.AllArgsConstructor;
 import pg.proj.pg.cipher.info.CipherInfo;
-import pg.proj.pg.error.definition.BasicAppError;
+import pg.proj.pg.error.BasicAppError;
 import pg.proj.pg.iv.InitializationVector;
 import pg.proj.pg.key.generator.KeyGen;
 

@@ -1,11 +1,11 @@
 package pg.proj.pg.error.layer;
 
-import pg.proj.pg.error.definition.BasicAppError;
-import pg.proj.pg.error.receiver.api.BasicErrorReceiver;
-import pg.proj.pg.error.definition.CriticalAppError;
-import pg.proj.pg.error.receiver.api.CriticalErrorReceiver;
-import pg.proj.pg.event.entity.api.OneArgEvent;
-import pg.proj.pg.event.entity.impl.OneArgEventImpl;
+import pg.proj.pg.error.BasicAppError;
+import pg.proj.pg.error.BasicErrorReceiver;
+import pg.proj.pg.error.CriticalAppError;
+import pg.proj.pg.error.CriticalErrorReceiver;
+import pg.proj.pg.event.OneArgEvent;
+import pg.proj.pg.event.OneArgEventImpl;
 
 public class ErrorHandlingLayerImpl implements ErrorHandlingLayer {
 

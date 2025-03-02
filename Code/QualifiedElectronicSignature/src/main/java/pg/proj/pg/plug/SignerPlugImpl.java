@@ -1,11 +1,11 @@
 package pg.proj.pg.plug;
 
 import lombok.AllArgsConstructor;
-import pg.proj.pg.communicate.definition.Communicate;
-import pg.proj.pg.communicate.receiver.api.CommunicateReceiver;
+import pg.proj.pg.communicate.Communicate;
+import pg.proj.pg.communicate.CommunicateReceiver;
 import pg.proj.pg.document.info.provider.DocumentInfoProvider;
-import pg.proj.pg.event.entity.api.OneArgEvent;
-import pg.proj.pg.event.entity.impl.OneArgEventImpl;
+import pg.proj.pg.event.OneArgEvent;
+import pg.proj.pg.event.OneArgEventImpl;
 import pg.proj.pg.file.cryptography.container.FileSignerInformationContainer;
 import pg.proj.pg.file.cryptography.container.FileSignerInformationContainerImpl;
 import pg.proj.pg.file.cryptography.container.FileVerifierInformationContainer;

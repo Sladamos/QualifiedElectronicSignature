@@ -1,7 +1,7 @@
 package pg.proj.pg.file.operator;
 
-import pg.proj.pg.error.definition.BasicAppError;
-import pg.proj.pg.error.definition.CriticalAppError;
+import pg.proj.pg.error.BasicAppError;
+import pg.proj.pg.error.CriticalAppError;
 import pg.proj.pg.file.info.FileInfo;
 
 import java.io.FileNotFoundException;

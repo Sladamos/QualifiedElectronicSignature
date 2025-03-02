@@ -10,16 +10,13 @@ module pg.proj.pg {
     requires java.xml;
 
     exports pg.proj.pg;
-    exports pg.proj.pg.error.receiver.api;
-    exports pg.proj.pg.error.definition;
-    exports pg.proj.pg.communicate.receiver.api;
-    exports pg.proj.pg.communicate.definition;
+    exports pg.proj.pg.error;
+    exports pg.proj.pg.communicate;
     opens pg.proj.pg to javafx.fxml;
     opens pg.proj.pg.cipher.selector to javafx.fxml;
     opens pg.proj.pg.signature.selector to javafx.fxml;
     opens pg.proj.pg.password.selector to javafx.fxml;
-    opens pg.proj.pg.error.receiver.api to javafx.fxml;
-    opens pg.proj.pg.error.definition to javafx.fxml;
+    opens pg.proj.pg.error to javafx.fxml;
     opens pg.proj.pg.data.hasher;
     opens pg.proj.pg.cipher.executioner;
     opens pg.proj.pg.data.unlocker;

@@ -1,6 +1,6 @@
 package pg.proj.pg.data.hasher;
 
-import pg.proj.pg.error.definition.BasicAppError;
+import pg.proj.pg.error.BasicAppError;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

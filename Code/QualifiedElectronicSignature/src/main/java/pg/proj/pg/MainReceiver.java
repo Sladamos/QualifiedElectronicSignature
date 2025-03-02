@@ -1,12 +1,12 @@
 package pg.proj.pg;
 
 import lombok.AllArgsConstructor;
-import pg.proj.pg.communicate.definition.Communicate;
-import pg.proj.pg.communicate.receiver.api.CommunicateReceiver;
-import pg.proj.pg.error.definition.BasicAppError;
-import pg.proj.pg.error.definition.CriticalAppError;
-import pg.proj.pg.error.receiver.api.BasicErrorReceiver;
-import pg.proj.pg.error.receiver.api.CriticalErrorReceiver;
+import pg.proj.pg.communicate.Communicate;
+import pg.proj.pg.communicate.CommunicateReceiver;
+import pg.proj.pg.error.BasicAppError;
+import pg.proj.pg.error.BasicErrorReceiver;
+import pg.proj.pg.error.CriticalAppError;
+import pg.proj.pg.error.CriticalErrorReceiver;
 
 import java.util.function.Consumer;
 

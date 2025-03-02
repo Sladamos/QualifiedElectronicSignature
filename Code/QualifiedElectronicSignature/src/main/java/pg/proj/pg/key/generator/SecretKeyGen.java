@@ -1,6 +1,6 @@
 package pg.proj.pg.key.generator;
 
-import pg.proj.pg.error.definition.CriticalAppError;
+import pg.proj.pg.error.CriticalAppError;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;

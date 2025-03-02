@@ -5,11 +5,11 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.FlowPane;
 import lombok.Setter;
-import pg.proj.pg.error.definition.BasicAppError;
+import pg.proj.pg.error.BasicAppError;
 import pg.proj.pg.error.layer.ErrorHandlingLayer;
-import pg.proj.pg.event.entity.api.NoArgsEvent;
-import pg.proj.pg.event.entity.impl.NoArgsEventImpl;
-import pg.proj.pg.event.receiver.api.NoArgsEventReceiver;
+import pg.proj.pg.event.NoArgsEvent;
+import pg.proj.pg.event.NoArgsEventImpl;
+import pg.proj.pg.event.NoArgsEventReceiver;
 import pg.proj.pg.signature.provider.SignatureExecutionerProvider;
 
 import java.util.HashMap;
