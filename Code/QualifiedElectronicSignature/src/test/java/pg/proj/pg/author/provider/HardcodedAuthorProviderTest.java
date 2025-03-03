@@ -10,7 +10,7 @@ class HardcodedAuthorProviderTest {
     private final HardcodedAuthorProvider uut = new HardcodedAuthorProvider();
 
     @Test
-    void shouldReturnValidAuthor() {
+    public void shouldReturnValidAuthor() {
         AuthorInfo validAuthor = new AuthorInfo("Sławomir Adamowicz");
         assertThat(uut.getAuthor()).isEqualTo(validAuthor);
     }

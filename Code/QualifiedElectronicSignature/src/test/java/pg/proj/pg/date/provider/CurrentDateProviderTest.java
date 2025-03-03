@@ -13,7 +13,7 @@ class CurrentDateProviderTest {
     private final CurrentDateProvider uut = new CurrentDateProvider();
 
     @Test
-    void shouldReturnCurrentDate() {
+    public void shouldReturnCurrentDate() {
         assertThat(uut.getDate()).isCloseTo(LocalDateTime.now(), within(15, ChronoUnit.SECONDS));
     }
 

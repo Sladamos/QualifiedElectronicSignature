@@ -5,6 +5,7 @@ import pg.proj.pg.signature.info.SignatureInfo;
 import java.util.Base64;
 
 public class XadesSignatureXmlWriter implements SignatureXmlWriter {
+
     @Override
     public String toXml(SignatureInfo xmlInfo) {
         return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
