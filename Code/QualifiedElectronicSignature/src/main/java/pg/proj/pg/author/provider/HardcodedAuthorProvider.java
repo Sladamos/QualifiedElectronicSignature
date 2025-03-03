@@ -1,7 +1,7 @@
 package pg.proj.pg.author.provider;
 
 import lombok.Getter;
-import pg.proj.pg.author.info.AuthorInfo;
+import pg.proj.pg.author.AuthorInfo;
 
 @Getter
 public class HardcodedAuthorProvider implements AuthorProvider {

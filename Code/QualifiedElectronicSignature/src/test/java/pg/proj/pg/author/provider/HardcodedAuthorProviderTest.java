@@ -1,7 +1,7 @@
 package pg.proj.pg.author.provider;
 
 import org.junit.jupiter.api.Test;
-import pg.proj.pg.author.info.AuthorInfo;
+import pg.proj.pg.author.AuthorInfo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -3,7 +3,7 @@ package pg.proj.pg.xml.parser;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
-import pg.proj.pg.author.info.AuthorInfo;
+import pg.proj.pg.author.AuthorInfo;
 import pg.proj.pg.document.details.DocumentDetails;
 import pg.proj.pg.document.info.DocumentInfo;
 import pg.proj.pg.error.BasicAppError;

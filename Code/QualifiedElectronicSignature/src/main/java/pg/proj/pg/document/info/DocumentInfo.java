@@ -1,7 +1,7 @@
 package pg.proj.pg.document.info;
 
 import lombok.Builder;
-import pg.proj.pg.author.info.AuthorInfo;
+import pg.proj.pg.author.AuthorInfo;
 import pg.proj.pg.document.details.DocumentDetails;
 
 import java.time.Instant;

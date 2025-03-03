@@ -1,7 +1,7 @@
 package pg.proj.pg.xml.parser;
 
 import org.junit.jupiter.api.Test;
-import pg.proj.pg.author.info.AuthorInfo;
+import pg.proj.pg.author.AuthorInfo;
 import pg.proj.pg.document.details.DocumentDetails;
 import pg.proj.pg.document.info.DocumentInfo;
 import pg.proj.pg.error.BasicAppError;
