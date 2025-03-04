@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 
 public class DocumentDetailsProviderImpl implements DocumentDetailsProvider {
+
     @Override
     public DocumentDetails getDocumentDetails(FileInfo fileInfo) {
         try {
