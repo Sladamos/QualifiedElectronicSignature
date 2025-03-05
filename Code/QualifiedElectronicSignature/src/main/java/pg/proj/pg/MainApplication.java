@@ -3,6 +3,7 @@ package pg.proj.pg;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import pg.proj.pg.author.provider.HardcodedAuthorProvider;
 import pg.proj.pg.cipher.executioner.CipherExecutioner;
@@ -87,6 +88,10 @@ import java.util.function.Supplier;
 
 public class MainApplication extends Application {
 
+    public static void main(String[] args) {
+        launch();
+    }
+
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("main-app.fxml"));
@@ -122,8 +127,8 @@ public class MainApplication extends Application {
 
     private CryptorPlug createCryptorPlug(Stage stage, ErrorHandlingLayer errorHandlingLayer, MainReceiver receiver) {
         Set<FileExtension> encryptorFileExtensions = createExtensionsPossibleToEncrypt();
-        FileSelector encryptFileSelector = new JavaFXFileSelector(stage, "Select source file", encryptorFileExtensions);
-        FileSelector decryptFileSelector = new JavaFXFileSelector(stage, "Select source file", Set.of(FileExtension.CYP));
+        FileSelector encryptFileSelector = new JavaFXFileSelector(stage, "Select source file", encryptorFileExtensions, FileChooser::new);
+        FileSelector decryptFileSelector = new JavaFXFileSelector(stage, "Select source file", Set.of(FileExtension.CYP), FileChooser::new);
         FileContentOperator cipherFileContentOperator = new SmallFilesContentOperator();
         CipherSelector encryptCipherSelector = createEncryptCipherSelector(stage,
                 cipherFileContentOperator, errorHandlingLayer);
@@ -173,8 +178,7 @@ public class MainApplication extends Application {
 
     private CipherProvider createPlainRsaPublicKeyCipherProvider(Stage stage,
                                                                  FileContentOperator cipherFileContentOperator) {
-        FileSelector publicKeySelector = new JavaFXFileSelector(stage,
-                "Select plain public key", Set.of(FileExtension.PUK));
+        FileSelector publicKeySelector = new JavaFXFileSelector(stage, "Select plain public key", Set.of(FileExtension.PUK), FileChooser::new);
         KeyGen rsaKeyGen = new PublicRsaKeyGen();
         Supplier<CipherInfo> cipherInfoSupplier = () -> CipherInfo.createFromPEMFile(publicKeySelector,
                 cipherFileContentOperator, rsaKeyGen, CipherType.RSA);
@@ -198,8 +202,7 @@ public class MainApplication extends Application {
     }
 
     private static FileSelector getPreDetectedFileSelector(Stage stage) {
-        FileSelector encryptedPrivateKeySelector = new JavaFXFileSelector(stage,
-                "Select encrypted private key", Set.of(FileExtension.EPK));
+        FileSelector encryptedPrivateKeySelector = new JavaFXFileSelector(stage, "Select encrypted private key", Set.of(FileExtension.EPK), FileChooser::new);
         FileDetector desktopFileDetector = new DesktopFileDetector("private_key", FileExtension.EPK);
         FileDetector usbDetector = UsbFileDetector.builder()
                 .fileDetector(Optional.of(desktopFileDetector))
@@ -226,9 +229,9 @@ public class MainApplication extends Application {
 
     private SignerPlug createSignerPlug(Stage stage, ErrorHandlingLayer errorHandlingLayer, MainReceiver receiver) {
         Set<FileExtension> signerFileExtensions = createExtensionsPossibleToEncrypt();
-        FileSelector signFileSelector = new JavaFXFileSelector(stage, "Select file to sign", signerFileExtensions);
-        FileSelector verifyFileSelector = new JavaFXFileSelector(stage, "Select file to verify", signerFileExtensions);
-        FileSelector signatureFileSelector = new JavaFXFileSelector(stage, "Select file with signature", Set.of(FileExtension.XML));
+        FileSelector signFileSelector = new JavaFXFileSelector(stage, "Select file to sign", signerFileExtensions, FileChooser::new);
+        FileSelector verifyFileSelector = new JavaFXFileSelector(stage, "Select file to verify", signerFileExtensions, FileChooser::new);
+        FileSelector signatureFileSelector = new JavaFXFileSelector(stage, "Select file with signature", Set.of(FileExtension.XML), FileChooser::new);
         FileContentOperator signerFileContentOperator = new SmallFilesContentOperator();
         SignatureExecutionerSelector signatureExecutionerSelector = createExecutionerSelector(stage,
                 signerFileContentOperator, errorHandlingLayer);
@@ -252,8 +255,7 @@ public class MainApplication extends Application {
 
     private SignatureVerifierProvider createPlainRsaPublicKeyVerifierProvider(Stage stage,
                                                                               FileContentOperator signerFileContentOperator) {
-        FileSelector publicKeySelector = new JavaFXFileSelector(stage,
-                "Select plain public key", Set.of(FileExtension.PUK));
+        FileSelector publicKeySelector = new JavaFXFileSelector(stage, "Select plain public key", Set.of(FileExtension.PUK), FileChooser::new);
         PublicKeyGen rsaKeyGen = new PublicRsaKeyGen();
         Supplier<SignatureVerifierInfo> verifierInfoSupplier = () ->
                 SignatureVerifierInfo.createFromPEMFile(publicKeySelector,
@@ -314,11 +316,6 @@ public class MainApplication extends Application {
     private DocumentInfoProvider createDocumentInfoProvider() {
         return new DocumentInfoProviderImpl(new DocumentDetailsProviderImpl(),
                 new HardcodedAuthorProvider(), new CurrentDateProvider());
-    }
-
-
-    public static void main(String[] args) {
-        launch();
     }
 
 }

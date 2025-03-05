@@ -13,6 +13,7 @@ import pg.proj.pg.file.provider.FileProviderImpl;
 import java.io.File;
 import java.util.Collection;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -24,11 +25,13 @@ public class JavaFXFileSelector implements FileSelector {
 
     private final Set<FileExtension> allowedExtensions;
 
+    private final Supplier<FileChooser> fileChooserSupplier;
+
     @Override
     public FileProvider selectFile() {
         sendErrorIfNoExtensionsAreAllowed();
         sendErrorIfStageIsNotSpecified();
-        FileChooser fileChooser = new FileChooser(); //TODO: FileChooserProvider inject
+        FileChooser fileChooser = fileChooserSupplier.get();
         fileChooser.setTitle(title);
         fileChooser.getExtensionFilters().addAll(getFiltersFromExtensions());
         File file = fileChooser.showOpenDialog(stage);
