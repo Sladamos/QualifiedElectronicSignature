@@ -2,10 +2,9 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <BorderPane styleClass="root" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pg.proj.pg.MainController">
       <top>
-          <Label styleClass="title" text="Welcome to Tool Emulator" BorderPane.alignment="CENTER" />
+          <Label styleClass="title" text="Welcome to Xades emulator" BorderPane.alignment="CENTER" />
       </top>
    <bottom>
       <Label fx:id="communicateLabel" styleClass="communicate" wrapText="true" BorderPane.alignment="CENTER" />

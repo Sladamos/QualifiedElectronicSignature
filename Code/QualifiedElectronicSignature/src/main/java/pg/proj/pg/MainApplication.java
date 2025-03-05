@@ -95,8 +95,8 @@ public class MainApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("main-app.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), (double) (512 * 3) /2, (double) (384 * 3) /2);
-        stage.setTitle("Emulator");
+        Scene scene = new Scene(fxmlLoader.load(), (double) (512 * 5) / 2, (double) (384 * 3) /2);
+        stage.setTitle("XadesEmulator");
         stage.setScene(scene);
         MainController controller = fxmlLoader.getController();
         initializeVariables(controller, stage);
